@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>True Texas Electricity Rate Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <h1>True Texas Electricity Rate Calculator</h1>
+        <p class="subtitle">
+          Know your true electricity costs. Calculate your true rate per kWh as well as an
+          approximate bill amount
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>Enter your plan information</h2>
+        <form id="plan-form" novalidate>
+          <div class="form-grid">
+            <label class="form-field">
+              <span>Base charge ($)</span>
+              <input type="number" id="base-charge" name="base_charge" min="0" step="0.01" required />
+            </label>
+            <label class="form-field">
+              <span>Energy rate (¢/kWh)</span>
+              <input type="number" id="energy-rate" name="energy_rate_cents" min="0" step="0.01" required />
+            </label>
+            <label class="form-field">
+              <span>CenterPoint delivery charge (¢/kWh)</span>
+              <input type="number" id="tdu-rate" name="tdu_rate_cents" min="0" step="0.01" required />
+            </label>
+            <label class="form-field">
+              <span>CenterPoint base delivery charge ($)</span>
+              <input
+                type="number"
+                id="base-delivery-charge"
+                name="base_delivery_charge"
+                min="0"
+                step="0.01"
+                required
+              />
+            </label>
+          </div>
+
+          <div class="form-field usage-field">
+            <span>Enter your kWh usage</span>
+            <input type="number" id="usage" name="usage_kwh" min="1" step="1" required />
+          </div>
+
+          <button type="submit" class="calculate-button">Calculate</button>
+        </form>
+      </section>
+
+      <section class="card" id="results" hidden>
+        <h2>Calculate your price per kWh and approximate bill amount</h2>
+        <div class="results-grid">
+          <div>
+            <h3>True Rate Per kWh</h3>
+            <p class="result-value"><span id="true-rate">0.00</span> ¢/kWh</p>
+          </div>
+          <div>
+            <h3>Approximate Bill Amount</h3>
+            <p class="result-value">$<span id="bill-amount">0.00</span></p>
+          </div>
+        </div>
+        <p class="result-note">
+          True rate per kWh is calculated as ((energy rate + TDU rate) / 100) +
+          ((base charge + base delivery charge) / usage).
+        </p>
+      </section>
+
+      <section class="card error" id="error" hidden>
+        <h2>There was a problem with your calculation</h2>
+        <p id="error-message"></p>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  </body>
+</html>
