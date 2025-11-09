@@ -13,9 +13,18 @@ A simple Flask application that helps customers understand their true electricit
 
 1. Create a virtual environment (optional but recommended):
 
+   **macOS/Linux**
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate
+   ```
+
+   **Windows (PowerShell)**
+
+   ```powershell
+   python -m venv .venv
+   .venv\\Scripts\\Activate.ps1
    ```
 
 2. Install dependencies:
@@ -26,7 +35,15 @@ A simple Flask application that helps customers understand their true electricit
 
 3. Run the application:
 
+   **macOS/Linux**
+
    ```bash
+   flask --app app run --debug
+   ```
+
+   **Windows (PowerShell)**
+
+   ```powershell
    flask --app app run --debug
    ```
 
