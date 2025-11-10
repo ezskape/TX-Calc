@@ -16,9 +16,9 @@
         </p>
       </header>
 
-      <section class="card">
-        <h2>Enter your plan information</h2>
-        <form id="plan-form" novalidate>
+      <form id="plan-form" novalidate>
+        <section class="card">
+          <h2>Enter your plan information</h2>
           <div class="form-grid">
             <label class="form-field">
               <span>Base charge ($)</span>
@@ -44,33 +44,38 @@
               />
             </label>
           </div>
+        </section>
 
+        <section class="card" id="results">
+          <h2>Calculate your price per kWh and approximate bill amount</h2>
+          <p class="results-placeholder" id="results-placeholder">
+            Enter all plan details and your kWh usage to see your true rate and estimated bill.
+          </p>
+          <div class="results-grid is-hidden" id="results-content">
+            <div>
+              <h3>True Rate Per kWh</h3>
+              <p class="result-value"><span id="true-rate">0.00</span> ¢/kWh</p>
+            </div>
+            <div>
+              <h3>Approximate Bill Amount</h3>
+              <p class="result-value">$<span id="bill-amount">0.00</span></p>
+            </div>
+          </div>
+          <p class="result-note is-hidden" id="result-note">
+            True rate per kWh is calculated as ((energy rate + TDU rate) / 100) +
+            ((base charge + base delivery charge) / usage).
+          </p>
+        </section>
+
+        <section class="card">
           <div class="form-field usage-field">
             <span>Enter your kWh usage</span>
             <input type="number" id="usage" name="usage_kwh" min="1" step="1" required />
           </div>
 
           <button type="submit" class="calculate-button">Calculate</button>
-        </form>
-      </section>
-
-      <section class="card" id="results" hidden>
-        <h2>Calculate your price per kWh and approximate bill amount</h2>
-        <div class="results-grid">
-          <div>
-            <h3>True Rate Per kWh</h3>
-            <p class="result-value"><span id="true-rate">0.00</span> ¢/kWh</p>
-          </div>
-          <div>
-            <h3>Approximate Bill Amount</h3>
-            <p class="result-value">$<span id="bill-amount">0.00</span></p>
-          </div>
-        </div>
-        <p class="result-note">
-          True rate per kWh is calculated as ((energy rate + TDU rate) / 100) +
-          ((base charge + base delivery charge) / usage).
-        </p>
-      </section>
+        </section>
+      </form>
 
       <section class="card error" id="error" hidden>
         <h2>There was a problem with your calculation</h2>

@@ -1,11 +1,18 @@
+let resultsContent;
+let resultNote;
+let resultsPlaceholder;
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("plan-form");
-  const resultsSection = document.getElementById("results");
   const errorSection = document.getElementById("error");
   const trueRate = document.getElementById("true-rate");
   const billAmount = document.getElementById("bill-amount");
   const errorMessage = document.getElementById("error-message");
+  resultsContent = document.getElementById("results-content");
+  resultNote = document.getElementById("result-note");
+  resultsPlaceholder = document.getElementById("results-placeholder");
 
+  hideResults();
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     hideSection(errorSection);
@@ -29,11 +36,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       trueRate.textContent = data.true_rate_display;
       billAmount.textContent = data.bill_amount_display;
-      showSection(resultsSection);
+      showResults();
     } catch (error) {
       errorMessage.textContent = error.message;
       showSection(errorSection);
-      hideSection(resultsSection);
+      hideResults();
+    }
+  });
+
+  form.addEventListener("input", () => {
+    if (!form.checkValidity()) {
+      hideResults();
     }
   });
 });
@@ -44,4 +57,16 @@ function showSection(section) {
 
 function hideSection(section) {
   section.hidden = true;
+}
+
+function showResults() {
+  resultsContent.classList.remove("is-hidden");
+  resultNote.classList.remove("is-hidden");
+  resultsPlaceholder.classList.add("is-hidden");
+}
+
+function hideResults() {
+  resultsContent.classList.add("is-hidden");
+  resultNote.classList.add("is-hidden");
+  resultsPlaceholder.classList.remove("is-hidden");
 }
