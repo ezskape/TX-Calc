@@ -46,6 +46,15 @@
           </div>
         </section>
 
+        <section class="card">
+          <div class="form-field usage-field">
+            <span>Enter your kWh usage</span>
+            <input type="number" id="usage" name="usage_kwh" min="1" step="1" required />
+          </div>
+
+          <button type="submit" class="calculate-button">Calculate</button>
+        </section>
+
         <section class="card" id="results">
           <h2>Calculate your price per kWh and approximate bill amount</h2>
           <p class="results-placeholder" id="results-placeholder">
@@ -65,15 +74,6 @@
             True rate per kWh is calculated as ((energy rate + TDU rate) / 100) +
             ((base charge + base delivery charge) / usage).
           </p>
-        </section>
-
-        <section class="card">
-          <div class="form-field usage-field">
-            <span>Enter your kWh usage</span>
-            <input type="number" id="usage" name="usage_kwh" min="1" step="1" required />
-          </div>
-
-          <button type="submit" class="calculate-button">Calculate</button>
         </section>
       </form>
 
