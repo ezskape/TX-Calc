@@ -1,24 +1,43 @@
-let resultsContent;
-let resultNote;
-let resultsPlaceholder;
-
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("plan-form");
-  const errorSection = document.getElementById("error");
-  const trueRate = document.getElementById("true-rate");
-  const billAmount = document.getElementById("bill-amount");
-  const errorMessage = document.getElementById("error-message");
-  resultsContent = document.getElementById("results-content");
-  resultNote = document.getElementById("result-note");
-  resultsPlaceholder = document.getElementById("results-placeholder");
+  setupTabs();
 
-  hideResults();
-  form.addEventListener("submit", async (event) => {
+  const panels = document.querySelectorAll(".tab-panel");
+  panels.forEach((panel) => {
+    const form = panel.querySelector(".plan-form");
+    if (form) {
+      new PlanCalculator(panel, form);
+    }
+  });
+});
+
+class PlanCalculator {
+  constructor(panel, form) {
+    this.panel = panel;
+    this.form = form;
+    this.planType = form.dataset.planType;
+
+    this.trueRate = panel.querySelector(".result-true-rate");
+    this.billAmount = panel.querySelector(".result-bill-amount");
+    this.resultsContent = panel.querySelector(".results-grid");
+    this.resultNote = panel.querySelector(".result-note");
+    this.resultsPlaceholder = panel.querySelector(".results-placeholder");
+    this.errorSection = panel.querySelector(".error-card");
+    this.errorMessage = panel.querySelector(".error-message");
+
+    this.hideResults();
+    this.clearError();
+
+    this.form.addEventListener("submit", (event) => this.handleSubmit(event));
+    this.form.addEventListener("input", () => this.handleInput());
+  }
+
+  async handleSubmit(event) {
     event.preventDefault();
-    hideSection(errorSection);
+    this.clearError();
 
-    const formData = new FormData(form);
+    const formData = new FormData(this.form);
     const payload = Object.fromEntries(formData.entries());
+    payload.plan_type = this.planType;
 
     try {
       const response = await fetch("/api/calculate", {
@@ -34,39 +53,67 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(data.error || "Unable to calculate. Check your inputs and try again.");
       }
 
-      trueRate.textContent = data.true_rate_display;
-      billAmount.textContent = data.bill_amount_display;
-      showResults();
+      this.trueRate.textContent = data.true_rate_display;
+      this.billAmount.textContent = data.bill_amount_display;
+      this.showResults();
     } catch (error) {
-      errorMessage.textContent = error.message;
-      showSection(errorSection);
-      hideResults();
+      this.showError(error.message);
     }
-  });
+  }
 
-  form.addEventListener("input", () => {
-    if (!form.checkValidity()) {
-      hideResults();
+  handleInput() {
+    if (!this.form.checkValidity()) {
+      this.hideResults();
     }
+  }
+
+  showResults() {
+    this.resultsContent.classList.remove("is-hidden");
+    this.resultNote.classList.remove("is-hidden");
+    this.resultsPlaceholder.classList.add("is-hidden");
+  }
+
+  hideResults() {
+    this.resultsContent.classList.add("is-hidden");
+    this.resultNote.classList.add("is-hidden");
+    this.resultsPlaceholder.classList.remove("is-hidden");
+  }
+
+  showError(message) {
+    this.errorMessage.textContent = message;
+    this.errorSection.hidden = false;
+    this.hideResults();
+  }
+
+  clearError() {
+    this.errorMessage.textContent = "";
+    this.errorSection.hidden = true;
+  }
+}
+
+function setupTabs() {
+  const buttons = document.querySelectorAll(".tab-button");
+  const panels = document.querySelectorAll(".tab-panel");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (button.classList.contains("is-active")) {
+        return;
+      }
+
+      const targetId = button.dataset.target;
+
+      buttons.forEach((btn) => {
+        const isActive = btn === button;
+        btn.classList.toggle("is-active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      panels.forEach((panel) => {
+        const isTarget = panel.id === targetId;
+        panel.classList.toggle("is-active", isTarget);
+        panel.toggleAttribute("hidden", !isTarget);
+      });
+    });
   });
-});
-
-function showSection(section) {
-  section.hidden = false;
-}
-
-function hideSection(section) {
-  section.hidden = true;
-}
-
-function showResults() {
-  resultsContent.classList.remove("is-hidden");
-  resultNote.classList.remove("is-hidden");
-  resultsPlaceholder.classList.add("is-hidden");
-}
-
-function hideResults() {
-  resultsContent.classList.add("is-hidden");
-  resultNote.classList.add("is-hidden");
-  resultsPlaceholder.classList.remove("is-hidden");
 }

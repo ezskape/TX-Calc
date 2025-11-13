@@ -39,15 +39,57 @@ class PlanInput:
             usage_kwh=usage_kwh,
         )
 
-    def calculate_true_rate_cents(self) -> float:
-        energy_component_dollars = (self.energy_rate_cents + self.tdu_rate_cents) / 100
-        fixed_component_dollars = (self.base_charge + self.base_delivery_charge) / self.usage_kwh
-        total_rate_dollars = energy_component_dollars + fixed_component_dollars
-        return total_rate_dollars * 100
+    def energy_charge_dollars(self) -> float:
+        return ((self.energy_rate_cents + self.tdu_rate_cents) / 100) * self.usage_kwh
+
+    def fixed_charge_dollars(self) -> float:
+        return self.base_charge + self.base_delivery_charge
 
     def calculate_bill_amount(self) -> float:
-        true_rate_dollars = self.calculate_true_rate_cents() / 100
-        return true_rate_dollars * self.usage_kwh
+        return self.energy_charge_dollars() + self.fixed_charge_dollars()
+
+    def calculate_true_rate_cents(self) -> float:
+        return (self.calculate_bill_amount() / self.usage_kwh) * 100
+
+
+@dataclass
+class PlanInputWithCredit(PlanInput):
+    usage_credit: float
+    credit_threshold_kwh: float
+
+    @classmethod
+    def from_json(cls, data: Dict[str, Any]) -> "PlanInputWithCredit":
+        base_plan = PlanInput.from_json(data)
+
+        try:
+            usage_credit = float(data["usage_credit"])
+            credit_threshold_kwh = float(data["credit_threshold_kwh"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("Invalid or missing credit data") from exc
+
+        if usage_credit < 0:
+            raise ValueError("Usage credit cannot be negative")
+
+        if credit_threshold_kwh < 0:
+            raise ValueError("Usage threshold cannot be negative")
+
+        return cls(
+            base_charge=base_plan.base_charge,
+            energy_rate_cents=base_plan.energy_rate_cents,
+            tdu_rate_cents=base_plan.tdu_rate_cents,
+            base_delivery_charge=base_plan.base_delivery_charge,
+            usage_kwh=base_plan.usage_kwh,
+            usage_credit=usage_credit,
+            credit_threshold_kwh=credit_threshold_kwh,
+        )
+
+    def calculate_bill_amount(self) -> float:
+        base_amount = super().calculate_bill_amount()
+        if self.usage_kwh >= self.credit_threshold_kwh:
+            adjusted_amount = base_amount - self.usage_credit
+        else:
+            adjusted_amount = base_amount
+        return max(adjusted_amount, 0.0)
 
 
 @app.route("/")
@@ -57,8 +99,16 @@ def index() -> str:
 
 @app.route("/api/calculate", methods=["POST"])
 def calculate() -> Any:
+    data = request.json or {}
+    plan_type = data.get("plan_type", "fixed_rate")
+
     try:
-        plan_input = PlanInput.from_json(request.json or {})
+        if plan_type == "fixed_rate_credit":
+            plan_input = PlanInputWithCredit.from_json(data)
+        elif plan_type == "fixed_rate":
+            plan_input = PlanInput.from_json(data)
+        else:
+            raise ValueError("Unsupported plan type")
     except ValueError as error:
         return jsonify({"error": str(error)}), 400
 

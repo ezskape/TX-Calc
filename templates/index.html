@@ -16,70 +16,260 @@
         </p>
       </header>
 
-      <form id="plan-form" novalidate>
-        <section class="card">
-          <h2>Enter the plan information</h2>
-          <div class="form-grid">
-            <label class="form-field">
-              <span>Base charge ($)</span>
-              <input type="number" id="base-charge" name="base_charge" min="0" step="0.01" required />
-            </label>
-            <label class="form-field">
-              <span>Energy rate (¢/kWh)</span>
-              <input type="number" id="energy-rate" name="energy_rate_cents" min="0" step="0.01" required />
-            </label>
-            <label class="form-field">
-              <span>CenterPoint delivery charge (¢/kWh)</span>
-              <input type="number" id="tdu-rate" name="tdu_rate_cents" min="0" step="0.01" required />
-            </label>
-            <label class="form-field">
-              <span>CenterPoint base delivery charge ($)</span>
+      <div class="tab-bar" role="tablist" aria-label="Plan options">
+        <button
+          class="tab-button is-active"
+          id="tab-fixed-rate"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-fixed-rate"
+          data-target="panel-fixed-rate"
+        >
+          Fixed Rate
+        </button>
+        <button
+          class="tab-button"
+          id="tab-fixed-rate-credit"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-fixed-rate-credit"
+          data-target="panel-fixed-rate-credit"
+        >
+          Fixed Rate with Credit
+        </button>
+      </div>
+
+      <section
+        class="tab-panel is-active"
+        id="panel-fixed-rate"
+        role="tabpanel"
+        aria-labelledby="tab-fixed-rate"
+      >
+        <form class="plan-form" data-plan-type="fixed_rate" novalidate>
+          <section class="card">
+            <div class="card-header">
+              <h2>Fixed Rate</h2>
+            </div>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="fixed-energy-rate"
+                  name="energy_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Charge ($)</span>
+                <input
+                  type="number"
+                  id="fixed-base-charge"
+                  name="base_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Delivery Charge (¢ per kWh)</span>
+                <input
+                  type="number"
+                  id="fixed-delivery-rate"
+                  name="tdu_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Delivery Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="fixed-base-delivery-charge"
+                  name="base_delivery_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Calculate your price per kWh and approximate bill amount</h2>
+            <div class="form-field usage-field">
+              <span>Enter your kWh usage</span>
               <input
                 type="number"
-                id="base-delivery-charge"
-                name="base_delivery_charge"
-                min="0"
-                step="0.01"
+                id="fixed-usage"
+                name="usage_kwh"
+                min="1"
+                step="1"
                 required
               />
-            </label>
-          </div>
-        </section>
-
-        <section class="card">
-          <h2>Calculate your price per kWh and approximate bill amount</h2>
-          <div class="form-field usage-field">
-            <span>Enter your kWh usage</span>
-            <input type="number" id="usage" name="usage_kwh" min="1" step="1" required />
-          </div>
-
-          <button type="submit" class="calculate-button">Calculate</button>
-        </section>
-
-        <section class="card" id="results">
-          <p class="results-placeholder" id="results-placeholder">
-            Enter all plan details and your kWh usage to see your true rate and estimated bill.
-          </p>
-          <div class="results-grid is-hidden" id="results-content">
-            <div>
-              <h3>True Rate Per kWh</h3>
-              <p class="result-value"><span id="true-rate">0.00</span> ¢/kWh</p>
             </div>
-            <div>
-              <h3>Approximate Bill Amount</h3>
-              <p class="result-value">$<span id="bill-amount">0.00</span></p>
-            </div>
-          </div>
-          <p class="result-note is-hidden" id="result-note">
-            True rate per kWh is calculated as ((energy rate + TDU rate) / 100) +
-            ((base charge + base delivery charge) / usage).
-          </p>
-        </section>
-      </form>
 
-      <section class="card error" id="error" hidden>
-        <h2>There was a problem with your calculation</h2>
-        <p id="error-message"></p>
+            <button type="submit" class="calculate-button">Calculate</button>
+          </section>
+
+          <section class="card results-card">
+            <p class="results-placeholder">
+              Enter all plan details and your kWh usage to see your true rate and estimated bill.
+            </p>
+            <div class="results-grid is-hidden">
+              <div>
+                <h3>True Rate Per kWh</h3>
+                <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
+              </div>
+              <div>
+                <h3>Approximate Bill Amount</h3>
+                <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
+              </div>
+            </div>
+            <p class="result-note is-hidden">
+              True rate per kWh is calculated as ((energy rate + delivery charge) / 100) +
+              ((base charge + base delivery charge) / usage).
+            </p>
+          </section>
+
+          <section class="card error-card" hidden>
+            <h2>There was a problem with your calculation</h2>
+            <p class="error-message"></p>
+          </section>
+        </form>
+      </section>
+
+      <section
+        class="tab-panel"
+        id="panel-fixed-rate-credit"
+        role="tabpanel"
+        aria-labelledby="tab-fixed-rate-credit"
+        hidden
+      >
+        <form class="plan-form" data-plan-type="fixed_rate_credit" novalidate>
+          <section class="card">
+            <div class="card-header">
+              <h2>Fixed Rate with Credit</h2>
+            </div>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="credit-energy-rate"
+                  name="energy_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Charge ($)</span>
+                <input
+                  type="number"
+                  id="credit-base-charge"
+                  name="base_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Delivery Charge (¢ per kWh)</span>
+                <input
+                  type="number"
+                  id="credit-delivery-rate"
+                  name="tdu_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Delivery Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="credit-base-delivery-charge"
+                  name="base_delivery_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Usage Credit ($)</span>
+                <input
+                  type="number"
+                  id="usage-credit"
+                  name="usage_credit"
+                  min="0"
+                  step="0.01"
+                  value="0"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Usage equal or more than (kWh)</span>
+                <input
+                  type="number"
+                  id="credit-threshold"
+                  name="credit_threshold_kwh"
+                  min="0"
+                  step="1"
+                  value="1000"
+                  required
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Calculate your price per kWh and approximate bill amount</h2>
+            <div class="form-field usage-field">
+              <span>Enter your kWh usage</span>
+              <input
+                type="number"
+                id="credit-usage"
+                name="usage_kwh"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+
+            <button type="submit" class="calculate-button">Calculate</button>
+          </section>
+
+          <section class="card results-card">
+            <p class="results-placeholder">
+              Enter all plan details and your kWh usage to see your true rate and estimated bill.
+            </p>
+            <div class="results-grid is-hidden">
+              <div>
+                <h3>True Rate Per kWh</h3>
+                <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
+              </div>
+              <div>
+                <h3>Approximate Bill Amount</h3>
+                <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
+              </div>
+            </div>
+            <p class="result-note is-hidden">
+              True rate per kWh subtracts the usage credit from the total charge when your usage
+              meets the entered kWh threshold.
+            </p>
+          </section>
+
+          <section class="card error-card" hidden>
+            <h2>There was a problem with your calculation</h2>
+            <p class="error-message"></p>
+          </section>
+        </form>
       </section>
     </main>
 
