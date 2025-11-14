@@ -23,12 +23,16 @@ class PlanCalculator {
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
     this.errorMessage = panel.querySelector(".error-message");
+    this.clearButton = form.querySelector(".clear-button");
 
     this.hideResults();
     this.clearError();
 
     this.form.addEventListener("submit", (event) => this.handleSubmit(event));
     this.form.addEventListener("input", () => this.handleInput());
+    if (this.clearButton) {
+      this.clearButton.addEventListener("click", () => this.handleClear());
+    }
   }
 
   async handleSubmit(event) {
@@ -88,6 +92,28 @@ class PlanCalculator {
   clearError() {
     this.errorMessage.textContent = "";
     this.errorSection.hidden = true;
+  }
+
+  handleClear() {
+    let preservedThresholdValue;
+    if (this.planType === "fixed_rate_credit") {
+      const thresholdInput = this.form.querySelector("#credit-threshold");
+      if (thresholdInput) {
+        preservedThresholdValue = thresholdInput.value;
+      }
+    }
+
+    this.form.reset();
+
+    if (this.planType === "fixed_rate_credit") {
+      const thresholdInput = this.form.querySelector("#credit-threshold");
+      if (thresholdInput && preservedThresholdValue !== undefined) {
+        thresholdInput.value = preservedThresholdValue;
+      }
+    }
+
+    this.hideResults();
+    this.clearError();
   }
 }
 
