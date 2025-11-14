@@ -65,7 +65,7 @@
                 />
               </label>
               <label class="form-field">
-                <span>Base Charge ($)</span>
+                <span>Base Charge ($ per billing cycle)</span>
                 <input
                   type="number"
                   id="fixed-base-charge"
@@ -87,7 +87,7 @@
                 />
               </label>
               <label class="form-field">
-                <span>Base Delivery Charge ($ per billing cycle)</span>
+                <span>Delivery Charge ($ per billing cycle)</span>
                 <input
                   type="number"
                   id="fixed-base-delivery-charge"
@@ -132,8 +132,8 @@
               </div>
             </div>
             <p class="result-note is-hidden">
-              True rate per kWh is calculated as ((energy rate + delivery charge) / 100) +
-              ((base charge + base delivery charge) / usage).
+              True rate per kWh is calculated using information entered, approximate bill
+              amount is calculated as price per kwh * kwh usage.
             </p>
           </section>
 
@@ -169,7 +169,7 @@
                 />
               </label>
               <label class="form-field">
-                <span>Base Charge ($)</span>
+                <span>Base Charge ($ per billing cycle)</span>
                 <input
                   type="number"
                   id="credit-base-charge"
@@ -191,7 +191,7 @@
                 />
               </label>
               <label class="form-field">
-                <span>Base Delivery Charge ($ per billing cycle)</span>
+                <span>Delivery Charge ($ per billing cycle)</span>
                 <input
                   type="number"
                   id="credit-base-delivery-charge"
@@ -242,7 +242,10 @@
               />
             </div>
 
-            <button type="submit" class="calculate-button">Calculate</button>
+            <div class="form-actions">
+              <button type="submit" class="calculate-button">Calculate</button>
+              <button type="button" class="clear-button">Clear</button>
+            </div>
           </section>
 
           <section class="card results-card">
