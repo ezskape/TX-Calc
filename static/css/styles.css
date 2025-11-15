@@ -98,16 +98,36 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   padding: 0.75rem;
   border: 1px solid #d2d6dc;
   border-radius: 8px;
   font-size: 1rem;
+  background-color: #ffffff;
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus {
   outline: 2px solid #0069ff;
   border-color: transparent;
+}
+
+.form-field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #52606d 50%),
+    linear-gradient(135deg, #52606d 50%, transparent 50%),
+    linear-gradient(to right, #d2d6dc, #d2d6dc);
+  background-position: calc(100% - 1.1rem) calc(0.9rem),
+    calc(100% - 0.75rem) calc(0.9rem), calc(100% - 2.5rem) 0.5rem;
+  background-size: 0.65rem 0.65rem, 0.65rem 0.65rem, 1px 60%;
+  background-repeat: no-repeat;
+  padding-right: 2.75rem;
+  color: inherit;
+}
+
+.tdu-card {
+  margin-bottom: 1.5rem;
 }
 
 .usage-field {
@@ -249,6 +269,15 @@ body {
     background-color: #243b53;
     border: 1px solid #52606d;
     color: inherit;
+  }
+
+  .form-field select {
+    background-color: #243b53;
+    border: 1px solid #52606d;
+    color: inherit;
+    background-image: linear-gradient(45deg, transparent 50%, #9aa5b1 50%),
+      linear-gradient(135deg, #9aa5b1 50%, transparent 50%),
+      linear-gradient(to right, #52606d, #52606d);
   }
 
   .result-value {
