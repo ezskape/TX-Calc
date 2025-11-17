@@ -181,7 +181,12 @@ function setupTduSelector() {
   select.addEventListener("change", () => {
     selectedTduKey = select.value;
 
-    if (!selectedTduKey || selectedTduKey === CUSTOM_OPTION_VALUE) {
+    if (!selectedTduKey) {
+      return;
+    }
+
+    if (selectedTduKey === CUSTOM_OPTION_VALUE) {
+      clearTduValuesFromAllPanels();
       return;
     }
 
@@ -224,6 +229,18 @@ function setupTduSelector() {
 
       if (baseInput) {
         baseInput.value = fees.base_delivery.toString();
+      }
+    });
+  }
+
+  function clearTduValuesFromAllPanels() {
+    Object.values(panelInputs).forEach(({ rateInput, baseInput }) => {
+      if (rateInput) {
+        rateInput.value = "";
+      }
+
+      if (baseInput) {
+        baseInput.value = "";
       }
     });
   }
