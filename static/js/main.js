@@ -38,6 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tduController = setupTduSelector();
 
+  const touButton = document.getElementById("touCalculateBtn");
+  if (touButton) {
+    touButton.addEventListener("click", calculateTimeOfUsePlan);
+  }
+
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
     const form = panel.querySelector(".plan-form");
@@ -155,7 +160,7 @@ class PlanCalculator {
 }
 
 function setupTduSelector() {
-  const select = document.getElementById("tdu-selector");
+  const select = document.getElementById("tduSelect");
   if (!select) {
     return {
       handleTabChange: () => {},
@@ -173,6 +178,10 @@ function setupTduSelector() {
     "panel-fixed-rate-credit": {
       rateInput: document.getElementById("credit-delivery-rate"),
       baseInput: document.getElementById("credit-base-delivery-charge"),
+    },
+    "tou-plan": {
+      rateInput: document.getElementById("touDeliveryRate"),
+      baseInput: document.getElementById("touBaseDeliveryCharge"),
     },
   };
 
@@ -304,4 +313,51 @@ function setupTabs(onTabChange) {
   });
 
   return activePanelId;
+}
+
+function getNumericValue(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) {
+    return 0;
+  }
+
+  const value = input.value.trim();
+  if (value === "") {
+    return 0;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function calculateTimeOfUsePlan() {
+  const onPeakRate = getNumericValue("touOnPeakRate");
+  const offPeakRate = getNumericValue("touOffPeakRate");
+  const baseCharge = getNumericValue("touBaseCharge");
+  const deliveryRate = getNumericValue("touDeliveryRate");
+  const baseDeliveryCharge = getNumericValue("touBaseDeliveryCharge");
+  const totalUsage = getNumericValue("touTotalUsage");
+  const freeUsage = getNumericValue("touFreeUsage");
+
+  const effectiveRateDisplay = document.getElementById("touEffectiveRate");
+  const approxBillDisplay = document.getElementById("touApproxBill");
+  if (!effectiveRateDisplay || !approxBillDisplay) {
+    return;
+  }
+
+  if (totalUsage <= 0) {
+    effectiveRateDisplay.textContent = "0.00 ¢/kWh";
+    approxBillDisplay.textContent = "$0.00";
+    return;
+  }
+
+  const onUsage = Math.max(totalUsage - freeUsage, 0);
+  const offUsage = Math.min(freeUsage, totalUsage);
+  const energyCost = (onUsage * onPeakRate + offUsage * offPeakRate) / 100;
+  const deliveryCost = (totalUsage * deliveryRate) / 100;
+  const totalBill = baseCharge + baseDeliveryCharge + energyCost + deliveryCost;
+  const effectiveRateCents = (totalBill / totalUsage) * 100;
+
+  effectiveRateDisplay.textContent = `${effectiveRateCents.toFixed(2)} ¢/kWh`;
+  approxBillDisplay.textContent = `$${totalBill.toFixed(2)}`;
 }
