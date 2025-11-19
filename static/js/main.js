@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   tduController = setupTduSelector();
 
   setupTouCalculator();
+  setupTieredPlanCalculator();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
@@ -179,6 +180,10 @@ function setupTduSelector() {
     "tou-plan": {
       rateInput: document.getElementById("touDeliveryRate"),
       baseInput: document.getElementById("touBaseDeliveryCharge"),
+    },
+    "tiered-panel": {
+      rateInput: document.getElementById("tieredDeliveryPerKwh"),
+      baseInput: document.getElementById("tieredDeliveryBaseFee"),
     },
   };
 
@@ -431,4 +436,111 @@ function setupTouCalculator() {
 
   hideResults();
   clearError();
+}
+
+function setupTieredPlanCalculator() {
+  const panel = document.getElementById("tiered-panel");
+  if (!panel) {
+    return;
+  }
+
+  const inputs = {
+    baseCharge: panel.querySelector("#tieredBaseCharge"),
+    usage: panel.querySelector("#tieredMonthlyUsage"),
+    tier1Limit: panel.querySelector("#tier1Limit"),
+    tier2Limit: panel.querySelector("#tier2Limit"),
+    tier1Rate: panel.querySelector("#tier1Rate"),
+    tier2Rate: panel.querySelector("#tier2Rate"),
+    tier3Rate: panel.querySelector("#tier3Rate"),
+    deliveryPerKwh: panel.querySelector("#tieredDeliveryPerKwh"),
+    deliveryBaseFee: panel.querySelector("#tieredDeliveryBaseFee"),
+  };
+
+  const calculateButton = panel.querySelector("#calculateTieredButton");
+  const resultsGrid = panel.querySelector("#tieredResultsGrid");
+  const placeholder = panel.querySelector("#tieredResultsPlaceholder");
+  const estimatedBillDisplay = panel.querySelector("#tieredEstimatedBill");
+  const effectiveRateDisplay = panel.querySelector("#tieredEffectiveRate");
+  const errorDisplay = panel.querySelector("#tieredError");
+
+  const hideResults = () => {
+    resultsGrid?.classList.add("is-hidden");
+    placeholder?.classList.remove("is-hidden");
+  };
+
+  const showResults = () => {
+    resultsGrid?.classList.remove("is-hidden");
+    placeholder?.classList.add("is-hidden");
+  };
+
+  const setError = (message) => {
+    if (!errorDisplay) {
+      return;
+    }
+    errorDisplay.textContent = message;
+    errorDisplay.hidden = !message;
+  };
+
+  const parseNumber = (input) => {
+    if (!input || input.value.trim() === "") {
+      return 0;
+    }
+    const value = Number(input.value);
+    return Number.isFinite(value) ? value : 0;
+  };
+
+  calculateButton?.addEventListener("click", () => {
+    setError("");
+
+    const usage = parseNumber(inputs.usage);
+    if (usage <= 0) {
+      hideResults();
+      setError("Monthly usage must be greater than zero.");
+      return;
+    }
+
+    const baseCharge = parseNumber(inputs.baseCharge);
+    const tier1Limit = parseNumber(inputs.tier1Limit);
+    const tier2Limit = parseNumber(inputs.tier2Limit);
+    const tier1Rate = parseNumber(inputs.tier1Rate);
+    const tier2Rate = parseNumber(inputs.tier2Rate);
+    const tier3Rate = parseNumber(inputs.tier3Rate);
+    const deliveryPerKwh = parseNumber(inputs.deliveryPerKwh);
+    const deliveryBaseFee = parseNumber(inputs.deliveryBaseFee);
+
+    const tier1Kwh = Math.min(usage, tier1Limit);
+    const tier2Kwh = Math.max(Math.min(usage, tier2Limit) - tier1Limit, 0);
+    const tier3Kwh = Math.max(usage - tier2Limit, 0);
+
+    const tier1Cost = (tier1Kwh * tier1Rate) / 100;
+    const tier2Cost = (tier2Kwh * tier2Rate) / 100;
+    const tier3Cost = (tier3Kwh * tier3Rate) / 100;
+
+    const energyCost = baseCharge + tier1Cost + tier2Cost + tier3Cost;
+    const deliveryCost = deliveryBaseFee + (usage * deliveryPerKwh) / 100;
+    const totalBill = energyCost + deliveryCost;
+    const effectiveRate = (totalBill / usage) * 100;
+
+    if (estimatedBillDisplay) {
+      estimatedBillDisplay.textContent = totalBill.toFixed(2);
+    }
+
+    if (effectiveRateDisplay) {
+      effectiveRateDisplay.textContent = Number.isFinite(effectiveRate)
+        ? effectiveRate.toFixed(2)
+        : "0.00";
+    }
+
+    showResults();
+  });
+
+  Object.values(inputs).forEach((input) => {
+    input?.addEventListener("input", () => {
+      hideResults();
+      setError("");
+    });
+  });
+
+  hideResults();
+  setError("");
 }

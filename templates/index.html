@@ -50,6 +50,17 @@
         >
           Time-of-Use (Free Nights/Weekends)
         </button>
+        <button
+          class="tab-button"
+          id="tiered-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="tiered-panel"
+          data-target="tiered-panel"
+        >
+          Tiered Plans
+        </button>
       </div>
 
       <section class="card tdu-card" aria-label="Transmission and Distribution Utility selector">
@@ -361,6 +372,93 @@
         <section class="card error-card" hidden>
           <h2>There was a problem with your calculation</h2>
           <p class="error-message"></p>
+        </section>
+      </section>
+
+      <section
+        class="tab-panel"
+        id="tiered-panel"
+        role="tabpanel"
+        aria-labelledby="tiered-tab"
+        hidden
+      >
+        <section class="card">
+          <div class="card-header">
+            <h2>Tiered Plans</h2>
+          </div>
+          <div class="form-grid">
+            <label class="form-field" for="tieredBaseCharge">
+              <span>Base Charge ($/month)</span>
+              <input type="number" id="tieredBaseCharge" min="0" step="0.01" />
+            </label>
+            <label class="form-field" for="tieredMonthlyUsage">
+              <span>Monthly Usage (kWh)</span>
+              <input type="number" id="tieredMonthlyUsage" min="0" step="1" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Energy tiers</h2>
+          <div class="form-grid">
+            <label class="form-field" for="tier1Limit">
+              <span>Tier 1: usage up to (kWh)</span>
+              <input type="number" id="tier1Limit" min="0" step="1" />
+            </label>
+            <label class="form-field" for="tier1Rate">
+              <span>Tier 1 Rate (¢/kWh)</span>
+              <input type="number" id="tier1Rate" min="0" step="0.01" />
+            </label>
+            <label class="form-field" for="tier2Limit">
+              <span>Tier 2: usage up to (kWh)</span>
+              <input type="number" id="tier2Limit" min="0" step="1" />
+            </label>
+            <label class="form-field" for="tier2Rate">
+              <span>Tier 2 Rate (¢/kWh)</span>
+              <input type="number" id="tier2Rate" min="0" step="0.01" />
+            </label>
+            <label class="form-field" for="tier3Rate">
+              <span>Tier 3 Rate (¢/kWh) for all usage above Tier 2 limit</span>
+              <input type="number" id="tier3Rate" min="0" step="0.01" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Delivery charges</h2>
+          <div class="form-grid">
+            <label class="form-field" for="tieredDeliveryPerKwh">
+              <span>Delivery Charge (¢/kWh)</span>
+              <input type="number" id="tieredDeliveryPerKwh" min="0" step="0.01" readonly />
+            </label>
+            <label class="form-field" for="tieredDeliveryBaseFee">
+              <span>Delivery Base Fee ($/month)</span>
+              <input type="number" id="tieredDeliveryBaseFee" min="0" step="0.01" readonly />
+            </label>
+          </div>
+        </section>
+
+        <section class="card results-card">
+          <p class="results-placeholder" id="tieredResultsPlaceholder">
+            Enter plan details, tiers, and your usage to calculate an estimated bill and
+            effective rate.
+          </p>
+          <div class="results-grid is-hidden" id="tieredResultsGrid">
+            <div>
+              <h3>Estimated Monthly Bill</h3>
+              <p class="result-value">$<span id="tieredEstimatedBill">0.00</span></p>
+            </div>
+            <div>
+              <h3>Effective Rate</h3>
+              <p class="result-value"><span id="tieredEffectiveRate">0.00</span> ¢/kWh</p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="calculate-button" id="calculateTieredButton">
+              Calculate Tiered Plan
+            </button>
+          </div>
+          <p class="error-message" id="tieredError" hidden></p>
         </section>
       </section>
     </main>
