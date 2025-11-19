@@ -329,10 +329,13 @@ function setupTouCalculator() {
   };
 
   const calculateButton = panel.querySelector("#touCalculateBtn");
+  const clearButton = panel.querySelector("#touClearBtn");
   const effectiveRateDisplay = panel.querySelector("#touEffectiveRate");
   const approxBillDisplay = panel.querySelector("#touApproxBill");
   const resultsGrid = panel.querySelector(".results-grid");
   const placeholder = panel.querySelector(".results-placeholder");
+  const errorSection = panel.querySelector(".error-card");
+  const errorMessage = panel.querySelector(".error-message");
 
   if (
     !calculateButton ||
@@ -357,15 +360,34 @@ function setupTouCalculator() {
   const inputsHaveValues = () =>
     Object.values(inputs).every((input) => input && input.value.trim() !== "");
 
+  const showError = (message) => {
+    if (!errorSection || !errorMessage) {
+      return;
+    }
+    errorMessage.textContent = message;
+    errorSection.hidden = false;
+  };
+
+  const clearError = () => {
+    if (!errorSection || !errorMessage) {
+      return;
+    }
+    errorMessage.textContent = "";
+    errorSection.hidden = true;
+  };
+
   calculateButton.addEventListener("click", () => {
+    clearError();
     if (!inputsHaveValues()) {
       hideResults();
+      showError("Invalid or missing input data");
       return;
     }
 
     const totalUsage = Number(inputs.totalUsage.value);
     if (!Number.isFinite(totalUsage) || totalUsage <= 0) {
       hideResults();
+      showError("Usage must be greater than zero");
       return;
     }
 
@@ -386,12 +408,27 @@ function setupTouCalculator() {
     effectiveRateDisplay.textContent = effectiveRateCents.toFixed(2);
     approxBillDisplay.textContent = totalBill.toFixed(2);
 
+    clearError();
     showResults();
   });
 
   Object.values(inputs).forEach((input) => {
-    input?.addEventListener("input", hideResults);
+    input?.addEventListener("input", () => {
+      hideResults();
+      clearError();
+    });
+  });
+
+  clearButton?.addEventListener("click", () => {
+    Object.values(inputs).forEach((input) => {
+      if (input) {
+        input.value = "";
+      }
+    });
+    hideResults();
+    clearError();
   });
 
   hideResults();
+  clearError();
 }
