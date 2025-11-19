@@ -318,7 +318,7 @@
               <input type="number" id="touDeliveryRate" min="0" step="0.01" />
             </label>
             <label class="form-field">
-              <span>Base Delivery Charge ($ per billing cycle)</span>
+              <span>Delivery Charge ($ per billing cycle)</span>
               <input type="number" id="touBaseDeliveryCharge" min="0" step="0.01" />
             </label>
           </div>
@@ -342,14 +342,17 @@
         </section>
 
         <section class="card results-card">
-          <div class="results-grid">
+          <p class="results-placeholder">
+            Enter all plan details and your kWh usage to see your true rate and estimated bill.
+          </p>
+          <div class="results-grid is-hidden">
             <div>
               <h3>True Rate Per kWh</h3>
-              <p class="result-value"><span id="touEffectiveRate">0.00 ¢/kWh</span></p>
+              <p class="result-value"><span id="touEffectiveRate">0.00</span> ¢/kWh</p>
             </div>
             <div>
               <h3>Approximate Bill Amount</h3>
-              <p class="result-value"><span id="touApproxBill">$0.00</span></p>
+              <p class="result-value">$<span id="touApproxBill">0.00</span></p>
             </div>
           </div>
         </section>

@@ -38,10 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tduController = setupTduSelector();
 
-  const touButton = document.getElementById("touCalculateBtn");
-  if (touButton) {
-    touButton.addEventListener("click", calculateTimeOfUsePlan);
-  }
+  setupTouCalculator();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
@@ -315,49 +312,86 @@ function setupTabs(onTabChange) {
   return activePanelId;
 }
 
-function getNumericValue(inputId) {
-  const input = document.getElementById(inputId);
-  if (!input) {
-    return 0;
-  }
-
-  const value = input.value.trim();
-  if (value === "") {
-    return 0;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function calculateTimeOfUsePlan() {
-  const onPeakRate = getNumericValue("touOnPeakRate");
-  const offPeakRate = getNumericValue("touOffPeakRate");
-  const baseCharge = getNumericValue("touBaseCharge");
-  const deliveryRate = getNumericValue("touDeliveryRate");
-  const baseDeliveryCharge = getNumericValue("touBaseDeliveryCharge");
-  const totalUsage = getNumericValue("touTotalUsage");
-  const freeUsage = getNumericValue("touFreeUsage");
-
-  const effectiveRateDisplay = document.getElementById("touEffectiveRate");
-  const approxBillDisplay = document.getElementById("touApproxBill");
-  if (!effectiveRateDisplay || !approxBillDisplay) {
+function setupTouCalculator() {
+  const panel = document.getElementById("tou-plan");
+  if (!panel) {
     return;
   }
 
-  if (totalUsage <= 0) {
-    effectiveRateDisplay.textContent = "0.00 ¢/kWh";
-    approxBillDisplay.textContent = "$0.00";
+  const inputs = {
+    onPeakRate: panel.querySelector("#touOnPeakRate"),
+    offPeakRate: panel.querySelector("#touOffPeakRate"),
+    baseCharge: panel.querySelector("#touBaseCharge"),
+    deliveryRate: panel.querySelector("#touDeliveryRate"),
+    baseDeliveryCharge: panel.querySelector("#touBaseDeliveryCharge"),
+    totalUsage: panel.querySelector("#touTotalUsage"),
+    freeUsage: panel.querySelector("#touFreeUsage"),
+  };
+
+  const calculateButton = panel.querySelector("#touCalculateBtn");
+  const effectiveRateDisplay = panel.querySelector("#touEffectiveRate");
+  const approxBillDisplay = panel.querySelector("#touApproxBill");
+  const resultsGrid = panel.querySelector(".results-grid");
+  const placeholder = panel.querySelector(".results-placeholder");
+
+  if (
+    !calculateButton ||
+    !effectiveRateDisplay ||
+    !approxBillDisplay ||
+    !resultsGrid ||
+    !placeholder
+  ) {
     return;
   }
 
-  const onUsage = Math.max(totalUsage - freeUsage, 0);
-  const offUsage = Math.min(freeUsage, totalUsage);
-  const energyCost = (onUsage * onPeakRate + offUsage * offPeakRate) / 100;
-  const deliveryCost = (totalUsage * deliveryRate) / 100;
-  const totalBill = baseCharge + baseDeliveryCharge + energyCost + deliveryCost;
-  const effectiveRateCents = (totalBill / totalUsage) * 100;
+  const hideResults = () => {
+    resultsGrid.classList.add("is-hidden");
+    placeholder.classList.remove("is-hidden");
+  };
 
-  effectiveRateDisplay.textContent = `${effectiveRateCents.toFixed(2)} ¢/kWh`;
-  approxBillDisplay.textContent = `$${totalBill.toFixed(2)}`;
+  const showResults = () => {
+    resultsGrid.classList.remove("is-hidden");
+    placeholder.classList.add("is-hidden");
+  };
+
+  const inputsHaveValues = () =>
+    Object.values(inputs).every((input) => input && input.value.trim() !== "");
+
+  calculateButton.addEventListener("click", () => {
+    if (!inputsHaveValues()) {
+      hideResults();
+      return;
+    }
+
+    const totalUsage = Number(inputs.totalUsage.value);
+    if (!Number.isFinite(totalUsage) || totalUsage <= 0) {
+      hideResults();
+      return;
+    }
+
+    const onPeakRate = Number(inputs.onPeakRate.value);
+    const offPeakRate = Number(inputs.offPeakRate.value);
+    const baseCharge = Number(inputs.baseCharge.value);
+    const deliveryRate = Number(inputs.deliveryRate.value);
+    const baseDeliveryCharge = Number(inputs.baseDeliveryCharge.value);
+    const freeUsage = Number(inputs.freeUsage.value);
+
+    const onUsage = Math.max(totalUsage - freeUsage, 0);
+    const offUsage = Math.min(freeUsage, totalUsage);
+    const energyCost = (onUsage * onPeakRate + offUsage * offPeakRate) / 100;
+    const deliveryCost = (totalUsage * deliveryRate) / 100;
+    const totalBill = baseCharge + baseDeliveryCharge + energyCost + deliveryCost;
+    const effectiveRateCents = (totalBill / totalUsage) * 100;
+
+    effectiveRateDisplay.textContent = effectiveRateCents.toFixed(2);
+    approxBillDisplay.textContent = totalBill.toFixed(2);
+
+    showResults();
+  });
+
+  Object.values(inputs).forEach((input) => {
+    input?.addEventListener("input", hideResults);
+  });
+
+  hideResults();
 }
