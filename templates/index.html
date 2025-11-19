@@ -39,12 +39,23 @@
         >
           Fixed Rate with Credit
         </button>
+        <button
+          class="tab-button"
+          id="tab-tou-plan"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="tou-plan"
+          data-target="tou-plan"
+        >
+          Time-of-Use (Free Nights/Weekends)
+        </button>
       </div>
 
       <section class="card tdu-card" aria-label="Transmission and Distribution Utility selector">
-        <label class="form-field" for="tdu-selector">
+        <label class="form-field" for="tduSelect">
           <span>Select Your TDU</span>
-          <select id="tdu-selector" class="tdu-select" required></select>
+          <select id="tduSelect" class="tdu-select" required></select>
         </label>
       </section>
 
@@ -282,6 +293,66 @@
             <p class="error-message"></p>
           </section>
         </form>
+      </section>
+
+      <section class="tab-panel" id="tou-plan" role="tabpanel" aria-labelledby="tab-tou-plan" hidden>
+        <section class="card">
+          <div class="card-header">
+            <h2>Time-of-Use (Free Nights/Weekends)</h2>
+          </div>
+          <div class="form-grid">
+            <label class="form-field">
+              <span>On-Peak Energy Rate (¢/kWh)</span>
+              <input type="number" id="touOnPeakRate" min="0" step="0.01" />
+            </label>
+            <label class="form-field">
+              <span>Off-Peak Energy Rate (¢/kWh)</span>
+              <input type="number" id="touOffPeakRate" min="0" step="0.01" />
+            </label>
+            <label class="form-field">
+              <span>Base Charge ($ per billing cycle)</span>
+              <input type="number" id="touBaseCharge" min="0" step="0.01" />
+            </label>
+            <label class="form-field">
+              <span>Delivery Charge (¢ per kWh)</span>
+              <input type="number" id="touDeliveryRate" min="0" step="0.01" />
+            </label>
+            <label class="form-field">
+              <span>Base Delivery Charge ($ per billing cycle)</span>
+              <input type="number" id="touBaseDeliveryCharge" min="0" step="0.01" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Your usage pattern</h2>
+          <div class="form-grid">
+            <label class="form-field">
+              <span>Total Monthly Usage (kWh)</span>
+              <input type="number" id="touTotalUsage" min="0" step="1" />
+            </label>
+            <label class="form-field">
+              <span>Usage During Free Period (kWh)</span>
+              <input type="number" id="touFreeUsage" min="0" step="1" />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="calculate-button" id="touCalculateBtn">Calculate</button>
+          </div>
+        </section>
+
+        <section class="card results-card">
+          <div class="results-grid">
+            <div>
+              <h3>True Rate Per kWh</h3>
+              <p class="result-value"><span id="touEffectiveRate">0.00 ¢/kWh</span></p>
+            </div>
+            <div>
+              <h3>Approximate Bill Amount</h3>
+              <p class="result-value"><span id="touApproxBill">$0.00</span></p>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
 
