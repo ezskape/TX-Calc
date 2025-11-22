@@ -57,6 +57,9 @@
           <span>Select Your TDU</span>
           <select id="tduSelect" class="tdu-select" required></select>
         </label>
+        <p class="helper-text tdu-helper-text is-hidden">
+          TDU delivery charges do NOT apply during the free usage period.
+        </p>
       </section>
 
       <section
@@ -333,6 +336,7 @@
             </label>
             <label class="form-field">
               <span>Usage During Free Period (kWh)</span>
+              <span class="helper-text">Free nights/weekends usage should be entered here.</span>
               <input type="number" id="touFreeUsage" min="0" step="1" />
             </label>
           </div>
