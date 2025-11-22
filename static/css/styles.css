@@ -98,6 +98,13 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.helper-text {
+  margin: 0.1rem 0 0.4rem;
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
 .form-field input,
 .form-field select {
   padding: 0.75rem;

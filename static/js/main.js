@@ -30,13 +30,19 @@ const tduFees = {
 
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
-  setupTabs((panelId) => {
+  const activePanelId = setupTabs((panelId) => {
     if (tduController) {
       tduController.handleTabChange(panelId);
     }
   });
 
   tduController = setupTduSelector();
+
+  const initialPanelId =
+    document.querySelector(".tab-panel.is-active")?.id || activePanelId;
+  if (tduController && initialPanelId) {
+    tduController.handleTabChange(initialPanelId);
+  }
 
   setupTouCalculator();
 
@@ -182,6 +188,8 @@ function setupTduSelector() {
     },
   };
 
+  const tduHelperText = document.querySelector(".tdu-helper-text");
+
   populateOptions();
 
   select.addEventListener("change", () => {
@@ -252,22 +260,9 @@ function setupTduSelector() {
   }
 
   function handleTabChange(newPanelId) {
-    if (!selectedTduKey || selectedTduKey === CUSTOM_OPTION_VALUE) {
-      return;
-    }
-
-    const inputs = panelInputs[newPanelId];
-    const fees = tduFees[selectedTduKey];
-    if (!inputs || !fees) {
-      return;
-    }
-
-    if (inputs.rateInput) {
-      inputs.rateInput.value = fees.delivery_per_kwh.toString();
-    }
-
-    if (inputs.baseInput) {
-      inputs.baseInput.value = fees.base_delivery.toString();
+    const showHelper = newPanelId === "tou-plan";
+    if (tduHelperText) {
+      tduHelperText.classList.toggle("is-hidden", !showHelper);
     }
   }
 
@@ -396,17 +391,20 @@ function setupTouCalculator() {
     const baseCharge = Number(inputs.baseCharge.value);
     const deliveryRate = Number(inputs.deliveryRate.value);
     const baseDeliveryCharge = Number(inputs.baseDeliveryCharge.value);
-    const freeUsage = Number(inputs.freeUsage.value);
+    const freeUsage = Math.max(Number(inputs.freeUsage.value), 0);
 
-    const onUsage = Math.max(totalUsage - freeUsage, 0);
-    const offUsage = Math.min(freeUsage, totalUsage);
-    const energyCost = (onUsage * onPeakRate + offUsage * offPeakRate) / 100;
-    const deliveryCost = (totalUsage * deliveryRate) / 100;
-    const totalBill = baseCharge + baseDeliveryCharge + energyCost + deliveryCost;
-    const effectiveRateCents = (totalBill / totalUsage) * 100;
+    const adjustedFreeUsage = Math.min(freeUsage, totalUsage);
+    const paidUsage = Math.max(totalUsage - adjustedFreeUsage, 0);
+
+    const energyCost =
+      (onPeakRate / 100) * paidUsage + (offPeakRate / 100) * adjustedFreeUsage;
+
+    const tduCost = (deliveryRate / 100) * paidUsage + baseDeliveryCharge;
+    const billAmount = baseCharge + energyCost + tduCost;
+    const effectiveRateCents = (billAmount / totalUsage) * 100;
 
     effectiveRateDisplay.textContent = effectiveRateCents.toFixed(2);
-    approxBillDisplay.textContent = totalBill.toFixed(2);
+    approxBillDisplay.textContent = billAmount.toFixed(2);
 
     clearError();
     showResults();
