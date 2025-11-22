@@ -3,27 +3,27 @@
 const tduFees = {
   CenterPoint: {
     name: "CenterPoint",
-    delivery_per_kwh: 4.639,
-    base_delivery: 4.39,
+    delivery_per_kwh: 5.9027,
+    base_delivery: 4.9,
   },
   Oncor: {
     name: "Oncor",
-    delivery_per_kwh: 3.974,
-    base_delivery: 3.42,
+    delivery_per_kwh: 5.6032,
+    base_delivery: 4.23,
   },
   "AEP Texas North": {
     name: "AEP Texas North",
-    delivery_per_kwh: 4.123,
-    base_delivery: 4.79,
+    delivery_per_kwh: 5.9318,
+    base_delivery: 3.24,
   },
   "AEP Texas Central": {
     name: "AEP Texas Central",
-    delivery_per_kwh: 3.998,
-    base_delivery: 4.79,
+    delivery_per_kwh: 6.0648,
+    base_delivery: 3.24,
   },
   TNMP: {
     name: "TNMP",
-    delivery_per_kwh: 4.011,
+    delivery_per_kwh: 7.2055,
     base_delivery: 7.85,
   },
 };
