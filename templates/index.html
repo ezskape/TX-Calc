@@ -305,12 +305,25 @@
           </div>
           <div class="form-grid">
             <label class="form-field">
-              <span>On-Peak Energy Rate (¢/kWh)</span>
-              <input type="number" id="touOnPeakRate" min="0" step="0.01" />
+              <span>Energy Rate (¢/kWh)</span>
+              <input
+                type="number"
+                id="touOnPeakRate"
+                min="0"
+                step="0.01"
+                placeholder="Rate paid during NON-free hours"
+              />
             </label>
             <label class="form-field">
-              <span>Off-Peak Energy Rate (¢/kWh)</span>
-              <input type="number" id="touOffPeakRate" min="0" step="0.01" />
+              <span>Free Hours Rate (¢/kWh)</span>
+              <input
+                type="number"
+                id="touOffPeakRate"
+                min="0"
+                step="0.01"
+                placeholder="0¢ for most plans because nights/weekends are free"
+                value="0"
+              />
             </label>
             <label class="form-field">
               <span>Base Charge ($ per billing cycle)</span>
@@ -335,13 +348,13 @@
               <input type="number" id="touTotalUsage" min="0" step="1" />
             </label>
             <label class="form-field">
-              <span>Usage During Free Period (kWh)</span>
+              <span>Free Hours Usage (kWh)</span>
               <input
                 type="number"
                 id="touFreeUsage"
                 min="0"
                 step="1"
-                placeholder="Free nights/weekends usage should be entered here."
+                placeholder="How many kWh you use during free nights/weekends"
               />
             </label>
           </div>
