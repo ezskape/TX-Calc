@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupTouCalculator();
+  setupTieredPlanForm();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
@@ -182,6 +183,10 @@ function setupTduSelector() {
       rateInput: document.getElementById("credit-delivery-rate"),
       baseInput: document.getElementById("credit-base-delivery-charge"),
     },
+    "panel-tiered-plan": {
+      rateInput: document.getElementById("tiered-delivery-rate"),
+      baseInput: document.getElementById("tiered-base-delivery-charge"),
+    },
     "tou-plan": {
       rateInput: document.getElementById("touDeliveryRate"),
       baseInput: document.getElementById("touBaseDeliveryCharge"),
@@ -305,6 +310,35 @@ function setupTabs(onTabChange) {
   });
 
   return activePanelId;
+}
+
+function setupTieredPlanForm() {
+  const panel = document.getElementById("panel-tiered-plan");
+  if (!panel) {
+    return;
+  }
+
+  const tier1FlatFee = panel.querySelector("#tiered-tier1-flat-fee");
+  const tier1Limit = panel.querySelector("#tiered-tier1-limit");
+  const clearButton = panel.querySelector(".clear-button");
+
+  const validateTier1Limit = () => {
+    if (!tier1Limit) {
+      return;
+    }
+
+    if (tier1FlatFee && tier1FlatFee.value !== "" && tier1Limit.value === "") {
+      tier1Limit.setCustomValidity("Enter the Tier 1 limit when using flat fees.");
+    } else {
+      tier1Limit.setCustomValidity("");
+    }
+  };
+
+  tier1FlatFee?.addEventListener("input", validateTier1Limit);
+  tier1Limit?.addEventListener("input", validateTier1Limit);
+  clearButton?.addEventListener("click", validateTier1Limit);
+
+  validateTier1Limit();
 }
 
 function setupTouCalculator() {

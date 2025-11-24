@@ -41,6 +41,17 @@
         </button>
         <button
           class="tab-button"
+          id="tab-tiered-plan"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-tiered-plan"
+          data-target="panel-tiered-plan"
+        >
+          Tiered Plans
+        </button>
+        <button
+          class="tab-button"
           id="tab-tou-plan"
           type="button"
           role="tab"
@@ -288,6 +299,187 @@
             <p class="result-note is-hidden">
               True rate per kWh subtracts the usage credit from the total charge when your usage
               meets the entered kWh threshold.
+            </p>
+          </section>
+
+          <section class="card error-card" hidden>
+            <h2>There was a problem with your calculation</h2>
+            <p class="error-message"></p>
+          </section>
+        </form>
+      </section>
+
+      <section
+        class="tab-panel"
+        id="panel-tiered-plan"
+        role="tabpanel"
+        aria-labelledby="tab-tiered-plan"
+        hidden
+      >
+        <form class="plan-form" data-plan-type="tiered_plan" novalidate>
+          <section class="card">
+            <div class="card-header">
+              <h2>Tiered Plans</h2>
+            </div>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Base Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="tiered-base-charge"
+                  name="base_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Delivery Charge (¢ per kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-delivery-rate"
+                  name="tdu_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Delivery Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="tiered-base-delivery-charge"
+                  name="base_delivery_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 1 Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-tier1-rate"
+                  name="tier1_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 2 Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-tier2-rate"
+                  name="tier2_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 3 Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-tier3-rate"
+                  name="tier3_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 2 Usage Limit (kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-tier2-limit"
+                  name="tier2_limit"
+                  min="0"
+                  step="1"
+                  required
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <h2>Flat Tier Fee Rules (Optional)</h2>
+            </div>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Tier 1 Flat Fee ($)</span>
+                <input
+                  type="number"
+                  id="tiered-tier1-flat-fee"
+                  name="tier1_flat_fee"
+                  step="0.01"
+                  min="0"
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 1 applies when usage is BELOW (kWh)</span>
+                <input
+                  type="number"
+                  id="tiered-tier1-limit"
+                  name="tier1_limit"
+                  min="0"
+                  step="1"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Tier 2 Flat Fee ($)</span>
+                <input
+                  type="number"
+                  id="tiered-tier2-flat-fee"
+                  name="tier2_flat_fee"
+                  step="0.01"
+                  value="0"
+                />
+              </label>
+            </div>
+            <p class="helper-text">
+              Tier 2 applies when usage is ABOVE OR EQUAL TO Tier 1 limit.
+            </p>
+          </section>
+
+          <section class="card">
+            <h2>Calculate your price per kWh and approximate bill amount</h2>
+            <div class="form-field usage-field">
+              <span>Enter your kWh usage</span>
+              <input
+                type="number"
+                id="tiered-usage"
+                name="usage_kwh"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="calculate-button">Calculate</button>
+              <button type="button" class="clear-button">Clear</button>
+            </div>
+          </section>
+
+          <section class="card results-card">
+            <p class="results-placeholder">
+              Enter all plan details and your kWh usage to see your true rate and estimated bill.
+            </p>
+            <div class="results-grid is-hidden">
+              <div>
+                <h3>True Rate Per kWh</h3>
+                <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
+              </div>
+              <div>
+                <h3>Approximate Bill Amount</h3>
+                <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
+              </div>
+            </div>
+            <p class="result-note is-hidden">
+              True rate per kWh is calculated using the tiered rate and flat tier details you enter.
             </p>
           </section>
 
