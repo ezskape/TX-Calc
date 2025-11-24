@@ -5,6 +5,7 @@ from typing import Any, Dict
 
 from flask import Flask, jsonify, render_template, request
 
+from tiered_plan import TieredPlanInput, calculateTieredPlan
 
 app = Flask(__name__)
 
@@ -105,15 +106,21 @@ def calculate() -> Any:
     try:
         if plan_type == "fixed_rate_credit":
             plan_input = PlanInputWithCredit.from_json(data)
+            true_rate_cents = round(plan_input.calculate_true_rate_cents(), 2)
+            bill_amount = round(plan_input.calculate_bill_amount(), 2)
         elif plan_type == "fixed_rate":
             plan_input = PlanInput.from_json(data)
+            true_rate_cents = round(plan_input.calculate_true_rate_cents(), 2)
+            bill_amount = round(plan_input.calculate_bill_amount(), 2)
+        elif plan_type == "tiered_plan":
+            plan_input = TieredPlanInput.from_json(data)
+            calculation = calculateTieredPlan(plan_input)
+            true_rate_cents = round(calculation.effectiveRateCents, 2)
+            bill_amount = round(calculation.totalCost, 2)
         else:
             raise ValueError("Unsupported plan type")
     except ValueError as error:
         return jsonify({"error": str(error)}), 400
-
-    true_rate_cents = round(plan_input.calculate_true_rate_cents(), 2)
-    bill_amount = round(plan_input.calculate_bill_amount(), 2)
 
     return jsonify(
         {
