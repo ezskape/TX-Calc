@@ -174,6 +174,9 @@ function setupTduSelector() {
   const CUSTOM_OPTION_VALUE = "custom";
   let selectedTduKey = "";
 
+  const globalRateInput = document.getElementById("tdu-delivery-rate");
+  const globalBaseInput = document.getElementById("tdu-base-delivery-charge");
+
   const panelInputs = {
     "panel-fixed-rate": {
       rateInput: document.getElementById("fixed-delivery-rate"),
@@ -212,6 +215,9 @@ function setupTduSelector() {
     applyTduValuesToAllPanels();
   });
 
+  globalRateInput?.addEventListener("input", syncGlobalToPanels);
+  globalBaseInput?.addEventListener("input", syncGlobalToPanels);
+
   function populateOptions() {
     select.innerHTML = "";
 
@@ -241,25 +247,44 @@ function setupTduSelector() {
       return;
     }
 
-    Object.values(panelInputs).forEach(({ rateInput, baseInput }) => {
-      if (rateInput) {
-        rateInput.value = fees.delivery_per_kwh.toString();
-      }
+    if (globalRateInput) {
+      globalRateInput.value = fees.delivery_per_kwh.toString();
+    }
 
-      if (baseInput) {
-        baseInput.value = fees.base_delivery.toString();
-      }
-    });
+    if (globalBaseInput) {
+      globalBaseInput.value = fees.base_delivery.toString();
+    }
+
+    syncGlobalToPanels();
   }
 
   function clearTduValuesFromAllPanels() {
+    if (globalRateInput) {
+      globalRateInput.value = "";
+    }
+
+    if (globalBaseInput) {
+      globalBaseInput.value = "";
+    }
+
+    syncGlobalToPanels();
+  }
+
+  function syncGlobalToPanels() {
+    const rateValue = globalRateInput?.value ?? "";
+    const baseValue = globalBaseInput?.value ?? "";
+
     Object.values(panelInputs).forEach(({ rateInput, baseInput }) => {
       if (rateInput) {
-        rateInput.value = "";
+        rateInput.value = rateValue;
+        rateInput.defaultValue = rateValue;
+        rateInput.dispatchEvent(new Event("input", { bubbles: true }));
       }
 
       if (baseInput) {
-        baseInput.value = "";
+        baseInput.value = baseValue;
+        baseInput.defaultValue = baseValue;
+        baseInput.dispatchEvent(new Event("input", { bubbles: true }));
       }
     });
   }
