@@ -332,58 +332,70 @@
               selector above and are automatically included in the calculation.
             </p>
 
-            <div class="form-row">
-              <label for="tierBaseCharge">Base Charge ($ per billing cycle)</label>
-              <input id="tierBaseCharge" type="number" step="0.01" placeholder="e.g. 9.95 or 0" />
-              <small>
-                This is the plan's fixed monthly charge from the EFL (not the TDU delivery charge).
-              </small>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div class="form-row">
+                  <label for="tierBaseCharge">Base Charge ($ per billing cycle)</label>
+                  <input id="tierBaseCharge" type="number" step="0.01" placeholder="e.g. 9.95 or 0" />
+                  <small>
+                    This is the plan's fixed monthly charge from the EFL (not the TDU delivery
+                    charge).
+                  </small>
+                </div>
 
-            <div class="form-row">
-              <label for="tier1Rate">Tier 1 Energy Rate (¢/kWh)</label>
-              <input id="tier1Rate" type="number" step="0.0001" placeholder="e.g. 13.1" />
-            </div>
+                <div class="form-row">
+                  <label for="tier1Rate">Tier 1 Energy Rate (¢/kWh)</label>
+                  <input id="tier1Rate" type="number" step="0.0001" placeholder="e.g. 13.1" />
+                </div>
 
-            <div class="form-row">
-              <label for="tier1Limit">Tier 1 Usage Limit (kWh)</label>
-              <input id="tier1Limit" type="number" step="1" placeholder="e.g. 1000" />
-              <small>
-                Enter the upper end of Tier 1 from your EFL (for "0–1000 kWh", type 1000).
-              </small>
-            </div>
+                <div class="form-row">
+                  <label for="tier2Rate">Tier 2 Energy Rate (¢/kWh) — optional</label>
+                  <input
+                    id="tier2Rate"
+                    type="number"
+                    step="0.0001"
+                    placeholder="e.g. 14.3, or leave blank if no Tier 2"
+                  />
+                </div>
 
-            <div class="form-row">
-              <label for="tier2Rate">Tier 2 Energy Rate (¢/kWh) — optional</label>
-              <input
-                id="tier2Rate"
-                type="number"
-                step="0.0001"
-                placeholder="e.g. 14.3, or leave blank if no Tier 2"
-              />
-            </div>
+                <div class="form-row">
+                  <label for="tier3Rate">Tier 3 Energy Rate (¢/kWh) for usage above the last limit — optional</label>
+                  <input
+                    id="tier3Rate"
+                    type="number"
+                    step="0.0001"
+                    placeholder="e.g. 16.9, or leave blank if no Tier 3"
+                  />
+                  <small>
+                    Used for any kWh above Tier 2’s limit. Leave blank if your plan has only one or
+                    two energy tiers.
+                  </small>
+                </div>
+              </div>
 
-            <div class="form-row">
-              <label for="tier2Limit">Tier 2 Usage Limit (kWh) — optional</label>
-              <input
-                id="tier2Limit"
-                type="number"
-                step="1"
-                placeholder="e.g. 2000, or leave blank if your EFL only has 2 ranges"
-              />
-              <small>
-                If your EFL has only two ranges (e.g. "0–1200" and ">1200"), leave this blank and
-                use Tier 3 rate for "above Tier 1".
-              </small>
-            </div>
+              <div class="space-y-4">
+                <div class="form-row">
+                  <label for="tier1Limit">Tier 1 Usage Limit (kWh)</label>
+                  <input id="tier1Limit" type="number" step="1" placeholder="e.g. 1000" />
+                  <small>
+                    Enter the upper end of Tier 1 from your EFL (for "0–1000 kWh", type 1000).
+                  </small>
+                </div>
 
-            <div class="form-row">
-              <label for="tier3Rate">Tier 3 Energy Rate (¢/kWh) for usage above the last limit — optional</label>
-              <input id="tier3Rate" type="number" step="0.0001" placeholder="e.g. 16.9, or leave blank if no Tier 3" />
-              <small>
-                Used for any kWh above Tier 2’s limit. Leave blank if your plan has only one or two
-                energy tiers.
-              </small>
+                <div class="form-row">
+                  <label for="tier2Limit">Tier 2 Usage Limit (kWh) — optional</label>
+                  <input
+                    id="tier2Limit"
+                    type="number"
+                    step="1"
+                    placeholder="e.g. 2000, or leave blank if your EFL only has 2 ranges"
+                  />
+                  <small>
+                    If your EFL has only two ranges (e.g. "0–1200" and ">1200"), leave this blank
+                    and use Tier 3 rate for "above Tier 1".
+                  </small>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -394,27 +406,33 @@
               an EFL: “Usage Charge $9.95 per billing cycle &lt; 1,000 kWh, $0.00 ≥ 1,000 kWh”.
             </p>
 
-            <div class="form-row">
-              <label for="tierFlatFee1">Tier 1 Flat Fee ($)</label>
-              <input id="tierFlatFee1" type="number" step="0.01" placeholder="e.g. 9.95" />
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div class="form-row">
+                  <label for="tierFlatFee1">Tier 1 Flat Fee ($)</label>
+                  <input id="tierFlatFee1" type="number" step="0.01" placeholder="e.g. 9.95" />
+                </div>
 
-            <div class="form-row">
-              <label for="tierFlatThreshold">Tier 1 applies when total usage is BELOW (kWh)</label>
-              <input id="tierFlatThreshold" type="number" step="1" placeholder="e.g. 1000" />
-              <small>
-                If your EFL says “Usage charge applies when usage is &lt; 1,000 kWh”, enter 1000
-                here.
-              </small>
-            </div>
+                <div class="form-row">
+                  <label for="tierFlatFee2">Tier 2 Flat Fee ($) — for usage AT OR ABOVE the threshold (optional)</label>
+                  <input id="tierFlatFee2" type="number" step="0.01" placeholder="e.g. 0.00" />
+                  <small>
+                    Enter the alternate flat fee when usage meets or exceeds the threshold. Leave 0
+                    if there is no second flat fee.
+                  </small>
+                </div>
+              </div>
 
-            <div class="form-row">
-              <label for="tierFlatFee2">Tier 2 Flat Fee ($) — for usage AT OR ABOVE the threshold (optional)</label>
-              <input id="tierFlatFee2" type="number" step="0.01" placeholder="e.g. 0.00" />
-              <small>
-                Enter the alternate flat fee when usage meets or exceeds the threshold. Leave 0 if
-                there is no second flat fee.
-              </small>
+              <div class="space-y-4">
+                <div class="form-row">
+                  <label for="tierFlatThreshold">Tier 1 applies when total usage is BELOW (kWh)</label>
+                  <input id="tierFlatThreshold" type="number" step="1" placeholder="e.g. 1000" />
+                  <small>
+                    If your EFL says “Usage charge applies when usage is &lt; 1,000 kWh”, enter 1000
+                    here.
+                  </small>
+                </div>
+              </div>
             </div>
           </section>
 
