@@ -45,14 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupTouCalculator();
-  setupTieredPlanForm();
+  setupTieredPlanCalculator();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
     const form = panel.querySelector(".plan-form");
-    if (form) {
-      new PlanCalculator(panel, form);
+    if (!form) {
+      return;
     }
+
+    if (form.dataset.planType === "tiered_plan") {
+      return;
+    }
+
+    new PlanCalculator(panel, form);
   });
 });
 
@@ -337,33 +343,173 @@ function setupTabs(onTabChange) {
   return activePanelId;
 }
 
-function setupTieredPlanForm() {
+function setupTieredPlanCalculator() {
   const panel = document.getElementById("panel-tiered-plan");
   if (!panel) {
     return;
   }
 
-  const tier1FlatFee = panel.querySelector("#tiered-tier1-flat-fee");
-  const tier1Limit = panel.querySelector("#tiered-tier1-limit");
+  const form = panel.querySelector(".plan-form");
+  const usageInput = panel.querySelector("#tiered-usage");
+  const tduPerKwhInput = document.getElementById("tdu-delivery-rate");
+  const tduBaseInput = document.getElementById("tdu-base-delivery-charge");
+
+  const calculateButton = panel.querySelector(".calculate-button");
   const clearButton = panel.querySelector(".clear-button");
 
-  const validateTier1Limit = () => {
-    if (!tier1Limit) {
+  const trueRateElement = panel.querySelector(".result-true-rate");
+  const totalBillElement = panel.querySelector(".result-bill-amount");
+  const resultsGrid = panel.querySelector(".results-grid");
+  const placeholder = panel.querySelector(".results-placeholder");
+  const resultNote = panel.querySelector(".result-note");
+  const errorSection = panel.querySelector(".error-card");
+  const errorMessage = panel.querySelector(".error-message");
+
+  if (!form || !usageInput || !calculateButton || !trueRateElement || !totalBillElement) {
+    return;
+  }
+
+  const hideResults = () => {
+    resultsGrid?.classList.add("is-hidden");
+    resultNote?.classList.add("is-hidden");
+    placeholder?.classList.remove("is-hidden");
+  };
+
+  const showResults = () => {
+    resultsGrid?.classList.remove("is-hidden");
+    resultNote?.classList.remove("is-hidden");
+    placeholder?.classList.add("is-hidden");
+  };
+
+  const showError = (message) => {
+    if (!errorSection || !errorMessage) {
+      return;
+    }
+    errorMessage.textContent = message;
+    errorSection.hidden = false;
+    hideResults();
+  };
+
+  const clearError = () => {
+    if (!errorSection || !errorMessage) {
+      return;
+    }
+    errorMessage.textContent = "";
+    errorSection.hidden = true;
+  };
+
+  const calculateTieredPlan = () => {
+    const usage = parseFloat(usageInput.value || "0");
+    if (!usage || usage <= 0) {
+      showError("Please enter your kWh usage.");
       return;
     }
 
-    if (tier1FlatFee && tier1FlatFee.value !== "" && tier1Limit.value === "") {
-      tier1Limit.setCustomValidity("Enter the Tier 1 limit when using flat fees.");
-    } else {
-      tier1Limit.setCustomValidity("");
+    const tduPerKwh = parseFloat(tduPerKwhInput?.value || "0");
+    const tduBase = parseFloat(tduBaseInput?.value || "0");
+
+    const baseCharge = parseFloat(document.getElementById("tierBaseCharge")?.value || "0");
+    const tier1Rate = parseFloat(document.getElementById("tier1Rate")?.value || "0");
+    const tier1Limit = parseFloat(document.getElementById("tier1Limit")?.value || "0");
+
+    const tier2RateRaw = document.getElementById("tier2Rate")?.value ?? "";
+    const tier2LimitRaw = document.getElementById("tier2Limit")?.value ?? "";
+    const tier3RateRaw = document.getElementById("tier3Rate")?.value ?? "";
+
+    const hasTier2 = tier2RateRaw.trim() !== "";
+    const hasTier3 = tier3RateRaw.trim() !== "";
+
+    const tier2Rate = hasTier2 ? parseFloat(tier2RateRaw) : 0;
+    const tier2Limit = hasTier2 && tier2LimitRaw.trim() !== "" ? parseFloat(tier2LimitRaw) : 0;
+    const tier3Rate = hasTier3 ? parseFloat(tier3RateRaw) : 0;
+
+    if (!tier1Rate || !tier1Limit) {
+      showError("Please enter at least a Tier 1 rate and usage limit.");
+      return;
     }
+
+    if (hasTier2 && tier2Limit && tier2Limit <= tier1Limit) {
+      showError("Tier 2 limit must be greater than Tier 1 limit.");
+      return;
+    }
+
+    let tier1Kwh = 0,
+      tier2Kwh = 0,
+      tier3Kwh = 0;
+
+    tier1Kwh = Math.min(usage, tier1Limit);
+
+    if (usage > tier1Limit) {
+      if (hasTier2) {
+        const upper2 = tier2Limit && tier2Limit > tier1Limit ? tier2Limit : usage;
+        tier2Kwh = Math.min(usage, upper2) - tier1Limit;
+
+        if (hasTier3 && usage > upper2) {
+          tier3Kwh = usage - upper2;
+        }
+      } else if (hasTier3) {
+        tier3Kwh = usage - tier1Limit;
+      } else {
+        tier1Kwh = usage;
+      }
+    }
+
+    const energyChargeDollars =
+      (tier1Kwh * tier1Rate + tier2Kwh * tier2Rate + tier3Kwh * tier3Rate) / 100;
+
+    const flat1 = parseFloat(document.getElementById("tierFlatFee1")?.value || "0");
+    const flatThreshold = parseFloat(document.getElementById("tierFlatThreshold")?.value || "0");
+    const flat2 = parseFloat(document.getElementById("tierFlatFee2")?.value || "0");
+
+    let flatFee = 0;
+    if (flat1 && flatThreshold) {
+      if (usage < flatThreshold) {
+        flatFee = flat1;
+      } else {
+        flatFee = flat2;
+      }
+    }
+
+    const tduKwhCharge = (usage * tduPerKwh) / 100;
+    const tduTotal = tduBase + tduKwhCharge;
+
+    const totalBill = baseCharge + energyChargeDollars + flatFee + tduTotal;
+    const trueRate = (totalBill / usage) * 100;
+
+    trueRateElement.textContent = trueRate.toFixed(2);
+    totalBillElement.textContent = totalBill.toFixed(2);
+
+    clearError();
+    showResults();
   };
 
-  tier1FlatFee?.addEventListener("input", validateTier1Limit);
-  tier1Limit?.addEventListener("input", validateTier1Limit);
-  clearButton?.addEventListener("click", validateTier1Limit);
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    clearError();
+    calculateTieredPlan();
+  });
 
-  validateTier1Limit();
+  calculateButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    clearError();
+    calculateTieredPlan();
+  });
+
+  panel.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", () => {
+      hideResults();
+      clearError();
+    });
+  });
+
+  clearButton?.addEventListener("click", () => {
+    form.reset();
+    hideResults();
+    clearError();
+  });
+
+  hideResults();
+  clearError();
 }
 
 function setupTouCalculator() {
