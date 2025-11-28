@@ -105,6 +105,13 @@ body {
   font-size: 0.95rem;
 }
 
+.helper {
+  margin: 0 0 0.75rem;
+  color: #52606d;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 .usage-field .helper-text {
   margin: 0;
 }
@@ -116,6 +123,38 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   background-color: #ffffff;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  color: #243b53;
+  font-weight: 600;
+}
+
+.form-row label {
+  font-weight: 600;
+}
+
+.form-row input {
+  padding: 0.75rem;
+  border: 1px solid #d2d6dc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #ffffff;
+}
+
+.form-row input:focus {
+  outline: 2px solid #0069ff;
+  border-color: transparent;
+}
+
+.form-row small {
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.4;
 }
 
 .form-field input:focus,
