@@ -3,13 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>True Texas Electricity Rate Calculator</title>
+    <title>WattWise | Never guess your electricity costs again</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
   </head>
   <body>
     <main class="container">
       <header class="page-header">
-        <h1>True Texas Electricity Rate Calculator</h1>
+        <div class="brand-mark">
+          <img
+            src="{{ url_for('static', filename='img/wattwise-icon.svg') }}"
+            alt="WattWise icon"
+            class="brand-icon"
+          />
+          <h1 class="brand-title">WattWise</h1>
+          <p class="brand-tagline">Never guess your electricity costs again</p>
+        </div>
         <p class="subtitle">
           Know your true electricity costs. Calculate your true rate per kWh as well as an
           approximate bill amount
