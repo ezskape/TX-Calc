@@ -356,6 +356,7 @@ function setupTouCalculator() {
   const approxBillDisplay = panel.querySelector("#touApproxBill");
   const resultsGrid = panel.querySelector(".results-grid");
   const placeholder = panel.querySelector(".results-placeholder");
+  const resultNote = panel.querySelector(".result-note");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
 
@@ -371,11 +372,13 @@ function setupTouCalculator() {
 
   const hideResults = () => {
     resultsGrid.classList.add("is-hidden");
+    resultNote?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
 
   const showResults = () => {
     resultsGrid.classList.remove("is-hidden");
+    resultNote?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
 

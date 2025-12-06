@@ -62,9 +62,6 @@
           <span>Select Your TDU</span>
           <select id="tduSelect" class="tdu-select" required></select>
         </label>
-        <p class="helper-text tdu-helper-text is-hidden">
-          TDU delivery charges do NOT apply during the free usage period.
-        </p>
         <div class="form-grid tdu-delivery-grid">
           <label class="form-field">
             <span>Delivery Rate (¢ per kWh)</span>
@@ -381,6 +378,9 @@
               <p class="result-value">$<span id="touApproxBill">0.00</span></p>
             </div>
           </div>
+          <p class="result-note is-hidden">
+            TDU delivery charges do NOT apply during the free usage period.
+          </p>
         </section>
 
         <section class="card error-card" hidden>
