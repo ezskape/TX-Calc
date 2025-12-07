@@ -194,6 +194,14 @@ h6,
   font-size: 0.95rem;
 }
 
+.text-sm {
+  font-size: 0.95rem;
+}
+
+.text-gray-500 {
+  color: var(--ww-gray-600);
+}
+
 .helper {
   margin: 0 0 0.75rem;
   color: var(--ww-gray-700);
@@ -321,6 +329,10 @@ h6,
 .result-note {
   margin-top: 1rem;
   color: var(--ww-gray-600);
+}
+
+.result-interpretation {
+  margin-top: 0.35rem;
 }
 
 .is-hidden {
