@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WattWise | Electricity Rate Calculator</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+  </head>
+  <body>
+    <main class="landing-container">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-brand">
+          <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="hero-icon" />
+          <h1 id="hero-title" class="brand-name">WattWise</h1>
+          <p class="tagline">Never guess your electricity costs again.</p>
+          <p class="subheadline">
+            Instantly calculate your true price per kWh and your real monthly electricity bill.
+          </p>
+          <a class="primary-cta" href="{{ url_for('index') }}">Start Calculator</a>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <svg viewBox="0 0 240 220" role="presentation" focusable="false" class="hero-illustration">
+            <defs>
+              <linearGradient id="houseGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1a7bff" stop-opacity="0.18" />
+                <stop offset="100%" stop-color="#1a7bff" stop-opacity="0.06" />
+              </linearGradient>
+            </defs>
+            <rect x="32" y="82" width="176" height="110" rx="12" fill="url(#houseGradient)" stroke="#1a7bff" stroke-width="6" />
+            <path d="M36 92 L120 34 L204 92" fill="none" stroke="#1a7bff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M120 78 l-28 52 h22 l-8 42 l42 -62 h-24 l8 -32 z"
+              fill="#1a7bff"
+              stroke="#0f62cf"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+            <circle cx="182" cy="166" r="30" fill="#ffffff" stroke="#1a7bff" stroke-width="6" />
+            <text x="182" y="176" text-anchor="middle" font-family="'Poppins', sans-serif" font-size="26" font-weight="700" fill="#1a7bff">
+              $
+            </text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="section value-props" aria-labelledby="value-title">
+        <div class="section-header">
+          <h2 id="value-title">Why Texans use WattWise</h2>
+        </div>
+        <div class="value-grid">
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">✔</div>
+            <h3>Real Accuracy</h3>
+            <p>We calculate your true electricity rate using your actual plan details, including TDU charges and credits.</p>
+          </article>
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">⚡</div>
+            <h3>Simple &amp; Fast</h3>
+            <p>Enter a few numbers and instantly get your real price per kWh and estimated bill.</p>
+          </article>
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">🧭</div>
+            <h3>Make Better Decisions</h3>
+            <p>Know whether your electricity plan is fair — or if it’s time to switch.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section how-it-works" aria-labelledby="how-title">
+        <div class="section-header">
+          <h2 id="how-title">How WattWise Works</h2>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number">1</div>
+            <h3>Enter Your Plan Inputs</h3>
+            <p>Energy rate, delivery rate, base charge, credits, or free hours.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-number">2</div>
+            <h3>WattWise Runs the True-Rate Formula</h3>
+            <p>We factor in TDU fees, credits, and plan structures to show your actual cost.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-number">3</div>
+            <h3>See Your Real Price &amp; Estimated Bill</h3>
+            <p>Get the insight you need to choose — or avoid — a plan.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section secondary-cta" aria-labelledby="cta-title">
+        <div class="cta-card">
+          <h2 id="cta-title">Ready to see your true electricity rate?</h2>
+          <a class="primary-cta" href="{{ url_for('index') }}">Start Calculator</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2025 WattWise</footer>
+  </body>
+</html>
