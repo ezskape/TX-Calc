@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WattWise | Never guess your electricity costs again</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <div class="brand-mark">
+          <img
+            src="{{ url_for('static', filename='img/wattwise-icon.svg') }}"
+            alt="WattWise icon"
+            class="brand-icon"
+          />
+          <h1 class="brand-title">WattWise</h1>
+          <p class="brand-tagline">Never guess your electricity costs again</p>
+        </div>
+      </header>
+
+      <div class="tab-bar" role="tablist" aria-label="Plan options">
+        <button
+          class="tab-button is-active"
+          id="tab-fixed-rate"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-fixed-rate"
+          data-target="panel-fixed-rate"
+        >
+          Fixed Rate
+        </button>
+        <button
+          class="tab-button"
+          id="tab-fixed-rate-credit"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-fixed-rate-credit"
+          data-target="panel-fixed-rate-credit"
+        >
+          Fixed Rate with Credit
+        </button>
+        <button
+          class="tab-button"
+          id="tab-tou-plan"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="tou-plan"
+          data-target="tou-plan"
+        >
+          Time-of-Use (Free Nights/Weekends)
+        </button>
+      </div>
+
+      <section class="card tdu-card" aria-label="Transmission and Distribution Utility selector">
+        <label class="form-field" for="tduSelect">
+          <span>Select Your TDU</span>
+          <select id="tduSelect" class="tdu-select" required></select>
+        </label>
+        <div class="form-grid tdu-delivery-grid">
+          <label class="form-field">
+            <span>Delivery Rate (¢ per kWh)</span>
+            <input
+              type="number"
+              id="tdu-delivery-rate"
+              min="0"
+              step="0.01"
+              required
+            />
+          </label>
+          <label class="form-field">
+            <span>Delivery Charge ($ per billing cycle)</span>
+            <input
+              type="number"
+              id="tdu-base-delivery-charge"
+              min="0"
+              step="0.01"
+              required
+            />
+          </label>
+        </div>
+      </section>
+
+      <section
+        class="tab-panel is-active"
+        id="panel-fixed-rate"
+        role="tabpanel"
+        aria-labelledby="tab-fixed-rate"
+      >
+        <form class="plan-form" data-plan-type="fixed_rate" novalidate>
+          <section class="card">
+            <div class="card-header">
+              <h2>Fixed Rate</h2>
+              <p class="card-subtitle">Enter your plan’s base rate and monthly charges.</p>
+            </div>
+            <input
+              type="hidden"
+              id="fixed-delivery-rate"
+              name="tdu_rate_cents"
+              required
+            />
+            <input
+              type="hidden"
+              id="fixed-base-delivery-charge"
+              name="base_delivery_charge"
+              required
+            />
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="fixed-energy-rate"
+                  name="energy_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="fixed-base-charge"
+                  name="base_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Calculate your price per kWh and approximate bill amount</h2>
+            <div class="form-field usage-field">
+              <span>Enter your kWh usage</span>
+              <input
+                type="number"
+                id="fixed-usage"
+                name="usage_kwh"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="calculate-button">Calculate</button>
+              <button type="button" class="clear-button">Clear</button>
+            </div>
+          </section>
+
+          <section class="card results-card">
+            <p class="results-placeholder">
+              Enter all plan details and your kWh usage to see your true rate and estimated bill.
+            </p>
+            <div class="results-grid is-hidden">
+              <div>
+                <h3>True Rate Per kWh</h3>
+                <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
+              </div>
+              <div>
+                <h3>Approximate Bill Amount</h3>
+                <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
+              </div>
+            </div>
+            <p class="result-note is-hidden">
+              True rate per kWh is calculated using information entered, approximate bill
+              amount is calculated as price per kwh * kwh usage.
+            </p>
+          </section>
+
+          <section class="card error-card" hidden>
+            <h2>There was a problem with your calculation</h2>
+            <p class="error-message"></p>
+          </section>
+        </form>
+      </section>
+
+      <section
+        class="tab-panel"
+        id="panel-fixed-rate-credit"
+        role="tabpanel"
+        aria-labelledby="tab-fixed-rate-credit"
+        hidden
+      >
+        <form class="plan-form" data-plan-type="fixed_rate_credit" novalidate>
+          <section class="card">
+            <div class="card-header">
+              <h2>Fixed Rate with Credit</h2>
+              <p class="card-subtitle">Include bill credits or usage-based discounts in your plan.</p>
+            </div>
+            <input
+              type="hidden"
+              id="credit-delivery-rate"
+              name="tdu_rate_cents"
+              required
+            />
+            <input
+              type="hidden"
+              id="credit-base-delivery-charge"
+              name="base_delivery_charge"
+              required
+            />
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Energy Rate (¢/kWh)</span>
+                <input
+                  type="number"
+                  id="credit-energy-rate"
+                  name="energy_rate_cents"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Base Charge ($ per billing cycle)</span>
+                <input
+                  type="number"
+                  id="credit-base-charge"
+                  name="base_charge"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </label>
+            </div>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Usage Credit ($)</span>
+                <input
+                  type="number"
+                  id="usage-credit"
+                  name="usage_credit"
+                  min="0"
+                  step="0.01"
+                  value="0"
+                  required
+                />
+              </label>
+              <label class="form-field">
+                <span>Usage equal or more than (kWh)</span>
+                <input
+                  type="number"
+                  id="credit-threshold"
+                  name="credit_threshold_kwh"
+                  min="0"
+                  step="1"
+                  value="1000"
+                  required
+                />
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Calculate your price per kWh and approximate bill amount</h2>
+            <div class="form-field usage-field">
+              <span>Enter your kWh usage</span>
+              <input
+                type="number"
+                id="credit-usage"
+                name="usage_kwh"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="calculate-button">Calculate</button>
+              <button type="button" class="clear-button">Clear</button>
+            </div>
+          </section>
+
+          <section class="card results-card">
+            <p class="results-placeholder">
+              Enter all plan details and your kWh usage to see your true rate and estimated bill.
+            </p>
+            <div class="results-grid is-hidden">
+              <div>
+                <h3>True Rate Per kWh</h3>
+                <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
+              </div>
+              <div>
+                <h3>Approximate Bill Amount</h3>
+                <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
+              </div>
+            </div>
+            <p class="result-note is-hidden">
+              True rate per kWh subtracts the usage credit from the total charge when your usage
+              meets the entered kWh threshold.
+            </p>
+          </section>
+
+          <section class="card error-card" hidden>
+            <h2>There was a problem with your calculation</h2>
+            <p class="error-message"></p>
+          </section>
+        </form>
+      </section>
+
+      <section class="tab-panel" id="tou-plan" role="tabpanel" aria-labelledby="tab-tou-plan" hidden>
+        <section class="card">
+          <div class="card-header">
+            <h2>Time-of-Use (Free Nights/Weekends)</h2>
+            <p class="card-subtitle">Enter the hours that qualify for free or discounted electricity.</p>
+          </div>
+          <input type="hidden" id="touDeliveryRate" min="0" step="0.01" />
+          <input type="hidden" id="touBaseDeliveryCharge" min="0" step="0.01" />
+          <div class="form-grid">
+            <label class="form-field">
+              <span>Energy Rate (¢/kWh)</span>
+              <input
+                type="number"
+                id="touOnPeakRate"
+                min="0"
+                step="0.01"
+                placeholder="Rate paid during NON-free hours"
+              />
+            </label>
+            <label class="form-field">
+              <span>Free Hours Rate (¢/kWh)</span>
+              <input
+                type="number"
+                id="touOffPeakRate"
+                min="0"
+                step="0.01"
+                placeholder="0¢ for most plans because nights/weekends are free"
+                value="0"
+              />
+            </label>
+            <label class="form-field">
+              <span>Base Charge ($ per billing cycle)</span>
+              <input type="number" id="touBaseCharge" min="0" step="0.01" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Calculate your price per kWh and approximate bill amount</h2>
+          <div class="form-grid usage-field">
+            <label class="form-field">
+              <span>Total Monthly Usage (kWh)</span>
+              <input type="number" id="touTotalUsage" min="0" step="1" />
+            </label>
+            <label class="form-field">
+              <span>Free Hours Usage (kWh)</span>
+              <input
+                type="number"
+                id="touFreeUsage"
+                min="0"
+                step="1"
+                placeholder="How many kWh you use during free nights/weekends"
+              />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="calculate-button" id="touCalculateBtn">Calculate</button>
+            <button type="button" class="clear-button" id="touClearBtn">Clear</button>
+          </div>
+        </section>
+
+        <section class="card results-card">
+          <p class="results-placeholder">
+            Enter all plan details and your kWh usage to see your true rate and estimated bill.
+          </p>
+          <div class="results-grid is-hidden">
+            <div>
+              <h3>True Rate Per kWh</h3>
+              <p class="result-value"><span id="touEffectiveRate">0.00</span> ¢/kWh</p>
+            </div>
+            <div>
+              <h3>Approximate Bill Amount</h3>
+              <p class="result-value">$<span id="touApproxBill">0.00</span></p>
+            </div>
+          </div>
+          <p class="result-note is-hidden">
+            TDU delivery charges do NOT apply during the free usage period.
+          </p>
+        </section>
+
+        <section class="card error-card" hidden>
+          <h2>There was a problem with your calculation</h2>
+          <p class="error-message"></p>
+        </section>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  </body>
+</html>
