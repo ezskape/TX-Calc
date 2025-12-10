@@ -94,6 +94,10 @@ class PlanInputWithCredit(PlanInput):
 
 
 @app.route("/")
+def index() -> str:
+    return render_template("index.html")
+
+
 @app.route("/landing")
 def landing() -> str:
     return render_template("landing.html")
