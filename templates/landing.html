@@ -20,27 +20,10 @@
           <a class="primary-cta" href="{{ url_for('index') }}">Start Calculator</a>
         </div>
         <div class="hero-visual" aria-hidden="true">
-          <svg viewBox="0 0 240 220" role="presentation" focusable="false" class="hero-illustration">
-            <defs>
-              <linearGradient id="houseGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1a7bff" stop-opacity="0.18" />
-                <stop offset="100%" stop-color="#1a7bff" stop-opacity="0.06" />
-              </linearGradient>
-            </defs>
-            <rect x="32" y="82" width="176" height="110" rx="12" fill="url(#houseGradient)" stroke="#1a7bff" stroke-width="6" />
-            <path d="M36 92 L120 34 L204 92" fill="none" stroke="#1a7bff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-            <path
-              d="M120 78 l-28 52 h22 l-8 42 l42 -62 h-24 l8 -32 z"
-              fill="#1a7bff"
-              stroke="#0f62cf"
-              stroke-width="2"
-              stroke-linejoin="round"
-            />
-            <circle cx="182" cy="166" r="30" fill="#ffffff" stroke="#1a7bff" stroke-width="6" />
-            <text x="182" y="176" text-anchor="middle" font-family="'Poppins', sans-serif" font-size="26" font-weight="700" fill="#1a7bff">
-              $
-            </text>
-          </svg>
+            <img
+              src="{{ url_for('static', filename='img/wattwise-house-hero.png') }}"
+              alt="WattWise hero illustration"
+              class="hero-illustration" />
         </div>
       </section>
 
