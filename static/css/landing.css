@@ -70,6 +70,14 @@ a {
   padding: 2.75rem 0;
 }
 
+.value-props {
+  padding-bottom: 2.25rem;
+}
+
+.how-it-works {
+  padding-top: 2.25rem;
+}
+
 .hero {
   background: linear-gradient(145deg, #ffffff, var(--ww-primary-50));
   border: 1px solid var(--ww-gray-200);
