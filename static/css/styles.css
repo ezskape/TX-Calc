@@ -361,20 +361,28 @@ h6,
 }
 
 .result-insight {
-  margin-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 16px;
+  padding-top: 12px;
 }
 
 .result-insight-title {
-  margin: 0 0 0.25rem;
-  font-size: 1rem;
+  margin: 0 0 4px;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--ww-gray-900);
 }
 
 .result-insight-body {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--ww-gray-600);
+}
+
+.result-disclaimer {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  opacity: 0.75;
 }
 
 .error-card {
