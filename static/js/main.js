@@ -67,6 +67,7 @@ class PlanCalculator {
     this.billAmount = panel.querySelector(".result-bill-amount");
     this.resultsContent = panel.querySelector(".results-grid");
     this.resultNote = panel.querySelector(".result-note");
+    this.resultInsight = panel.querySelector(".result-insight");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
     this.errorMessage = panel.querySelector(".error-message");
@@ -121,12 +122,14 @@ class PlanCalculator {
   showResults() {
     this.resultsContent.classList.remove("is-hidden");
     this.resultNote.classList.remove("is-hidden");
+    this.resultInsight?.classList.remove("is-hidden");
     this.resultsPlaceholder.classList.add("is-hidden");
   }
 
   hideResults() {
     this.resultsContent.classList.add("is-hidden");
     this.resultNote.classList.add("is-hidden");
+    this.resultInsight?.classList.add("is-hidden");
     this.resultsPlaceholder.classList.remove("is-hidden");
   }
 
@@ -357,6 +360,7 @@ function setupTouCalculator() {
   const resultsGrid = panel.querySelector(".results-grid");
   const placeholder = panel.querySelector(".results-placeholder");
   const resultNote = panel.querySelector(".result-note");
+  const resultInsight = panel.querySelector(".result-insight");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
 
@@ -373,12 +377,14 @@ function setupTouCalculator() {
   const hideResults = () => {
     resultsGrid.classList.add("is-hidden");
     resultNote?.classList.add("is-hidden");
+    resultInsight?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
 
   const showResults = () => {
     resultsGrid.classList.remove("is-hidden");
     resultNote?.classList.remove("is-hidden");
+    resultInsight?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
 
