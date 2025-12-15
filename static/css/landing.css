@@ -70,6 +70,10 @@ a {
   padding: 2.75rem 0;
 }
 
+.how-it-works {
+  margin-top: -1.25rem;
+}
+
 .hero {
   background: linear-gradient(145deg, #ffffff, var(--ww-primary-50));
   border: 1px solid var(--ww-gray-200);
