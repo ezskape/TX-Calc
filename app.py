@@ -3,11 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 
 from tiered_plan import TieredPlanInput, calculateTieredPlan
 
 app = Flask(__name__)
+app.secret_key = "replace-me"
 
 
 @dataclass
@@ -101,6 +102,21 @@ def index() -> str:
 @app.route("/landing")
 def landing() -> str:
     return render_template("landing.html")
+
+
+@app.route("/subscribe", methods=["POST"])
+def subscribe() -> Any:
+    email = request.form.get("email")
+
+    if email:
+        print(f"New WattWise subscriber: {email}")
+
+    try:
+        flash("Thanks! We’ll email you helpful updates soon.")
+    except Exception:
+        pass
+
+    return redirect(url_for("index"))
 
 
 @app.route("/api/calculate", methods=["POST"])
