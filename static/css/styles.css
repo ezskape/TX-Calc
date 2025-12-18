@@ -391,13 +391,24 @@ h6,
 }
 
 .result-email-optin {
-  padding: 12px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .result-email-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 4px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.result-email-title::before {
+  content: '📨';
+  font-size: 1.1rem;
 }
 
 .result-email-intro {
@@ -406,36 +417,80 @@ h6,
 }
 
 .result-email-benefits {
-  margin: 0 0 8px 1.1rem;
-  padding: 0;
+  margin: 0 0 8px 0;
+  padding: 0 0 0 1.1rem;
   font-size: 0.9rem;
 }
 
 .result-email-benefits li {
-  margin-bottom: 2px;
+  margin-bottom: 6px;
+  line-height: 1.45;
 }
 
 .result-email-form {
   margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .result-email-input-row {
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .result-email-input {
-  flex: 1;
+  flex: 1 1 260px;
+  max-width: 400px;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--ww-gray-300);
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.result-email-input:focus,
+.result-email-input:focus-visible {
+  outline: none;
+  border-color: var(--ww-primary-500);
+  box-shadow: 0 0 0 3px rgba(26, 123, 255, 0.2);
 }
 
 .result-email-button {
   white-space: nowrap;
+  background: linear-gradient(135deg, var(--ww-primary-600), var(--ww-primary-700));
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem 2.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  box-shadow: 0 12px 24px rgba(0, 59, 138, 0.18);
+}
+
+.result-email-button:hover,
+.result-email-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0, 59, 138, 0.22);
+  outline: none;
 }
 
 .result-email-disclaimer {
   font-size: 0.8rem;
   opacity: 0.75;
+}
+
+.result-email-card {
+  background: linear-gradient(180deg, var(--ww-primary-50), #ffffff);
+  border: 1px solid var(--ww-gray-200);
 }
 
 .result-disclaimer {
