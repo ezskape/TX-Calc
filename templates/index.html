@@ -178,6 +178,37 @@
               </p>
             </div>
           </section>
+          <div class="card email-card result-email-card is-hidden">
+            <section class="result-email-optin">
+              <h3 class="result-email-title">Get more out of your number</h3>
+
+              <p class="result-email-intro">Enter your email to get:</p>
+
+              <ul class="result-email-benefits">
+                <li>A simple guide to spotting bad plans</li>
+                <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
+              </ul>
+
+              <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
+                <label for="result-email" class="sr-only">Email address</label>
+                <div class="result-email-input-row">
+                  <input
+                    type="email"
+                    id="result-email"
+                    name="email"
+                    required
+                    placeholder="you@example.com"
+                    class="result-email-input"
+                  />
+                  <button type="submit" class="result-email-button">Send it to me</button>
+                </div>
+              </form>
+
+              <p class="result-email-disclaimer">
+                We’ll only email you occasionally. No spam. We don’t sell your data.
+              </p>
+            </section>
+          </div>
           <p class="result-note result-disclaimer is-hidden">
             True rate per kWh is calculated using information entered, approximate bill amount is calculated as price per kwh * kwh usage.
           </p>
@@ -309,6 +340,37 @@
               </p>
             </div>
           </section>
+          <div class="card email-card result-email-card is-hidden">
+            <section class="result-email-optin">
+              <h3 class="result-email-title">Get more out of your number</h3>
+
+              <p class="result-email-intro">Enter your email to get:</p>
+
+              <ul class="result-email-benefits">
+                <li>A simple guide to spotting bad plans</li>
+                <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
+              </ul>
+
+              <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
+                <label for="result-email" class="sr-only">Email address</label>
+                <div class="result-email-input-row">
+                  <input
+                    type="email"
+                    id="result-email"
+                    name="email"
+                    required
+                    placeholder="you@example.com"
+                    class="result-email-input"
+                  />
+                  <button type="submit" class="result-email-button">Send it to me</button>
+                </div>
+              </form>
+
+              <p class="result-email-disclaimer">
+                We’ll only email you occasionally. No spam. We don’t sell your data.
+              </p>
+            </section>
+          </div>
           <p class="result-note result-disclaimer is-hidden">
             True rate per kWh subtracts the usage credit from the total charge when your usage meets the entered kWh threshold.
           </p>
@@ -404,6 +466,37 @@
             </p>
           </div>
         </section>
+        <div class="card email-card result-email-card is-hidden">
+          <section class="result-email-optin">
+            <h3 class="result-email-title">Get more out of your number</h3>
+
+            <p class="result-email-intro">Enter your email to get:</p>
+
+            <ul class="result-email-benefits">
+              <li>A simple guide to spotting bad plans</li>
+              <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
+            </ul>
+
+            <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
+              <label for="result-email" class="sr-only">Email address</label>
+              <div class="result-email-input-row">
+                <input
+                  type="email"
+                  id="result-email"
+                  name="email"
+                  required
+                  placeholder="you@example.com"
+                  class="result-email-input"
+                />
+                <button type="submit" class="result-email-button">Send it to me</button>
+              </div>
+            </form>
+
+            <p class="result-email-disclaimer">
+              We’ll only email you occasionally. No spam. We don’t sell your data.
+            </p>
+          </section>
+        </div>
         <p class="result-note result-disclaimer is-hidden">
           TDU delivery charges do NOT apply during the free usage period.
         </p>
