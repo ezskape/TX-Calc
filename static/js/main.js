@@ -68,7 +68,7 @@ class PlanCalculator {
     this.resultsContent = panel.querySelector(".results-grid");
     this.resultNote = panel.querySelector(".result-note");
     this.resultInsight = panel.querySelector(".result-insight");
-    this.resultEmailOptin = panel.querySelector(".result-email-card");
+    this.resultEmailOptin = panel.querySelector(".result-email-optin");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
     this.errorMessage = panel.querySelector(".error-message");
@@ -364,7 +364,7 @@ function setupTouCalculator() {
   const placeholder = panel.querySelector(".results-placeholder");
   const resultNote = panel.querySelector(".result-note");
   const resultInsight = panel.querySelector(".result-insight");
-  const resultEmailOptin = panel.querySelector(".result-email-card");
+  const resultEmailOptin = panel.querySelector(".result-email-optin");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
 
