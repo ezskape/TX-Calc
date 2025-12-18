@@ -391,9 +391,7 @@ h6,
 }
 
 .result-email-optin {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 12px 0;
 }
 
 .result-email-title {
