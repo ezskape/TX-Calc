@@ -190,6 +190,10 @@
               <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
             </ul>
 
+            {% if request.args.get("subscribed") == "1" %}
+            <p class="result-email-success">Thanks! You’re on the list.</p>
+            {% endif %}
+
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
               <div class="result-email-input-row">
@@ -352,6 +356,10 @@
               <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
             </ul>
 
+            {% if request.args.get("subscribed") == "1" %}
+            <p class="result-email-success">Thanks! You’re on the list.</p>
+            {% endif %}
+
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
               <div class="result-email-input-row">
@@ -476,6 +484,10 @@
               <li>A simple guide to spotting bad plans</li>
               <li>A reminder when we launch automatic bill analysis and plan suggestions</li>
             </ul>
+
+            {% if request.args.get("subscribed") == "1" %}
+            <p class="result-email-success">Thanks! You’re on the list.</p>
+            {% endif %}
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
