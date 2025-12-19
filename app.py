@@ -116,7 +116,7 @@ def subscribe() -> Any:
     except Exception:
         pass
 
-    return redirect(url_for("index"))
+    return redirect(url_for("index", subscribed="1"))
 
 
 @app.route("/api/calculate", methods=["POST"])

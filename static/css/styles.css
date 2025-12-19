@@ -427,6 +427,13 @@ h6,
   line-height: 1.45;
 }
 
+.result-email-success {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ww-success);
+}
+
 .result-email-form {
   margin-top: 4px;
   display: flex;
