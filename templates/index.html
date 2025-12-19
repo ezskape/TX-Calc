@@ -21,6 +21,10 @@
         </div>
       </header>
 
+      {% if request.args.get("subscribed") == "1" %}
+      <div class="subscribe-success">Thanks! You’re on the list.</div>
+      {% endif %}
+
       <div class="tab-bar" role="tablist" aria-label="Plan options">
         <button
           class="tab-button is-active"

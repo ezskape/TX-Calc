@@ -113,6 +113,13 @@ h6,
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
+.subscribe-success {
+  margin: 12px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
 .subtitle {
   margin-top: 0.75rem;
   color: var(--ww-gray-600);
