@@ -23,6 +23,11 @@
 
       {% if request.args.get("subscribed") == "1" %}
       <div class="subscribe-success">Thanks! You’re on the list.</div>
+      <script>
+        setTimeout(function () {
+          window.location.href = window.location.pathname;
+        }, 2500);
+      </script>
       {% endif %}
 
       <div class="tab-bar" role="tablist" aria-label="Plan options">

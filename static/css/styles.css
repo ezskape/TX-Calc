@@ -115,9 +115,10 @@ h6,
 
 .subscribe-success {
   margin: 12px 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  opacity: 0.9;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ww-primary-600);
+  line-height: 1.45;
 }
 
 .subtitle {
