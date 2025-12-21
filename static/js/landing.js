@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const tdu = determineTdu(zip);
-    const searchParams = new URLSearchParams({ zip, tdu });
+    const searchParams = new URLSearchParams({ pc: zip, tdu });
     window.location.href = `/calculator?${searchParams.toString()}`;
   });
 });

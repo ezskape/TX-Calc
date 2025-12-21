@@ -20,6 +20,7 @@
           <p class="brand-tagline">Never guess your electricity costs again</p>
         </div>
       </header>
+      <input type="hidden" id="postal-code-param" aria-hidden="true" />
 
       {% if request.args.get("subscribed") == "1" %}
       <div class="subscribe-success">Thanks! You’re on the list.</div>
