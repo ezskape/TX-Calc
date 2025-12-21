@@ -104,6 +104,11 @@ def landing() -> str:
     return render_template("landing.html")
 
 
+@app.route("/calculator")
+def calculator() -> str:
+    return render_template("index.html")
+
+
 @app.route("/subscribe", methods=["POST"])
 def subscribe() -> Any:
     email = request.form.get("email")
