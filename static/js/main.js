@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   tduController = setupTduSelector();
+  applyUrlParameters();
 
   const initialPanelId =
     document.querySelector(".tab-panel.is-active")?.id || activePanelId;
@@ -471,4 +472,52 @@ function setupTouCalculator() {
 
   hideResults();
   clearError();
+}
+
+function applyUrlParameters() {
+  const searchParams = new URLSearchParams(window.location.search);
+  if ([...searchParams.keys()].length === 0) {
+    return;
+  }
+
+  const zipParam = searchParams.get("zip");
+  if (zipParam) {
+    const usageInputs = [
+      document.getElementById("fixed-usage"),
+      document.getElementById("credit-usage"),
+      document.getElementById("touTotalUsage"),
+    ];
+
+    usageInputs.forEach((input) => {
+      if (input) {
+        input.value = zipParam;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
+  }
+
+  const tduParam = searchParams.get("tdu");
+  if (tduParam) {
+    const tduSelect = document.getElementById("tduSelect");
+    if (!tduSelect) {
+      return;
+    }
+
+    const tduMap = {
+      centerpoint: "CenterPoint",
+      oncor: "Oncor",
+      aep_central: "AEP Texas Central",
+      aep_north: "AEP Texas North",
+      tnmp: "TNMP",
+      custom: "custom",
+    };
+
+    const normalizedKey = tduParam.trim().toLowerCase();
+    const mappedValue = tduMap[normalizedKey];
+
+    if (mappedValue && tduSelect.querySelector(`option[value="${mappedValue}"]`)) {
+      tduSelect.value = mappedValue;
+      tduSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
 }
