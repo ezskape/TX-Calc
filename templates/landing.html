@@ -16,6 +16,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
   </head>
   <body>
+    <header class="nav-shell" aria-label="WattWise navigation">
+      <div class="nav-bar">
+        <div class="nav-brand">
+          <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="nav-icon" />
+          <div class="nav-copy">
+            <span class="nav-title">WattWise</span>
+            <span class="nav-subtitle">True-rate calculator</span>
+          </div>
+        </div>
+        <a id="sticky-nav-cta" class="nav-cta" href="{{ url_for('calculator') }}">⚡ Calculate Now</a>
+      </div>
+    </header>
     <main class="landing-container">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-brand">
@@ -61,6 +73,7 @@
       <section class="section value-props" aria-labelledby="value-title">
         <div class="section-header">
           <h2 id="value-title">Why Texans use WattWise</h2>
+          <p class="section-subline">Join the first 500 Texans getting early access to true-rate transparency.</p>
         </div>
         <div class="value-grid">
           <article class="value-card">
@@ -88,8 +101,8 @@
         <div class="steps-grid">
           <article class="step-card">
             <div class="step-number">1</div>
-            <h3>Enter Your Plan Inputs</h3>
-            <p>Energy rate, delivery rate, base charge, credits, or free hours.</p>
+            <h3>Grab your latest bill</h3>
+            <p>Find your Electricity Facts Label (EFL) or latest bill to get your plan details.</p>
           </article>
           <article class="step-card">
             <div class="step-number">2</div>

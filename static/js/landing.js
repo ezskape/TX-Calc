@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("zip-rate-form");
   const zipInput = document.getElementById("zip-code-input");
+  const stickyCta = document.getElementById("sticky-nav-cta");
 
   if (!form || !zipInput) {
     return;
@@ -42,6 +43,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   zipInput.addEventListener("input", sanitizeZip);
+
+  const toggleStickyCta = () => {
+    if (!stickyCta) return;
+    if (window.scrollY > 500) {
+      stickyCta.classList.add("is-visible");
+    } else {
+      stickyCta.classList.remove("is-visible");
+    }
+  };
+
+  toggleStickyCta();
+  window.addEventListener("scroll", toggleStickyCta, { passive: true });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
