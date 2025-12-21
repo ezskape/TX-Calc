@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WattWise | Electricity Rate Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: false,
+        },
+      };
+    </script>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
   </head>
@@ -17,7 +25,30 @@
           <p class="subheadline">
             Instantly calculate your true price per kWh and your real monthly electricity bill.
           </p>
-          <a class="primary-cta" href="{{ url_for('index') }}">Start Calculator</a>
+          <form id="zip-rate-form" class="w-full max-w-xl">
+            <div class="flex w-full flex-col gap-3 sm:flex-row sm:items-stretch">
+              <label class="sr-only" for="zip-code-input">Zip Code</label>
+              <input
+                id="zip-code-input"
+                name="zip"
+                type="text"
+                maxlength="5"
+                inputmode="numeric"
+                pattern="\d{5}"
+                placeholder="Enter Zip"
+                class="flex-1 rounded-lg border border-gray-200 px-4 py-3 text-base text-gray-900 shadow-md focus:border-[#0061d1] focus:outline-none focus:ring-2 focus:ring-[#0061d1]"
+                required
+                aria-describedby="zip-helper"
+              />
+              <button
+                type="submit"
+                class="rounded-lg bg-[#0061d1] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-[#004fa8] focus:outline-none focus:ring-2 focus:ring-[#0061d1] focus:ring-offset-2"
+              >
+                Get My Rates
+              </button>
+            </div>
+            <p id="zip-helper" class="mt-2 text-sm text-gray-600">Enter your 5-digit Texas zip code.</p>
+          </form>
         </div>
         <div class="hero-visual" aria-hidden="true">
             <img
@@ -82,5 +113,6 @@
     </main>
 
     <footer class="footer">© 2025 WattWise</footer>
+    <script src="{{ url_for('static', filename='js/landing.js') }}" defer></script>
   </body>
 </html>
