@@ -44,6 +44,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   zipInput.addEventListener("input", sanitizeZip);
 
+  if (stickyCta) {
+    stickyCta.addEventListener("click", (event) => {
+      event.preventDefault();
+      sanitizeZip();
+
+      const zip = zipInput.value.trim();
+      const targetUrl = zip ? `/calculator?pc=${encodeURIComponent(zip)}` : "/calculator";
+
+      window.location.href = targetUrl;
+    });
+  }
+
   const toggleStickyCta = () => {
     if (!stickyCta) return;
     if (window.scrollY > 500) {
