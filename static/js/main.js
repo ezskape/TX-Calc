@@ -480,20 +480,12 @@ function applyUrlParameters() {
     return;
   }
 
-  const zipParam = searchParams.get("zip");
-  if (zipParam) {
-    const usageInputs = [
-      document.getElementById("fixed-usage"),
-      document.getElementById("credit-usage"),
-      document.getElementById("touTotalUsage"),
-    ];
-
-    usageInputs.forEach((input) => {
-      if (input) {
-        input.value = zipParam;
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-    });
+  const postalCodeParam = searchParams.get("pc");
+  if (postalCodeParam) {
+    const postalCodeField = document.getElementById("postal-code-param");
+    if (postalCodeField) {
+      postalCodeField.value = postalCodeParam.trim();
+    }
   }
 
   const tduParam = searchParams.get("tdu");
@@ -519,5 +511,21 @@ function applyUrlParameters() {
       tduSelect.value = mappedValue;
       tduSelect.dispatchEvent(new Event("change", { bubbles: true }));
     }
+  }
+
+  const usageParam = searchParams.get("usage");
+  if (usageParam) {
+    const usageInputs = [
+      document.getElementById("fixed-usage"),
+      document.getElementById("credit-usage"),
+      document.getElementById("touTotalUsage"),
+    ];
+
+    usageInputs.forEach((input) => {
+      if (input) {
+        input.value = usageParam;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
   }
 }
