@@ -134,8 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "79848",
   ];
 
-  const tnmpZipSet = new Set(tnmpZips);
-
   const sanitizeZip = () => {
     const digitsOnly = zipInput.value.replace(/\D/g, "").slice(0, 5);
     if (zipInput.value !== digitsOnly) {
@@ -145,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getTDUFromZip = (zip) => {
-    if (tnmpZipSet.has(zip)) {
+    if (tnmpZips.includes(zip)) {
       return "TNMP";
     }
 
