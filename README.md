@@ -61,6 +61,10 @@ A simple Flask application that helps customers understand their true electricit
 └── requirements.txt    # Python dependencies
 ```
 
+## TDU Routing Logic
+
+The calculator uses the `pc` query parameter exclusively for postal codes and the `usage` field strictly for energy values. Keeping these values isolated prevents misrouting True Distribution Utility (TDU) selection and avoids calculation errors that can occur when postal codes and usage values are mixed.
+
 ## Testing the calculator manually
 
 The API expects all numeric values. Usage must be greater than zero. As an example, entering the following values:
@@ -75,4 +79,3 @@ Produces:
 
 - True Rate Per kWh: `14.10 ¢/kWh`
 - Approximate Bill Amount: `$141.00`
-

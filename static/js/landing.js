@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     zipInput.setCustomValidity("");
   };
 
+  // CRITICAL: Always check the specific TNMP zip list before general prefix rules to handle service area overlaps.
   const getTDUFromZip = (zip) => {
     if (tnmpZips.includes(zip)) {
       return "TNMP";
