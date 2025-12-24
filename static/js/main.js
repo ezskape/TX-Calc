@@ -28,6 +28,47 @@ const tduFees = {
   },
 };
 
+function normalizeRateInput(input) {
+  if (!input) {
+    return false;
+  }
+
+  const value = Number(input.value);
+  if (!Number.isFinite(value) || value >= 1 || value <= 0) {
+    return false;
+  }
+
+  const normalizedValue = +(value * 100).toFixed(4);
+  input.value = normalizedValue.toString();
+  showNormalizationFeedback(input);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  return true;
+}
+
+function normalizeRateInputs(inputs) {
+  return inputs.some((input) => normalizeRateInput(input));
+}
+
+function showNormalizationFeedback(input) {
+  input.classList.add("input-normalized");
+
+  const parent = input.parentElement;
+  const existingTooltip = parent?.querySelector(".input-normalized-tooltip");
+  if (existingTooltip) {
+    existingTooltip.remove();
+  }
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "input-normalized-tooltip";
+  tooltip.textContent = "Converted $ to ¢";
+  input.insertAdjacentElement("afterend", tooltip);
+
+  setTimeout(() => {
+    input.classList.remove("input-normalized");
+    tooltip.remove();
+  }, 1500);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
   const activePanelId = setupTabs((panelId) => {
@@ -64,6 +105,13 @@ class PlanCalculator {
     this.form = form;
     this.planType = form.dataset.planType;
 
+    this.rateInputs = [];
+    if (this.planType === "fixed_rate") {
+      this.rateInputs.push(this.form.querySelector("#fixed-energy-rate"));
+    } else if (this.planType === "fixed_rate_credit") {
+      this.rateInputs.push(this.form.querySelector("#credit-energy-rate"));
+    }
+
     this.trueRate = panel.querySelector(".result-true-rate");
     this.billAmount = panel.querySelector(".result-bill-amount");
     this.resultsContent = panel.querySelector(".results-grid");
@@ -78,6 +126,10 @@ class PlanCalculator {
     this.hideResults();
     this.clearError();
 
+    this.rateInputs.forEach((input) => {
+      input?.addEventListener("blur", () => normalizeRateInput(input));
+    });
+
     this.form.addEventListener("submit", (event) => this.handleSubmit(event));
     this.form.addEventListener("input", () => this.handleInput());
     if (this.clearButton) {
@@ -88,6 +140,8 @@ class PlanCalculator {
   async handleSubmit(event) {
     event.preventDefault();
     this.clearError();
+
+    normalizeRateInputs(this.rateInputs);
 
     const formData = new FormData(this.form);
     const payload = Object.fromEntries(formData.entries());
@@ -357,6 +411,8 @@ function setupTouCalculator() {
     freeUsage: panel.querySelector("#touFreeUsage"),
   };
 
+  const touRateInputs = [inputs.onPeakRate, inputs.offPeakRate];
+
   const calculateButton = panel.querySelector("#touCalculateBtn");
   const clearButton = panel.querySelector("#touClearBtn");
   const effectiveRateDisplay = panel.querySelector("#touEffectiveRate");
@@ -415,6 +471,7 @@ function setupTouCalculator() {
   };
 
   calculateButton.addEventListener("click", () => {
+    normalizeRateInputs(touRateInputs);
     clearError();
     if (!inputsHaveValues()) {
       hideResults();
@@ -458,6 +515,7 @@ function setupTouCalculator() {
       hideResults();
       clearError();
     });
+    input?.addEventListener("blur", () => normalizeRateInput(input));
   });
 
   clearButton?.addEventListener("click", () => {
