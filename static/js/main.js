@@ -28,6 +28,15 @@ const tduFees = {
   },
 };
 
+const energyRateInputIds = [
+  "fixed-energy-rate",
+  "credit-energy-rate",
+  "touOnPeakRate",
+  "touOffPeakRate",
+];
+
+const normalizationFlashDurationMs = 900;
+
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
   const activePanelId = setupTabs((panelId) => {
@@ -37,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   tduController = setupTduSelector();
+  setupEnergyRateNormalization();
   applyUrlParameters();
 
   const initialPanelId =
@@ -88,6 +98,7 @@ class PlanCalculator {
   async handleSubmit(event) {
     event.preventDefault();
     this.clearError();
+    normalizeAllEnergyRateInputs();
 
     const formData = new FormData(this.form);
     const payload = Object.fromEntries(formData.entries());
@@ -416,6 +427,7 @@ function setupTouCalculator() {
 
   calculateButton.addEventListener("click", () => {
     clearError();
+    normalizeAllEnergyRateInputs();
     if (!inputsHaveValues()) {
       hideResults();
       showError("Invalid or missing input data");
@@ -472,6 +484,111 @@ function setupTouCalculator() {
 
   hideResults();
   clearError();
+}
+
+function setupEnergyRateNormalization() {
+  const rateInputs = getEnergyRateInputs();
+
+  rateInputs.forEach((input) => {
+    ["change", "blur"].forEach((eventName) => {
+      input.addEventListener(eventName, () => normalizeEnergyRateInput(input));
+    });
+  });
+}
+
+function getEnergyRateInputs() {
+  const inputs = [];
+
+  energyRateInputIds.forEach((inputId) => {
+    const input = document.getElementById(inputId);
+    if (input) {
+      inputs.push(input);
+    }
+  });
+
+  return inputs;
+}
+
+function flashNormalization(input) {
+  input.classList.add("input-normalized");
+  window.setTimeout(() => {
+    input.classList.remove("input-normalized");
+  }, normalizationFlashDurationMs);
+}
+
+function normalizeEnergyRateInput(input) {
+  if (!input) {
+    return false;
+  }
+
+  const numericValue = Number(input.value);
+
+  if (!Number.isFinite(numericValue) || numericValue <= 0 || numericValue >= 1) {
+    return false;
+  }
+
+  const normalizedValue = Number((numericValue * 100).toFixed(3));
+  const asString = Number.isInteger(normalizedValue)
+    ? normalizedValue.toString()
+    : normalizedValue.toString().replace(/(\.\d*?[1-9])0+$/, "$1");
+
+  input.value = asString;
+  flashNormalization(input);
+  return true;
+}
+
+function normalizeAllEnergyRateInputs() {
+  const inputs = getEnergyRateInputs();
+  inputs.forEach((input) => normalizeEnergyRateInput(input));
+}
+
+function runRateNormalizationConsoleTest() {
+  const testInputs = [
+    { inputId: "fixed-energy-rate", value: 7.5, expected: 7.5 },
+    { inputId: "credit-energy-rate", value: 0.11, expected: 11 },
+    { inputId: "touOnPeakRate", value: 0.12, expected: 12 },
+    { inputId: "touOffPeakRate", value: 0.09, expected: 9 },
+  ];
+
+  const results = [];
+
+  testInputs.forEach(({ inputId, value, expected }) => {
+    const input = document.getElementById(inputId);
+
+    if (!input) {
+      results.push({ inputId, error: "Input not found" });
+      return;
+    }
+
+    input.value = value.toString();
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    normalizeEnergyRateInput(input);
+
+    const after = Number(input.value);
+    const pass = Number.isFinite(after) && Math.abs(after - expected) < 0.0001;
+
+    results.push({ inputId, before: value, after, expected, pass });
+  });
+
+  let allPassed = true;
+  results.forEach((result) => {
+    if (!result.pass && !result.error) {
+      allPassed = false;
+    }
+  });
+
+  console.table(results);
+  if (!allPassed) {
+    console.warn("Energy rate normalization test encountered mismatches.", results);
+  } else {
+    console.info("Energy rate normalization test passed for all provided inputs.");
+  }
+
+  return results;
+}
+
+if (typeof window !== "undefined") {
+  window.runRateNormalizationConsoleTest = runRateNormalizationConsoleTest;
 }
 
 function applyUrlParameters() {
