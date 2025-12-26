@@ -10,7 +10,7 @@
   <body>
     <main class="container">
       <header class="page-header">
-        <div class="brand-mark">
+        <a class="brand-mark" href="{{ url_for('landing') }}" aria-label="Go to WattWise home">
           <img
             src="{{ url_for('static', filename='img/wattwise-icon.svg') }}"
             alt="WattWise icon"
@@ -18,7 +18,7 @@
           />
           <h1 class="brand-title">WattWise</h1>
           <p class="brand-tagline">Never guess your electricity costs again</p>
-        </div>
+        </a>
       </header>
       <input type="hidden" id="postal-code-param" aria-hidden="true" />
 

@@ -18,13 +18,13 @@
   <body>
     <header class="nav-shell" aria-label="WattWise navigation">
       <div class="nav-bar">
-        <div class="nav-brand">
+        <a class="nav-brand" href="{{ url_for('landing') }}" aria-label="Go to WattWise home">
           <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="nav-icon" />
           <div class="nav-copy">
             <span class="nav-title">WattWise</span>
             <span class="nav-subtitle">True-rate calculator</span>
           </div>
-        </div>
+        </a>
         <a id="sticky-nav-cta" class="nav-cta" href="{{ url_for('calculator') }}">⚡ Calculate Now</a>
       </div>
     </header>
