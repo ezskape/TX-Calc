@@ -536,6 +536,14 @@ h6,
   margin-bottom: 0;
 }
 
+.page-footer {
+  text-align: center;
+  color: var(--ww-gray-500);
+  padding: 1.5rem 1.25rem 2.5rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 640px) {
   .tab-bar {
     justify-content: center;
