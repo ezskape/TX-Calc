@@ -31,40 +31,43 @@
       </script>
       {% endif %}
 
-      <div class="tab-bar" role="tablist" aria-label="Plan options">
-        <button
-          class="tab-button is-active"
-          id="tab-fixed-rate"
-          type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls="panel-fixed-rate"
-          data-target="panel-fixed-rate"
-        >
-          Fixed Rate
-        </button>
-        <button
-          class="tab-button"
-          id="tab-fixed-rate-credit"
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="panel-fixed-rate-credit"
-          data-target="panel-fixed-rate-credit"
-        >
-          Fixed Rate with Credit
-        </button>
-        <button
-          class="tab-button"
-          id="tab-tou-plan"
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="tou-plan"
-          data-target="tou-plan"
-        >
-          Time-of-Use (Free Nights/Weekends)
-        </button>
+      <div class="plan-type-row">
+        <span class="plan-type-label">Select plan type:</span>
+        <div class="tab-bar" role="tablist" aria-label="Plan options">
+          <button
+            class="tab-button is-active"
+            id="tab-fixed-rate"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-fixed-rate"
+            data-target="panel-fixed-rate"
+          >
+            Fixed Rate
+          </button>
+          <button
+            class="tab-button"
+            id="tab-fixed-rate-credit"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-fixed-rate-credit"
+            data-target="panel-fixed-rate-credit"
+          >
+            Fixed Rate with Credit
+          </button>
+          <button
+            class="tab-button"
+            id="tab-tou-plan"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="tou-plan"
+            data-target="tou-plan"
+          >
+            Time-of-Use (Free Nights/Weekends)
+          </button>
+        </div>
       </div>
 
       <section class="card tdu-card" aria-label="Transmission and Distribution Utility selector">
