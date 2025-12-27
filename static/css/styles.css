@@ -141,8 +141,10 @@ h6,
 
 .plan-selection-label {
   margin-right: 20px;
+  margin-bottom: 0;
   font-weight: 500;
   font-size: 1rem;
+  line-height: normal;
 }
 
 .tab-bar {
