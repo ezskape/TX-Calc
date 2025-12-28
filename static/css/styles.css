@@ -533,6 +533,25 @@ h6,
   box-shadow: 0 12px 24px rgba(0, 59, 138, 0.18);
 }
 
+@media (max-width: 768px) {
+  .result-email-input-row {
+    display: flex;
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  .result-email-input {
+    width: 100% !important;
+    flex: 0 1 auto !important;
+    height: 48px;
+  }
+
+  .result-email-button {
+    width: 100%;
+    margin-top: 12px;
+  }
+}
+
 .result-email-button:hover,
 .result-email-button:focus-visible {
   transform: translateY(-1px);
