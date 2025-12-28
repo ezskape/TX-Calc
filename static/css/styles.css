@@ -540,6 +540,25 @@ h6,
   outline: none;
 }
 
+@media (max-width: 768px) {
+  .result-email-input-row {
+    display: flex;
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  .result-email-input {
+    width: 100%;
+    min-height: 45px;
+    max-width: none;
+  }
+
+  .result-email-button {
+    width: 100%;
+    margin-top: 12px;
+  }
+}
+
 .result-email-disclaimer {
   font-size: 0.8rem;
   opacity: 0.75;
