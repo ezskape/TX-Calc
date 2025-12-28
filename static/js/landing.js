@@ -188,6 +188,27 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleStickyCta();
   window.addEventListener("scroll", toggleStickyCta, { passive: true });
 
+  if (stickyCta) {
+    stickyCta.addEventListener("click", (event) => {
+      sanitizeZip();
+
+      const zip = zipInput.value.trim();
+      const isValidZip = /^\d{5}$/.test(zip);
+
+      if (!isValidZip) {
+        return;
+      }
+
+      const tdu = getTDUFromZip(zip);
+      const destinationUrl = new URL(stickyCta.href, window.location.origin);
+      destinationUrl.searchParams.set("pc", zip);
+      destinationUrl.searchParams.set("tdu", tdu);
+
+      event.preventDefault();
+      window.location.href = destinationUrl.toString();
+    });
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     sanitizeZip();
