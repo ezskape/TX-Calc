@@ -36,6 +36,7 @@ const energyRateInputIds = [
 ];
 
 const normalizationFlashDurationMs = 900;
+let supabaseClient = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
@@ -48,6 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
   tduController = setupTduSelector();
   setupEnergyRateNormalization();
   applyUrlParameters();
+
+  supabaseClient = initializeSupabaseClient();
+  setupLeadCapture();
 
   const initialPanelId =
     document.querySelector(".tab-panel.is-active")?.id || activePanelId;
@@ -645,4 +649,105 @@ function applyUrlParameters() {
       }
     });
   }
+}
+
+function initializeSupabaseClient() {
+  if (typeof window === "undefined" || !window.supabase) {
+    return null;
+  }
+
+  const config = window.SUPABASE_CONFIG || {};
+  if (!config.url || !config.key) {
+    return null;
+  }
+
+  return window.supabase.createClient(config.url, config.key);
+}
+
+function setupLeadCapture() {
+  const forms = document.querySelectorAll(".result-email-form");
+  if (!forms.length) {
+    return;
+  }
+
+  const postalCodeField = document.getElementById("postal-code-param");
+  const subscribeSuccessBanner = document.querySelector("[data-subscribe-success]");
+  const successMessages = document.querySelectorAll("[data-email-success]");
+
+  forms.forEach((form) => {
+    const emailInput = form.querySelector('input[type="email"]');
+    const submitButton = form.querySelector(".result-email-button");
+    const errorMessage = ensureLeadErrorMessage(form);
+
+    if (!emailInput || !submitButton) {
+      return;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (!supabaseClient) {
+        setLeadErrorMessage(errorMessage, "Lead capture is unavailable right now. Please try again soon.");
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const zipCode = postalCodeField?.value.trim() || "";
+
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Saving...";
+      setLeadErrorMessage(errorMessage, "");
+
+      const { error } = await supabaseClient
+        .from("leads")
+        .insert([{ email, zip_code: zipCode || null }]);
+
+      if (error) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+        setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
+        return;
+      }
+
+      emailInput.value = "";
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+
+      successMessages.forEach((message) => {
+        message.hidden = false;
+      });
+
+      if (subscribeSuccessBanner) {
+        subscribeSuccessBanner.hidden = false;
+      }
+    });
+  });
+}
+
+function ensureLeadErrorMessage(form) {
+  let errorMessage = form.querySelector(".result-email-error");
+
+  if (!errorMessage) {
+    errorMessage = document.createElement("p");
+    errorMessage.className = "result-email-error";
+    errorMessage.hidden = true;
+    form.append(errorMessage);
+  }
+
+  return errorMessage;
+}
+
+function setLeadErrorMessage(target, message) {
+  if (!target) {
+    return;
+  }
+
+  target.textContent = message;
+  target.hidden = !message;
 }
