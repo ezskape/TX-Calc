@@ -706,7 +706,7 @@ function setupLeadCapture() {
 
       const { error } = await supabaseClient
         .from("leads")
-        .insert([{ email, zip_code: zipCode || null }]);
+        .insert([{ email, zip_code: zipCode || "" }]);
 
       if (error) {
         submitButton.disabled = false;
