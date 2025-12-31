@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from os import environ
 from typing import Any, Dict
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
@@ -94,9 +95,16 @@ class PlanInputWithCredit(PlanInput):
         return max(adjusted_amount, 0.0)
 
 
+def supabase_context() -> Dict[str, str]:
+    return {
+        "supabase_url": environ.get("SUPABASE_URL", ""),
+        "supabase_key": environ.get("SUPABASE_KEY", ""),
+    }
+
+
 @app.route("/")
 def index() -> str:
-    return render_template("index.html")
+    return render_template("index.html", **supabase_context())
 
 
 @app.route("/landing")
@@ -106,7 +114,7 @@ def landing() -> str:
 
 @app.route("/calculator")
 def calculator() -> str:
-    return render_template("index.html")
+    return render_template("index.html", **supabase_context())
 
 
 @app.route("/subscribe", methods=["POST"])

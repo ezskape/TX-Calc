@@ -6,6 +6,7 @@
     <title>WattWise | Never guess your electricity costs again</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   </head>
   <body>
     <main class="container">
@@ -22,8 +23,17 @@
       </header>
       <input type="hidden" id="postal-code-param" aria-hidden="true" />
 
+      <div
+        class="subscribe-success"
+        data-subscribe-success
+        {% if request.args.get("subscribed") != "1" %}
+        hidden
+        {% endif %}
+      >
+        Thanks! You’re on the list.
+      </div>
+
       {% if request.args.get("subscribed") == "1" %}
-      <div class="subscribe-success">Thanks! You’re on the list.</div>
       <script>
         setTimeout(function () {
           window.location.href = window.location.pathname;
@@ -203,9 +213,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -369,9 +385,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -498,9 +520,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -535,6 +563,12 @@
 
     <footer class="page-footer">© 2025 WattWise</footer>
 
+    <script>
+      window.SUPABASE_CONFIG = {
+        url: {{ supabase_url | tojson }},
+        key: {{ supabase_key | tojson }},
+      };
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
   </body>
 </html>
