@@ -23,16 +23,6 @@
       </header>
       <input type="hidden" id="postal-code-param" aria-hidden="true" />
 
-      <div
-        class="subscribe-success"
-        data-subscribe-success
-        {% if request.args.get("subscribed") != "1" %}
-        hidden
-        {% endif %}
-      >
-        Thanks! You’re on the list.
-      </div>
-
       {% if request.args.get("subscribed") == "1" %}
       <script>
         setTimeout(function () {

@@ -671,7 +671,6 @@ function setupLeadCapture() {
   }
 
   const postalCodeField = document.getElementById("postal-code-param");
-  const subscribeSuccessBanner = document.querySelector("[data-subscribe-success]");
   const successMessages = document.querySelectorAll("[data-email-success]");
 
   forms.forEach((form) => {
@@ -722,10 +721,6 @@ function setupLeadCapture() {
       successMessages.forEach((message) => {
         message.hidden = false;
       });
-
-      if (subscribeSuccessBanner) {
-        subscribeSuccessBanner.hidden = false;
-      }
     });
   });
 }
