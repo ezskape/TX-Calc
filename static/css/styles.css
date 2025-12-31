@@ -116,14 +116,6 @@ h6,
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
-.subscribe-success {
-  margin: 12px 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--ww-primary-600);
-  line-height: 1.45;
-}
-
 .subtitle {
   margin-top: 0.75rem;
   color: var(--ww-gray-600);
@@ -479,9 +471,12 @@ h6,
 
   .result-email-success {
     margin: 0;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--ww-success);
+    font-size: 1.05rem;
+    font-weight: 700;
+    background: linear-gradient(120deg, var(--ww-primary-600), var(--ww-accent-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   .result-email-error {
