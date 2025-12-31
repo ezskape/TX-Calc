@@ -566,7 +566,7 @@
     <script>
       window.SUPABASE_CONFIG = {
         url: {{ supabase_url | tojson }},
-        key: {{ supabase_key | tojson }},
+        key: {{ supabase_anon_key | tojson }},
       };
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>

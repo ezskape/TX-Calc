@@ -98,7 +98,7 @@ class PlanInputWithCredit(PlanInput):
 def supabase_context() -> Dict[str, str]:
     return {
         "supabase_url": environ.get("SUPABASE_URL", ""),
-        "supabase_key": environ.get("SUPABASE_KEY", ""),
+        "supabase_anon_key": environ.get("SUPABASE_ANON_KEY", ""),
     }
 
 
