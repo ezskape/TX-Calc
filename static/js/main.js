@@ -710,6 +710,25 @@ function setupLeadCapture() {
       if (error) {
         submitButton.disabled = false;
         submitButton.textContent = originalText;
+
+        const isDuplicateError =
+          error.code === "23505" ||
+          (typeof error.message === "string" &&
+            error.message.toLowerCase().includes("duplicate"));
+
+        if (isDuplicateError) {
+          emailInput.value = "";
+          successMessages.forEach((message) => {
+            message.hidden = false;
+          });
+          setLeadErrorMessage(
+            errorMessage,
+            "You're already on the list! We'll be in touch soon.",
+            { variant: "info" }
+          );
+          return;
+        }
+
         setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
         return;
       }
@@ -738,11 +757,13 @@ function ensureLeadErrorMessage(form) {
   return errorMessage;
 }
 
-function setLeadErrorMessage(target, message) {
+function setLeadErrorMessage(target, message, { variant = "error" } = {}) {
   if (!target) {
     return;
   }
 
+  target.classList.toggle("is-info", variant === "info");
+  target.classList.toggle("is-error", variant === "error");
   target.textContent = message;
   target.hidden = !message;
 }
