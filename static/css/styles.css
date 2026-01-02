@@ -485,6 +485,14 @@ h6,
     color: var(--ww-error);
   }
 
+  .result-email-error.is-info {
+    color: var(--ww-primary-700);
+    font-weight: 700;
+    background-color: rgba(26, 123, 255, 0.08);
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+  }
+
 .result-email-form {
   margin-top: 4px;
   display: flex;
