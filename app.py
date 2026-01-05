@@ -117,7 +117,7 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> None:
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
-        "from": "WattWise <welcome@mail.wattwise.com>",
+        "from": "WattWise onboarding@resend.dev",
         "to": email,
         "subject": "Your Texas Electricity Hidden Fee Guide",
         "html": f"""
