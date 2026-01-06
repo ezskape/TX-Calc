@@ -2,14 +2,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from os import environ
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
+from dotenv import load_dotenv
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
+import resend
 
 from tiered_plan import TieredPlanInput, calculateTieredPlan
 
+load_dotenv()
+
 app = Flask(__name__)
 app.secret_key = "replace-me"
+
+resend.api_key = environ.get("RESEND_API_KEY", "")
 
 
 @dataclass
@@ -102,6 +108,45 @@ def supabase_context() -> Dict[str, str]:
     }
 
 
+def send_welcome_email(email: str, zip_code: Optional[str] = None) -> None:
+    if not resend.api_key:
+        app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
+        return
+
+    guide_link = "https://example.com/texas-electricity-hidden-fee-guide"
+    zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
+
+    email_payload = {
+        "from": "WattWise onboarding@resend.dev",
+        "to": email,
+        "subject": "Your Texas Electricity Hidden Fee Guide",
+        "html": f"""
+            <div style='font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6;'>
+              <h1 style='color: #0b61d6;'>Welcome to WattWise</h1>
+              <p>Thanks for signing up to get the Texas Electricity Hidden Fee Guide.</p>
+              {zip_line}
+              <p>Click the link below to access your guide any time:</p>
+              <p>
+                <a href='{guide_link}' style='background: #0b61d6; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 6px;'>
+                  View the Hidden Fee Guide
+                </a>
+              </p>
+              <p>If you have any questions, just hit reply — we're here to help you avoid surprise charges.</p>
+              <p style='margin-top: 24px;'>
+                Cheers,<br />
+                The WattWise Team
+              </p>
+            </div>
+        """,
+    }
+
+    try:
+        resend.Emails.send(email_payload)
+        app.logger.info("Welcome email sent to %s", email)
+    except Exception as error:  # noqa: BLE001
+        app.logger.error("Failed to send welcome email to %s: %s", email, error, exc_info=True)
+
+
 @app.route("/")
 def index() -> str:
     return render_template("index.html", **supabase_context())
@@ -120,9 +165,14 @@ def calculator() -> str:
 @app.route("/subscribe", methods=["POST"])
 def subscribe() -> Any:
     email = request.form.get("email")
+    zip_code = request.form.get("zip") or request.form.get("zipcode") or request.form.get("pc")
 
     if email:
         print(f"New WattWise subscriber: {email}")
+        try:
+            send_welcome_email(email, zip_code)
+        except Exception:
+            app.logger.error("Unable to send welcome email for %s", email, exc_info=True)
 
     try:
         flash("Thanks! We’ll email you helpful updates soon.")
