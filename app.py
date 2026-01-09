@@ -14,6 +14,8 @@ load_dotenv()
 app = Flask(__name__)
 
 resend.api_key = os.environ.get("RESEND_API_KEY", "")
+RESEND_FROM = os.environ.get("RESEND_FROM", "Resend <onboarding@resend.dev>")
+app.logger.info("Using RESEND_FROM=%s", RESEND_FROM)
 
 @dataclass
 class PlanInput:
@@ -114,7 +116,7 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> None:
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
-        "from": "WattWise onboarding@resend.dev",
+        "from": RESEND_FROM,
         "to": email,
         "subject": "Your Texas Electricity Hidden Fee Guide",
         "html": f"""
