@@ -164,6 +164,7 @@ def subscribe() -> Any:
     app.logger.info("HIT /subscribe")
     email = request.form.get("email")
     zip_code = request.form.get("zip") or request.form.get("zipcode") or request.form.get("pc")
+    app.logger.info("HIT /subscribe email=%s zip=%s", email, zip_code)
 
     if email:
         print(f"New WattWise subscriber: {email}")

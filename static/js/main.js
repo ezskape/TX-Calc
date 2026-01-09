@@ -665,20 +665,23 @@ function initializeSupabaseClient() {
 }
 
 function setupLeadCapture() {
-  const forms = document.querySelectorAll(".result-email-form");
-  if (!forms.length) {
+  const leadForms = document.querySelectorAll(".result-email-form");
+  if (!leadForms.length) {
     return;
   }
 
-  const postalCodeField = document.getElementById("postal-code-param");
-  const successMessages = document.querySelectorAll("[data-email-success]");
+  const postalCodeParamField = document.getElementById("postal-code-param");
 
-  forms.forEach((form) => {
-    const emailInput = form.querySelector('input[type="email"]');
-    const submitButton = form.querySelector(".result-email-button");
-    const errorMessage = ensureLeadErrorMessage(form);
+  leadForms.forEach((form) => {
+    const leadEmailInput = form.querySelector('input[type="email"]');
+    const leadSubmitButton = form.querySelector(".result-email-button");
+    const leadErrorMessage = ensureLeadErrorMessage(form);
+    const leadCard = form.closest(".result-email-card") || form.parentElement;
+    const leadSuccessMessages = leadCard
+      ? leadCard.querySelectorAll("[data-email-success]")
+      : [];
 
-    if (!emailInput || !submitButton) {
+    if (!leadEmailInput || !leadSubmitButton) {
       return;
     }
 
@@ -690,56 +693,87 @@ function setupLeadCapture() {
         return;
       }
 
-      if (!supabaseClient) {
-        setLeadErrorMessage(errorMessage, "Lead capture is unavailable right now. Please try again soon.");
-        return;
-      }
+      const email = leadEmailInput.value.trim();
+      const zipCode = postalCodeParamField?.value.trim() || "";
+      const originalText = leadSubmitButton.textContent;
 
-      const email = emailInput.value.trim();
-      const zipCode = postalCodeField?.value.trim() || "";
+      leadSubmitButton.disabled = true;
+      leadSubmitButton.textContent = "Saving...";
+      setLeadErrorMessage(leadErrorMessage, "");
 
-      const originalText = submitButton.textContent;
-      submitButton.disabled = true;
-      submitButton.textContent = "Saving...";
-      setLeadErrorMessage(errorMessage, "");
+      let supabaseStatus = "skipped";
+      if (supabaseClient) {
+        const { error } = await supabaseClient
+          .from("leads")
+          .insert([{ email, zip_code: zipCode || "" }]);
 
-      const { error } = await supabaseClient
-        .from("leads")
-        .insert([{ email, zip_code: zipCode || "" }]);
+        if (error) {
+          const isDuplicateError =
+            error.code === "23505" ||
+            (typeof error.message === "string" &&
+              error.message.toLowerCase().includes("duplicate"));
 
-      if (error) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalText;
-
-        const isDuplicateError =
-          error.code === "23505" ||
-          (typeof error.message === "string" &&
-            error.message.toLowerCase().includes("duplicate"));
-
-        if (isDuplicateError) {
-          emailInput.value = "";
-          successMessages.forEach((message) => {
-            message.hidden = false;
-          });
-          setLeadErrorMessage(
-            errorMessage,
-            "You're already on the list! We'll be in touch soon.",
-            { variant: "info" }
-          );
-          return;
+          if (isDuplicateError) {
+            supabaseStatus = "duplicate";
+          } else {
+            leadSubmitButton.disabled = false;
+            leadSubmitButton.textContent = originalText;
+            setLeadErrorMessage(leadErrorMessage, "We couldn’t save your email. Please try again.");
+            return;
+          }
+        } else {
+          supabaseStatus = "saved";
         }
+      }
 
-        setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
+      let subscribeError = null;
+      try {
+        const response = await fetch("/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            email,
+            zip: zipCode || "",
+          }).toString(),
+        });
+
+        if (!response.ok) {
+          throw new Error("Unable to send the welcome email.");
+        }
+      } catch (error) {
+        subscribeError = error;
+      }
+
+      leadSubmitButton.disabled = false;
+      leadSubmitButton.textContent = originalText;
+
+      if (subscribeError && supabaseStatus === "skipped") {
+        setLeadErrorMessage(
+          leadErrorMessage,
+          "We couldn’t submit your email right now. Please try again."
+        );
         return;
       }
 
-      emailInput.value = "";
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-
-      successMessages.forEach((message) => {
+      leadEmailInput.value = "";
+      leadSuccessMessages.forEach((message) => {
         message.hidden = false;
       });
+
+      if (supabaseStatus === "duplicate") {
+        const duplicateMessage = subscribeError
+          ? "You're already on the list, but we couldn't send the welcome email yet."
+          : "You're already on the list! We'll be in touch soon.";
+        setLeadErrorMessage(leadErrorMessage, duplicateMessage, { variant: "info" });
+      } else if (subscribeError) {
+        setLeadErrorMessage(
+          leadErrorMessage,
+          "Saved your email, but we couldn't send the welcome email yet.",
+          { variant: "info" }
+        );
+      }
     });
   });
 }
