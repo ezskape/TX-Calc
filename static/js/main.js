@@ -707,29 +707,39 @@ function setupLeadCapture() {
         .from("leads")
         .insert([{ email, zip_code: zipCode || "" }]);
 
-      if (error) {
+      const isDuplicateError =
+        error?.code === "23505" ||
+        (typeof error?.message === "string" &&
+          error.message.toLowerCase().includes("duplicate"));
+
+      if (error && !isDuplicateError) {
         submitButton.disabled = false;
         submitButton.textContent = originalText;
-
-        const isDuplicateError =
-          error.code === "23505" ||
-          (typeof error.message === "string" &&
-            error.message.toLowerCase().includes("duplicate"));
-
-        if (isDuplicateError) {
-          emailInput.value = "";
-          successMessages.forEach((message) => {
-            message.hidden = false;
-          });
-          setLeadErrorMessage(
-            errorMessage,
-            "You're already on the list! We'll be in touch soon.",
-            { variant: "info" }
-          );
-          return;
-        }
-
         setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
+        return;
+      }
+
+      submitButton.textContent = "Sending...";
+
+      const emailResponse = await fetch("/subscribe", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: new URLSearchParams({
+          email,
+          zip: zipCode || "",
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+        setLeadErrorMessage(
+          errorMessage,
+          "We saved your email, but couldn’t send the guide right now. Please try again."
+        );
         return;
       }
 
@@ -740,6 +750,14 @@ function setupLeadCapture() {
       successMessages.forEach((message) => {
         message.hidden = false;
       });
+
+      if (isDuplicateError) {
+        setLeadErrorMessage(
+          errorMessage,
+          "You're already on the list! We'll be in touch soon.",
+          { variant: "info" }
+        );
+      }
     });
   });
 }

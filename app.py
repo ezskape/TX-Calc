@@ -105,10 +105,10 @@ def supabase_context() -> Dict[str, str]:
     }
 
 
-def send_welcome_email(email: str, zip_code: Optional[str] = None) -> None:
+def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
     if not resend.api_key:
         app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
-        return
+        return False
 
     guide_link = "https://example.com/texas-electricity-hidden-fee-guide"
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
@@ -140,8 +140,10 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> None:
     try:
         resend.Emails.send(email_payload)
         app.logger.info("Welcome email sent to %s", email)
+        return True
     except Exception as error:  # noqa: BLE001
         app.logger.error("Failed to send welcome email to %s: %s", email, error, exc_info=True)
+        return False
 
 
 @app.route("/")
@@ -164,13 +166,24 @@ def subscribe() -> Any:
     app.logger.info("HIT /subscribe")
     email = request.form.get("email")
     zip_code = request.form.get("zip") or request.form.get("zipcode") or request.form.get("pc")
+    wants_json = "application/json" in request.headers.get("Accept", "")
 
-    if email:
-        print(f"New WattWise subscriber: {email}")
-        try:
-            send_welcome_email(email, zip_code)
-        except Exception:
-            app.logger.error("Unable to send welcome email for %s", email, exc_info=True)
+    if not email:
+        if wants_json:
+            return jsonify({"error": "Email is required"}), 400
+        return redirect(url_for("index"))
+
+    print(f"New WattWise subscriber: {email}")
+    try:
+        email_sent = send_welcome_email(email, zip_code)
+    except Exception:
+        app.logger.error("Unable to send welcome email for %s", email, exc_info=True)
+        email_sent = False
+
+    if wants_json:
+        if not email_sent:
+            return jsonify({"error": "Unable to send email right now."}), 500
+        return jsonify({"success": True})
 
     try:
         flash("Thanks! We’ll email you helpful updates soon.")
