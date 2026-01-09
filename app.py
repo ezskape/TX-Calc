@@ -1,22 +1,19 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
-from os import environ
 from typing import Any, Dict, Optional
 
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from dotenv import load_dotenv
-from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
-import resend
 
-from tiered_plan import TieredPlanInput, calculateTieredPlan
+import resend
 
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "replace-me"
 
-resend.api_key = environ.get("RESEND_API_KEY", "")
-
+resend.api_key = os.environ.get("RESEND_API_KEY", "")
 
 @dataclass
 class PlanInput:
@@ -103,8 +100,8 @@ class PlanInputWithCredit(PlanInput):
 
 def supabase_context() -> Dict[str, str]:
     return {
-        "supabase_url": environ.get("SUPABASE_URL", ""),
-        "supabase_key": environ.get("SUPABASE_KEY", ""),
+        "supabase_url": os.environ.get("SUPABASE_URL", ""),
+        "supabase_key": os.environ.get("SUPABASE_KEY", ""),
     }
 
 
@@ -164,6 +161,7 @@ def calculator() -> str:
 
 @app.route("/subscribe", methods=["POST"])
 def subscribe() -> Any:
+    app.logger.info("HIT /subscribe")
     email = request.form.get("email")
     zip_code = request.form.get("zip") or request.form.get("zipcode") or request.form.get("pc")
 

@@ -225,7 +225,7 @@
               Thanks! You’re on the list.
             </p>
 
-            <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
+            <div class="result-email-form">
               <label for="result-email" class="sr-only">Email address</label>
               <div class="result-email-input-row">
                 <input
@@ -236,9 +236,9 @@
                   placeholder="you@example.com"
                   class="result-email-input"
                 />
-                <button type="submit" class="result-email-button calculate-button">Send me the guide</button>
+                <button type="button" id="subscribe-btn" class="result-email-button calculate-button">Send me the guide</button>
               </div>
-            </form>
+            </div>
 
             <p class="result-email-disclaimer">
               Your privacy is our priority. Unsubscribe anytime with one click.
