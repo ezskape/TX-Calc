@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WattWise | Texas Electricity Hidden Fee Guide</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+  </head>
+  <body>
+    <header class="nav-shell" aria-label="WattWise navigation">
+      <div class="nav-bar">
+        <a class="nav-brand" href="{{ url_for('landing') }}" aria-label="Go to WattWise home">
+          <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="nav-icon" />
+          <div class="nav-copy">
+            <span class="nav-title">WattWise</span>
+            <span class="nav-subtitle">True-rate calculator</span>
+          </div>
+        </a>
+        <a class="nav-cta is-visible" href="{{ url_for('calculator') }}">⚡ Calculate Now</a>
+      </div>
+    </header>
+
+    <main class="landing-container" style="max-width: 900px;">
+      <section class="section" aria-labelledby="guide-title">
+        <div class="section-header">
+          <h1 id="guide-title">Your Texas Electricity Hidden Fee Guide</h1>
+          <p class="section-subline">How to avoid overpaying — even when the advertised rate looks cheap.</p>
+        </div>
+
+        <div class="value-grid" style="margin-top: 2rem; grid-template-columns: 1fr; gap: 1.5rem;">
+          <article class="value-card">
+            <h2>Why advertised rates are misleading in Texas</h2>
+            <p>
+              Many plans promote an eye-catching cents-per-kWh number that only applies at one usage tier.
+              The real cost often includes additional delivery charges, base fees, and credits that shift the
+              effective rate once your usage changes.
+            </p>
+          </article>
+          <article class="value-card">
+            <h2>The difference between energy charges and TDU delivery charges</h2>
+            <p>
+              Your bill is made up of two separate parts: the energy charge from your retail provider and the
+              delivery charge from your local Transmission and Distribution Utility (TDU). TDUs apply both a
+              per-kWh delivery rate and a fixed monthly delivery charge that every customer pays.
+            </p>
+          </article>
+          <article class="value-card">
+            <h2>Common hidden fees</h2>
+            <ul>
+              <li><strong>Base charges:</strong> fixed monthly fees that raise your true rate at lower usage.</li>
+              <li><strong>Minimum usage fees:</strong> penalties when you do not hit a required kWh threshold.</li>
+              <li><strong>Bill credits with thresholds:</strong> discounts that disappear if you miss a usage band.</li>
+              <li><strong>Time-of-use fine print:</strong> free nights or weekends paired with higher daytime rates.</li>
+            </ul>
+          </article>
+          <article class="value-card">
+            <h2>How to read the Electricity Facts Label (EFL)</h2>
+            <p>
+              Look for the "Average Price" table, then read the sections on fees and credits. The EFL shows
+              pricing at 500, 1,000, and 2,000 kWh, plus any minimum usage fees, base charges, and TDU delivery
+              charges. If the EFL calls out a bill credit, confirm the exact usage range required to earn it.
+            </p>
+          </article>
+          <article class="value-card">
+            <h2>A quick checklist for any plan</h2>
+            <ol>
+              <li>Confirm the energy rate and TDU delivery rate separately.</li>
+              <li>Add the fixed base charges to your expected monthly total.</li>
+              <li>Check whether you qualify for bill credits at your typical usage.</li>
+              <li>Compare your effective rate at your real kWh usage—not just the advertised number.</li>
+            </ol>
+          </article>
+          <article class="value-card">
+            <h2>WattWise keeps it transparent</h2>
+            <p>
+              WattWise exists to reveal your true electricity cost, so you can compare plans with confidence
+              and avoid hidden fees. Use the calculator any time to see the real rate that matches your usage.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2025 WattWise</footer>
+  </body>
+</html>

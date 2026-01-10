@@ -112,7 +112,7 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
 
     resend_from = os.environ.get("RESEND_FROM", "WattWise <onboarding@resend.dev>")
 
-    guide_link = "https://example.com/texas-electricity-hidden-fee-guide"
+    guide_link = url_for("hidden_fee_guide", _external=True)
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
@@ -151,6 +151,11 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
 @app.route("/")
 def index() -> str:
     return render_template("index.html", **supabase_context())
+
+
+@app.route("/guide/texas-electricity-hidden-fees")
+def hidden_fee_guide() -> str:
+    return render_template("hidden_fee_guide.html")
 
 
 @app.route("/landing")
