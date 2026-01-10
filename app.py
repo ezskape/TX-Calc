@@ -110,11 +110,13 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
         app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
         return False
 
+    resend_from = os.environ.get("RESEND_FROM", "WattWise <onboarding@resend.dev>")
+
     guide_link = "https://example.com/texas-electricity-hidden-fee-guide"
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
-        "from": "WattWise onboarding@resend.dev",
+        "from": resend_from,
         "to": email,
         "subject": "Your Texas Electricity Hidden Fee Guide",
         "html": f"""
