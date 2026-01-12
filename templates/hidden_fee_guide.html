@@ -3,9 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WattWise | Texas Electricity Hidden Fee Guide</title>
+    <title>WattWise | Hidden Fee Decoder</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hidden_fee_guide.css') }}" />
   </head>
   <body>
     <header class="nav-shell" aria-label="WattWise navigation">
@@ -21,76 +22,114 @@
       </div>
     </header>
 
-    <main class="landing-container" style="max-width: 900px;">
-      <section class="section" aria-labelledby="guide-title">
-        <div class="section-header">
-          <h1 id="guide-title">How to avoid overpaying — even when the advertised rate looks cheap.</h1>
-        </div>
+    <main class="decoder-container">
+      <section class="decoder-header" aria-labelledby="decoder-title">
+        <h1 id="decoder-title">The WattWise Hidden Fee Decoder</h1>
+        <p class="decoder-subheadline">
+          Stop paying the "Teaser Rate" trap. Learn how to read your Electricity Facts Label (EFL) like an expert.
+        </p>
+      </section>
 
-        <div class="value-grid" style="margin-top: 2rem; grid-template-columns: 1fr; gap: 1.5rem;">
-          <article class="value-card" style="text-align: left;">
-            <h2>Why advertised rates are misleading in Texas</h2>
-            <p>
-              Many plans promote an eye-catching cents-per-kWh number that only applies at one usage tier.
-              The real cost often includes additional delivery charges, base fees, and credits that shift the
-              effective rate once your usage changes. Your bill is made up of two parts: the energy charge from
-              your retail provider and the delivery charge from your local Transmission and Distribution Utility
-              (TDU). TDUs apply both a per-kWh delivery rate and a fixed monthly delivery charge that every customer
-              pays.
-            </p>
-          </article>
-          <article class="value-card" style="text-align: left;">
-            <h2>Common hidden fees</h2>
-            <ul>
-              <li>
-                <strong>The &quot;Teaser Rate&quot; trap:</strong> the bold advertised rate (like 11.5¢/kWh) often applies only
-                at exactly 1,000 kWh. The &quot;average rate&quot; is a calculation, not a flat price—use 999 or 1,001 kWh and
-                your rate can jump when you miss a usage credit.
-              </li>
-              <li>
-                <strong>Minimum usage penalty:</strong> the most common hidden fee for energy-efficient homes or small
-                apartments. Look for EFL language like &quot;Minimum Usage Fee: $9.95 if usage is below 1,000 kWh.&quot;
-                You are literally being penalized for saving energy.
-              </li>
-              <li>
-                <strong>Base charges (subscription fees):</strong> a fixed $5–$15 monthly fee just for having the account.
-                If you use less power (a condo or guest house), a $10 base charge can add ~2¢ per kWh to your
-                effective rate.
-              </li>
-              <li>
-                <strong>Bill credits with thresholds:</strong> discounts that vanish if you miss a usage band, which can
-                make your rate jump even if your usage changes by a few kWh.
-              </li>
-              <li>
-                <strong>Time-of-use fine print:</strong> free nights or weekends paired with higher daytime rates that
-                erase the advertised savings if your usage timing does not match the plan.
-              </li>
-              <li>
-                <strong>TDU pass-through vs. bundled charges:</strong> if a rate looks too good to be true (like 6¢),
-                it may exclude TDU delivery fees, which often add another 4–5¢ per kWh.
-              </li>
-            </ul>
-          </article>
-          <article class="value-card" style="text-align: left;">
-            <h2>The &quot;Contract Detective&quot; checklist</h2>
-            <ol>
-              <li><strong>Early Termination Fee:</strong> is it a flat $150 or $20 per month remaining?</li>
-              <li><strong>Automatic Renewal:</strong> does the rate convert to a market rate after the contract ends?</li>
-              <li><strong>Document Fee:</strong> are you paying $2/month just to receive a paper bill?</li>
-              <li><strong>Separate charges:</strong> confirm the energy rate and TDU delivery rate are both listed.</li>
-              <li><strong>Base charges:</strong> add fixed fees to your expected monthly total.</li>
-              <li><strong>Bill credits:</strong> verify you will hit the usage threshold that unlocks them.</li>
-              <li><strong>Effective rate:</strong> compare the total at your real kWh usage, not the advertised number.</li>
-            </ol>
-          </article>
-          <article class="value-card" style="text-align: left;">
-            <h2>WattWise keeps it transparent</h2>
-            <p>
-              WattWise exists to reveal your true electricity cost, so you can compare plans with confidence
-              and avoid hidden fees. Use the calculator any time to see the real rate that matches your usage.
-            </p>
-          </article>
+      <section class="decoder-hero" aria-labelledby="efl-title">
+        <div class="decoder-hero-copy">
+          <h2 id="efl-title">The Interactive EFL Decoder</h2>
+          <p>
+            Hover over each hotspot to see the line items that quietly change your real electricity rate. These are
+            the fees that hide behind a simple advertised cents-per-kWh number.
+          </p>
         </div>
+        <div class="efl-card" role="img" aria-label="Mock Electricity Facts Label with highlighted line items">
+          <div class="efl-header">
+            <span>Electricity Facts Label (Sample)</span>
+            <span class="efl-rate">Average Price: 12.4¢ / kWh</span>
+          </div>
+          <div class="efl-table">
+            <div class="efl-row">
+              <span>Energy Charge</span>
+              <span>6.9¢ / kWh</span>
+            </div>
+            <div class="efl-row">
+              <span>TDU Delivery Charge</span>
+              <span>4.2¢ / kWh</span>
+            </div>
+            <div class="efl-row">
+              <span>Base Charge</span>
+              <span>$9.95 / month</span>
+            </div>
+            <div class="efl-row">
+              <span>Usage Credit</span>
+              <span>-$30 at 1,000 kWh</span>
+            </div>
+          </div>
+          <div class="efl-hotspot hotspot-energy">
+            <span class="efl-tooltip">
+              <strong>Energy Charge:</strong> Providers can pad this rate while showcasing a lower average price
+              that depends on hitting specific usage tiers.
+            </span>
+          </div>
+          <div class="efl-hotspot hotspot-base">
+            <span class="efl-tooltip">
+              <strong>Base Charge:</strong> Flat monthly fees raise your effective rate, especially for low-usage homes.
+            </span>
+          </div>
+          <div class="efl-hotspot hotspot-credit">
+            <span class="efl-tooltip">
+              <strong>Usage Credits:</strong> Bill credits disappear when you miss the exact kWh threshold, causing a
+              sudden spike in price.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="decoder-grid" aria-label="Comparison grid of red flags and green flags">
+        <div class="flag-column">
+          <div class="flag-header flag-header--red">🚩 Red Flags</div>
+          <div class="flag-card flag-card--red">
+            <h3>The Teaser Trap</h3>
+            <p>Rates that only apply at exactly one usage tier, then jump when you miss a credit.</p>
+          </div>
+          <div class="flag-card flag-card--red">
+            <h3>Minimum Usage Penalties</h3>
+            <p>Monthly fees for using less than a set kWh amount—even if you are saving energy.</p>
+          </div>
+          <div class="flag-card flag-card--red">
+            <h3>Base Charges</h3>
+            <p>Flat subscription-style fees that quietly add cents-per-kWh to your total.</p>
+          </div>
+        </div>
+        <div class="flag-column">
+          <div class="flag-header flag-header--green">✅ Green Flags</div>
+          <div class="flag-card flag-card--green">
+            <h3>Fixed Energy Rates</h3>
+            <p>Simple, transparent pricing where the energy charge stays consistent across usage levels.</p>
+          </div>
+          <div class="flag-card flag-card--green">
+            <h3>TDU Pass-Through</h3>
+            <p>Delivery fees called out separately so you can see the real total cost upfront.</p>
+          </div>
+          <div class="flag-card flag-card--green">
+            <h3>No-Fee Tiers</h3>
+            <p>Plans that do not rely on minimum usage penalties or hidden bill credits.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="decoder-checklist" aria-labelledby="checklist-title">
+        <h2 id="checklist-title">The "Contract Detective" Checklist</h2>
+        <ul class="checklist">
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            Early Termination Fee structure
+          </li>
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            Automatic Renewal Clauses
+          </li>
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            Document/Paper Bill Fees
+          </li>
+        </ul>
       </section>
     </main>
 
