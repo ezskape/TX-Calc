@@ -109,9 +109,9 @@ body {
 
 .efl-tooltip {
   position: absolute;
-  left: -10px;
+  left: 28px;
   top: -10px;
-  transform: translate(-100%, -20%);
+  transform: translate(0, -20%);
   background: #ffffff;
   color: var(--decoder-text);
   border-radius: 12px;
@@ -131,19 +131,19 @@ body {
 
 .hotspot-energy {
   top: 44%;
-  right: 1.75rem;
+  left: 1.5rem;
 }
 
 .hotspot-base {
   top: 64%;
-  right: 1.75rem;
+  left: 1.5rem;
   background: var(--decoder-red);
   box-shadow: 0 0 0 6px rgba(255, 77, 77, 0.25);
 }
 
 .hotspot-credit {
   top: 82%;
-  right: 1.75rem;
+  left: 1.5rem;
 }
 
 .decoder-grid {
