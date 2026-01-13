@@ -78,6 +78,8 @@ body {
 }
 
 .efl-row {
+  position: relative;
+  overflow: visible;
   display: flex;
   justify-content: space-between;
   padding: 0.6rem 0.75rem;
@@ -88,30 +90,27 @@ body {
 
 .efl-hotspot {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--decoder-green);
   box-shadow: 0 0 0 6px rgba(46, 204, 113, 0.25);
   cursor: pointer;
+  left: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.efl-hotspot::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 44px;
-  height: 2px;
-  background: rgba(15, 23, 42, 0.4);
-  transform: translate(10%, -50%);
+.efl-hotspot--alert {
+  background: var(--decoder-red);
+  box-shadow: 0 0 0 6px rgba(255, 77, 77, 0.25);
 }
 
 .efl-tooltip {
   position: absolute;
-  left: 28px;
-  top: -10px;
-  transform: translate(0, -20%);
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: #ffffff;
   color: var(--decoder-text);
   border-radius: 12px;
@@ -129,21 +128,8 @@ body {
   opacity: 1;
 }
 
-.hotspot-energy {
-  top: 44%;
-  left: 1.5rem;
-}
-
-.hotspot-base {
-  top: 64%;
-  left: 1.5rem;
-  background: var(--decoder-red);
-  box-shadow: 0 0 0 6px rgba(255, 77, 77, 0.25);
-}
-
-.hotspot-credit {
-  top: 82%;
-  left: 1.5rem;
+.efl-row:hover {
+  z-index: 2;
 }
 
 .decoder-grid {
@@ -245,25 +231,13 @@ body {
   .decoder-header {
     text-align: left;
   }
+}
 
-  .efl-hotspot {
-    position: static;
-    width: auto;
-    height: auto;
-    margin-top: 0.75rem;
-    background: none;
-    box-shadow: none;
-  }
-
+@media (max-width: 600px) {
   .efl-tooltip {
-    position: static;
-    transform: none;
-    opacity: 1;
-    margin-top: 0.5rem;
     width: auto;
-  }
-
-  .efl-hotspot::after {
-    display: none;
+    left: 10px;
+    right: 10px;
+    transform: translateY(-50%);
   }
 }
