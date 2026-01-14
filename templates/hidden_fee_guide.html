@@ -44,21 +44,39 @@
             <span class="efl-rate">Average Price: 12.4¢ / kWh</span>
           </div>
           <div class="efl-table">
-            <div class="efl-row" data-target="card-teaser">
+            <div class="efl-row">
               <span>Energy Charge</span>
               <span>6.9¢ / kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
             </div>
-            <div class="efl-row" data-target="card-tdu">
+            <div class="efl-details">
+              Providers can pad this rate while showcasing a lower average price that depends on hitting specific
+              usage tiers.
+            </div>
+            <div class="efl-row">
               <span>TDU Delivery Charge</span>
               <span>4.2¢ / kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
             </div>
-            <div class="efl-row" data-target="card-base">
+            <div class="efl-details">
+              Delivery fees are called out separately so you can see the real total cost upfront and avoid bundled
+              surprises.
+            </div>
+            <div class="efl-row">
               <span>Base Charge</span>
               <span>$9.95 / month</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
             </div>
-            <div class="efl-row" data-target="card-credit">
+            <div class="efl-details">
+              Flat monthly fees raise your effective rate, especially for low-usage homes.
+            </div>
+            <div class="efl-row">
               <span>Usage Credit</span>
               <span>-$30 at 1,000 kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
+            </div>
+            <div class="efl-details">
+              Bill credits can vanish below a kWh threshold, so missing it by even 1 kWh can spike your price.
             </div>
           </div>
         </div>
@@ -131,18 +149,21 @@
     <footer class="footer">© 2025 WattWise</footer>
     <script>
       const eflRows = Array.from(document.querySelectorAll(".efl-row"));
-      const flagCards = Array.from(document.querySelectorAll(".flag-card"));
 
       eflRows.forEach((row) => {
         row.addEventListener("click", () => {
-          const targetId = row.dataset.target;
-          const targetCard = document.getElementById(targetId);
-          if (!targetCard) {
+          const details = row.nextElementSibling;
+          if (!details || !details.classList.contains("efl-details")) {
             return;
           }
 
-          flagCards.forEach((card) => card.classList.remove("is-highlight"));
-          targetCard.classList.add("is-highlight");
+          document.querySelectorAll(".efl-details.visible").forEach((openDetails) => {
+            if (openDetails !== details) {
+              openDetails.classList.remove("visible");
+            }
+          });
+
+          details.classList.toggle("visible");
         });
       });
     </script>
