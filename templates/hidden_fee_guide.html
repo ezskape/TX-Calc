@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WattWise | Hidden Fee Decoder</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hidden_fee_guide.css') }}" />
+  </head>
+  <body>
+    <header class="nav-shell" aria-label="WattWise navigation">
+      <div class="nav-bar">
+        <a class="nav-brand" href="{{ url_for('landing') }}" aria-label="Go to WattWise home">
+          <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="nav-icon" />
+          <div class="nav-copy">
+            <span class="nav-title">WattWise</span>
+            <span class="nav-subtitle">True-rate calculator</span>
+          </div>
+        </a>
+        <a class="nav-cta is-visible" href="{{ url_for('calculator') }}">⚡ Calculate Now</a>
+      </div>
+    </header>
+
+    <main class="decoder-container">
+      <section class="decoder-header" aria-labelledby="decoder-title">
+        <h1 id="decoder-title">The WattWise Hidden Fee Decoder</h1>
+        <p class="decoder-subheadline">
+          Stop paying the "Teaser Rate" trap. Learn how to read your Electricity Facts Label (EFL) like an expert.
+        </p>
+      </section>
+
+      <section class="decoder-hero" aria-labelledby="efl-title">
+        <div class="decoder-hero-copy">
+          <h2 id="efl-title">The Interactive EFL Decoder</h2>
+          <p>
+            Click on each row to see the line items that quietly change your real electricity rate. These are the
+            fees that hide behind a simple advertised cents-per-kWh number.
+          </p>
+        </div>
+        <div class="efl-card" role="img" aria-label="Mock Electricity Facts Label with highlighted line items">
+          <div class="efl-header">
+            <span>Electricity Facts Label (Sample)</span>
+            <span class="efl-rate">Average Price: 12.4¢ / kWh</span>
+          </div>
+          <div class="efl-table">
+            <div class="efl-row">
+              <span>Energy Charge</span>
+              <span>6.9¢ / kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
+            </div>
+            <div class="efl-details">
+              Providers can pad this rate while showcasing a lower average price that depends on hitting specific
+              usage tiers.
+            </div>
+            <div class="efl-row">
+              <span>TDU Delivery Charge</span>
+              <span>4.2¢ / kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
+            </div>
+            <div class="efl-details">
+              Plans that show these charges separately are more transparent, so you can see the real total cost
+              upfront and avoid bundled surprises.
+            </div>
+            <div class="efl-row">
+              <span>Base Charge</span>
+              <span>$9.95 / month</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
+            </div>
+            <div class="efl-details">
+              Flat monthly fees raise your effective rate, especially for low-usage homes.
+            </div>
+            <div class="efl-row">
+              <span>Usage Credit</span>
+              <span>-$30 at 1,000 kWh</span>
+              <span class="efl-chevron" aria-hidden="true">▾</span>
+            </div>
+            <div class="efl-details">
+              Bill credits can vanish below a kWh threshold, so missing it by even 1 kWh can spike your price.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="decoder-grid" aria-label="Comparison grid of red flags and green flags">
+        <div class="flag-column">
+          <div class="flag-header flag-header--red">🚩 Red Flags</div>
+          <div class="flag-card flag-card--red" id="card-teaser">
+            <h3>The Teaser Trap</h3>
+            <p>
+              Providers can pad this rate while showcasing a lower average price that depends on hitting specific
+              usage tiers.
+            </p>
+          </div>
+          <div class="flag-card flag-card--red" id="card-minimum">
+            <h3>Minimum Usage Penalties</h3>
+            <p>Monthly fees for using less than a set kWh amount—even if you are saving energy.</p>
+          </div>
+          <div class="flag-card flag-card--red" id="card-base">
+            <h3>Base Charges</h3>
+            <p>Flat monthly fees raise your effective rate, especially for low-usage homes.</p>
+          </div>
+        </div>
+        <div class="flag-column">
+          <div class="flag-header flag-header--green">✅ Green Flags</div>
+          <div class="flag-card flag-card--green" id="card-fixed">
+            <h3>Fixed Energy Rates</h3>
+            <p>Simple, transparent pricing where the energy charge stays consistent across usage levels.</p>
+          </div>
+          <div class="flag-card flag-card--green" id="card-tdu">
+            <h3>TDU Pass-Through</h3>
+            <p>
+              Delivery fees are called out separately so you can see the real total cost upfront and avoid bundled
+              surprises.
+            </p>
+          </div>
+          <div class="flag-card flag-card--green" id="card-credit">
+            <h3>No-Fee Tiers</h3>
+            <p>Plans that do not rely on minimum usage penalties or bill credits that vanish below a kWh threshold.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="decoder-checklist" aria-labelledby="checklist-title">
+        <h2 id="checklist-title">The "Contract Detective" Checklist</h2>
+        <ul class="checklist">
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            <strong>Early Termination Fee:</strong> Check if it is a flat fee or per month remaining, since that
+            directly impacts your flexibility to switch.
+          </li>
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            <strong>Automatic Renewal:</strong> Rates often jump to a market rate the moment your contract ends.
+          </li>
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            <strong>Bill Fees:</strong> Some providers charge $2+ just to mail a physical bill, so check the fees
+            section for these hidden charges.
+          </li>
+          <li>
+            <span class="checklist-icon" aria-hidden="true"></span>
+            <strong>Bill Credits:</strong> Check the exact usage limit. If you use even 1 kWh less than that amount,
+            you won't get the credit.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">© 2025 WattWise</footer>
+    <script>
+      const eflRows = Array.from(document.querySelectorAll(".efl-row"));
+
+      eflRows.forEach((row) => {
+        row.addEventListener("click", () => {
+          const details = row.nextElementSibling;
+          if (!details || !details.classList.contains("efl-details")) {
+            return;
+          }
+
+          document.querySelectorAll(".efl-details.visible").forEach((openDetails) => {
+            if (openDetails !== details) {
+              openDetails.classList.remove("visible");
+            }
+          });
+
+          details.classList.toggle("visible");
+        });
+      });
+    </script>
+  </body>
+</html>
