@@ -44,38 +44,21 @@
             <span class="efl-rate">Average Price: 12.4¢ / kWh</span>
           </div>
           <div class="efl-table">
-            <div class="efl-row">
+            <div class="efl-row" data-target="card-teaser">
               <span>Energy Charge</span>
               <span>6.9¢ / kWh</span>
-              <div class="efl-hotspot">
-                <span class="efl-tooltip">
-                  <strong>Energy Charge:</strong> Providers can pad this rate while showcasing a lower average price
-                  that depends on hitting specific usage tiers.
-                </span>
-              </div>
             </div>
-            <div class="efl-row">
+            <div class="efl-row" data-target="card-tdu">
               <span>TDU Delivery Charge</span>
               <span>4.2¢ / kWh</span>
             </div>
-            <div class="efl-row">
+            <div class="efl-row" data-target="card-base">
               <span>Base Charge</span>
               <span>$9.95 / month</span>
-              <div class="efl-hotspot efl-hotspot--alert">
-                <span class="efl-tooltip">
-                  <strong>Base Charge:</strong> Flat monthly fees raise your effective rate, especially for low-usage homes.
-                </span>
-              </div>
             </div>
-            <div class="efl-row">
+            <div class="efl-row" data-target="card-credit">
               <span>Usage Credit</span>
               <span>-$30 at 1,000 kWh</span>
-              <div class="efl-hotspot">
-                <span class="efl-tooltip">
-                  <strong>Usage Credits:</strong> Bill credits disappear when you miss the exact kWh threshold, causing a
-                  sudden spike in price.
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -84,32 +67,38 @@
       <section class="decoder-grid" aria-label="Comparison grid of red flags and green flags">
         <div class="flag-column">
           <div class="flag-header flag-header--red">🚩 Red Flags</div>
-          <div class="flag-card flag-card--red">
+          <div class="flag-card flag-card--red" id="card-teaser">
             <h3>The Teaser Trap</h3>
-            <p>Rates that only apply at exactly one usage tier, then jump when you miss a credit.</p>
+            <p>
+              Providers can pad this rate while showcasing a lower average price that depends on hitting specific
+              usage tiers.
+            </p>
           </div>
-          <div class="flag-card flag-card--red">
+          <div class="flag-card flag-card--red" id="card-minimum">
             <h3>Minimum Usage Penalties</h3>
             <p>Monthly fees for using less than a set kWh amount—even if you are saving energy.</p>
           </div>
-          <div class="flag-card flag-card--red">
+          <div class="flag-card flag-card--red" id="card-base">
             <h3>Base Charges</h3>
-            <p>Flat subscription-style fees that quietly add cents-per-kWh to your total.</p>
+            <p>Flat monthly fees raise your effective rate, especially for low-usage homes.</p>
           </div>
         </div>
         <div class="flag-column">
           <div class="flag-header flag-header--green">✅ Green Flags</div>
-          <div class="flag-card flag-card--green">
+          <div class="flag-card flag-card--green" id="card-fixed">
             <h3>Fixed Energy Rates</h3>
             <p>Simple, transparent pricing where the energy charge stays consistent across usage levels.</p>
           </div>
-          <div class="flag-card flag-card--green">
+          <div class="flag-card flag-card--green" id="card-tdu">
             <h3>TDU Pass-Through</h3>
-            <p>Delivery fees called out separately so you can see the real total cost upfront.</p>
+            <p>
+              Delivery fees are called out separately so you can see the real total cost upfront and avoid bundled
+              surprises.
+            </p>
           </div>
-          <div class="flag-card flag-card--green">
+          <div class="flag-card flag-card--green" id="card-credit">
             <h3>No-Fee Tiers</h3>
-            <p>Plans that do not rely on minimum usage penalties or hidden bill credits.</p>
+            <p>Plans that do not rely on minimum usage penalties or bill credits that vanish below a kWh threshold.</p>
           </div>
         </div>
       </section>
@@ -140,5 +129,22 @@
     </main>
 
     <footer class="footer">© 2025 WattWise</footer>
+    <script>
+      const eflRows = Array.from(document.querySelectorAll(".efl-row"));
+      const flagCards = Array.from(document.querySelectorAll(".flag-card"));
+
+      eflRows.forEach((row) => {
+        row.addEventListener("click", () => {
+          const targetId = row.dataset.target;
+          const targetCard = document.getElementById(targetId);
+          if (!targetCard) {
+            return;
+          }
+
+          flagCards.forEach((card) => card.classList.remove("is-highlight"));
+          targetCard.classList.add("is-highlight");
+        });
+      });
+    </script>
   </body>
 </html>

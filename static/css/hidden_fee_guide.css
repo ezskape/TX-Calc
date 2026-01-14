@@ -86,50 +86,24 @@ body {
   background: rgba(15, 23, 42, 0.03);
   border-radius: 10px;
   font-weight: 500;
-}
-
-.efl-hotspot {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--decoder-green);
-  box-shadow: 0 0 0 6px rgba(46, 204, 113, 0.25);
   cursor: pointer;
-  left: 0.4rem;
-  top: 50%;
-  transform: translateY(-50%);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.efl-hotspot--alert {
-  background: var(--decoder-red);
-  box-shadow: 0 0 0 6px rgba(255, 77, 77, 0.25);
-}
-
-.efl-tooltip {
+.efl-row::before {
+  content: '⟶';
   position: absolute;
-  left: 2rem;
+  left: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
-  background: #ffffff;
-  color: var(--decoder-text);
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
-  width: 240px;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.efl-hotspot:hover .efl-tooltip {
-  opacity: 1;
+  color: rgba(15, 23, 42, 0.45);
+  font-size: 0.85rem;
 }
 
 .efl-row:hover {
-  z-index: 2;
+  background: rgba(46, 204, 113, 0.12);
+  transform: translateY(-1px);
+  z-index: 1;
 }
 
 .decoder-grid {
@@ -167,6 +141,7 @@ body {
   padding: 1.25rem 1.5rem;
   border: 1px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 150px;
 }
 
 .flag-card--red {
@@ -182,6 +157,11 @@ body {
 .flag-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.flag-card.is-highlight {
+  border-color: rgba(46, 204, 113, 0.6);
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.35);
 }
 
 .decoder-checklist h2 {
@@ -230,14 +210,5 @@ body {
 @media (max-width: 720px) {
   .decoder-header {
     text-align: left;
-  }
-}
-
-@media (max-width: 600px) {
-  .efl-tooltip {
-    left: 5px !important;
-    right: 5px !important;
-    width: auto !important;
-    transform: none !important;
   }
 }
