@@ -273,6 +273,69 @@ h6,
   line-height: 1.5;
 }
 
+.inline-helper-wrapper {
+  margin: 0 0 1rem;
+}
+
+.inline-helper-trigger,
+.inline-helper-hide {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--ww-primary-600);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-align: left;
+}
+
+.inline-helper-trigger:hover,
+.inline-helper-hide:hover {
+  color: var(--ww-primary-700);
+}
+
+.inline-helper {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+}
+
+.inline-helper.is-open {
+  max-height: 1200px;
+  opacity: 1;
+}
+
+.inline-helper-body {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--ww-gray-200);
+  background: var(--ww-gray-50);
+}
+
+.inline-helper-image {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 10px;
+  border: 1px solid var(--ww-gray-200);
+  margin-bottom: 0.75rem;
+  background: #ffffff;
+}
+
+.inline-helper-list {
+  margin: 0 0 0.75rem;
+  padding-left: 1.2rem;
+  color: var(--ww-gray-800);
+  line-height: 1.6;
+}
+
+.inline-helper-list li + li {
+  margin-top: 0.4rem;
+}
+
 .usage-field .helper-text {
   margin: 0;
 }

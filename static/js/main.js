@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupTouCalculator();
+  setupInlineHelpers();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
@@ -497,6 +498,33 @@ function setupEnergyRateNormalization() {
     ["change", "blur"].forEach((eventName) => {
       input.addEventListener(eventName, () => normalizeEnergyRateInput(input));
     });
+  });
+}
+
+function setupInlineHelpers() {
+  const wrappers = document.querySelectorAll(".inline-helper-wrapper");
+  wrappers.forEach((wrapper) => {
+    const trigger = wrapper.querySelector("[data-inline-helper-trigger]");
+    const helper = wrapper.querySelector("[data-inline-helper]");
+    const hideButton = wrapper.querySelector("[data-inline-helper-hide]");
+
+    if (!trigger || !helper) {
+      return;
+    }
+
+    const setOpen = (open) => {
+      helper.classList.toggle("is-open", open);
+      helper.setAttribute("aria-hidden", open ? "false" : "true");
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    trigger.addEventListener("click", () => {
+      setOpen(!helper.classList.contains("is-open"));
+    });
+
+    if (hideButton) {
+      hideButton.addEventListener("click", () => setOpen(false));
+    }
   });
 }
 
