@@ -551,6 +551,28 @@ h6,
   color: var(--ww-gray-600);
 }
 
+.result-guidance {
+  margin-top: 12px;
+}
+
+.result-guidance-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: var(--ww-gray-900);
+}
+
+.result-guidance-list {
+  margin: 0 0 0 1.1rem;
+  padding: 0;
+  color: var(--ww-gray-600);
+  font-size: 0.9rem;
+}
+
+.result-guidance-list li {
+  margin-bottom: 4px;
+}
+
 .result-email-optin {
   padding: 0;
   display: flex;

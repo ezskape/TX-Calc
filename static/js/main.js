@@ -84,6 +84,7 @@ class PlanCalculator {
     this.resultsContent = panel.querySelector(".results-grid");
     this.resultNote = panel.querySelector(".result-note");
     this.resultInsight = panel.querySelector(".result-insight");
+    this.resultGuidance = panel.querySelector(".result-guidance");
     this.resultEmailOptin = panel.querySelector(".result-email-card");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
@@ -141,6 +142,7 @@ class PlanCalculator {
     this.resultsContent.classList.remove("is-hidden");
     this.resultNote.classList.remove("is-hidden");
     this.resultInsight?.classList.remove("is-hidden");
+    this.resultGuidance?.classList.remove("is-hidden");
     this.resultEmailOptin?.classList.remove("is-hidden");
     this.resultsPlaceholder.classList.add("is-hidden");
   }
@@ -149,6 +151,7 @@ class PlanCalculator {
     this.resultsContent.classList.add("is-hidden");
     this.resultNote.classList.add("is-hidden");
     this.resultInsight?.classList.add("is-hidden");
+    this.resultGuidance?.classList.add("is-hidden");
     this.resultEmailOptin?.classList.add("is-hidden");
     this.resultsPlaceholder.classList.remove("is-hidden");
   }
@@ -381,6 +384,7 @@ function setupTouCalculator() {
   const placeholder = panel.querySelector(".results-placeholder");
   const resultNote = panel.querySelector(".result-note");
   const resultInsight = panel.querySelector(".result-insight");
+  const resultGuidance = panel.querySelector(".result-guidance");
   const resultEmailOptin = panel.querySelector(".result-email-card");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
@@ -399,6 +403,7 @@ function setupTouCalculator() {
     resultsGrid.classList.add("is-hidden");
     resultNote?.classList.add("is-hidden");
     resultInsight?.classList.add("is-hidden");
+    resultGuidance?.classList.add("is-hidden");
     resultEmailOptin?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
@@ -407,6 +412,7 @@ function setupTouCalculator() {
     resultsGrid.classList.remove("is-hidden");
     resultNote?.classList.remove("is-hidden");
     resultInsight?.classList.remove("is-hidden");
+    resultGuidance?.classList.remove("is-hidden");
     resultEmailOptin?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
