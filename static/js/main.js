@@ -36,6 +36,7 @@ const energyRateInputIds = [
 ];
 
 const normalizationFlashDurationMs = 900;
+let supabaseClient = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
@@ -49,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEnergyRateNormalization();
   applyUrlParameters();
 
+  supabaseClient = initializeSupabaseClient();
+  setupLeadCapture();
+
   const initialPanelId =
     document.querySelector(".tab-panel.is-active")?.id || activePanelId;
   if (tduController && initialPanelId) {
@@ -56,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupTouCalculator();
+  setupInlineHelpers();
 
   const panels = document.querySelectorAll(".tab-panel");
   panels.forEach((panel) => {
@@ -79,6 +84,7 @@ class PlanCalculator {
     this.resultsContent = panel.querySelector(".results-grid");
     this.resultNote = panel.querySelector(".result-note");
     this.resultInsight = panel.querySelector(".result-insight");
+    this.resultGuidance = panel.querySelector(".result-guidance");
     this.resultEmailOptin = panel.querySelector(".result-email-card");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
@@ -136,6 +142,7 @@ class PlanCalculator {
     this.resultsContent.classList.remove("is-hidden");
     this.resultNote.classList.remove("is-hidden");
     this.resultInsight?.classList.remove("is-hidden");
+    this.resultGuidance?.classList.remove("is-hidden");
     this.resultEmailOptin?.classList.remove("is-hidden");
     this.resultsPlaceholder.classList.add("is-hidden");
   }
@@ -144,6 +151,7 @@ class PlanCalculator {
     this.resultsContent.classList.add("is-hidden");
     this.resultNote.classList.add("is-hidden");
     this.resultInsight?.classList.add("is-hidden");
+    this.resultGuidance?.classList.add("is-hidden");
     this.resultEmailOptin?.classList.add("is-hidden");
     this.resultsPlaceholder.classList.remove("is-hidden");
   }
@@ -376,6 +384,7 @@ function setupTouCalculator() {
   const placeholder = panel.querySelector(".results-placeholder");
   const resultNote = panel.querySelector(".result-note");
   const resultInsight = panel.querySelector(".result-insight");
+  const resultGuidance = panel.querySelector(".result-guidance");
   const resultEmailOptin = panel.querySelector(".result-email-card");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
@@ -394,6 +403,7 @@ function setupTouCalculator() {
     resultsGrid.classList.add("is-hidden");
     resultNote?.classList.add("is-hidden");
     resultInsight?.classList.add("is-hidden");
+    resultGuidance?.classList.add("is-hidden");
     resultEmailOptin?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
@@ -402,6 +412,7 @@ function setupTouCalculator() {
     resultsGrid.classList.remove("is-hidden");
     resultNote?.classList.remove("is-hidden");
     resultInsight?.classList.remove("is-hidden");
+    resultGuidance?.classList.remove("is-hidden");
     resultEmailOptin?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
@@ -493,6 +504,33 @@ function setupEnergyRateNormalization() {
     ["change", "blur"].forEach((eventName) => {
       input.addEventListener(eventName, () => normalizeEnergyRateInput(input));
     });
+  });
+}
+
+function setupInlineHelpers() {
+  const wrappers = document.querySelectorAll(".inline-helper-wrapper");
+  wrappers.forEach((wrapper) => {
+    const trigger = wrapper.querySelector("[data-inline-helper-trigger]");
+    const helper = wrapper.querySelector("[data-inline-helper]");
+    const hideButton = wrapper.querySelector("[data-inline-helper-hide]");
+
+    if (!trigger || !helper) {
+      return;
+    }
+
+    const setOpen = (open) => {
+      helper.classList.toggle("is-open", open);
+      helper.setAttribute("aria-hidden", open ? "false" : "true");
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    trigger.addEventListener("click", () => {
+      setOpen(!helper.classList.contains("is-open"));
+    });
+
+    if (hideButton) {
+      hideButton.addEventListener("click", () => setOpen(false));
+    }
   });
 }
 
@@ -645,4 +683,139 @@ function applyUrlParameters() {
       }
     });
   }
+}
+
+function initializeSupabaseClient() {
+  if (typeof window === "undefined" || !window.supabase) {
+    return null;
+  }
+
+  const config = window.SUPABASE_CONFIG || {};
+  if (!config.url || !config.key) {
+    return null;
+  }
+
+  return window.supabase.createClient(config.url, config.key);
+}
+
+function setupLeadCapture() {
+  const forms = document.querySelectorAll(".result-email-form");
+  if (!forms.length) {
+    return;
+  }
+
+  const postalCodeField = document.getElementById("postal-code-param");
+  const successMessages = document.querySelectorAll("[data-email-success]");
+
+  forms.forEach((form) => {
+    const emailInput = form.querySelector('input[type="email"]');
+    const submitButton = form.querySelector(".result-email-button");
+    const errorMessage = ensureLeadErrorMessage(form);
+
+    if (!emailInput || !submitButton) {
+      return;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (!supabaseClient) {
+        setLeadErrorMessage(errorMessage, "Lead capture is unavailable right now. Please try again soon.");
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const zipCode = postalCodeField?.value.trim() || "";
+
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Saving...";
+      setLeadErrorMessage(errorMessage, "");
+
+      const { error } = await supabaseClient
+        .from("leads")
+        .insert([{ email, zip_code: zipCode || "" }]);
+
+      const isDuplicateError =
+        error?.code === "23505" ||
+        (typeof error?.message === "string" &&
+          error.message.toLowerCase().includes("duplicate"));
+
+      if (error && !isDuplicateError) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+        setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
+        return;
+      }
+
+      submitButton.textContent = "Sending...";
+
+      const emailResponse = await fetch("/subscribe", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: new URLSearchParams({
+          email,
+          zip: zipCode || "",
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+        setLeadErrorMessage(
+          errorMessage,
+          "We saved your email, but couldn’t send the guide right now. Please try again."
+        );
+        return;
+      }
+
+      emailInput.value = "";
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+
+      successMessages.forEach((message) => {
+        message.hidden = false;
+      });
+
+      if (isDuplicateError) {
+        setLeadErrorMessage(
+          errorMessage,
+          "You're already on the list! We'll be in touch soon.",
+          { variant: "info" }
+        );
+      }
+    });
+  });
+}
+
+function ensureLeadErrorMessage(form) {
+  let errorMessage = form.querySelector(".result-email-error");
+
+  if (!errorMessage) {
+    errorMessage = document.createElement("p");
+    errorMessage.className = "result-email-error";
+    errorMessage.hidden = true;
+    form.append(errorMessage);
+  }
+
+  return errorMessage;
+}
+
+function setLeadErrorMessage(target, message, { variant = "error" } = {}) {
+  if (!target) {
+    return;
+  }
+
+  target.classList.toggle("is-info", variant === "info");
+  target.classList.toggle("is-error", variant === "error");
+  target.textContent = message;
+  target.hidden = !message;
 }

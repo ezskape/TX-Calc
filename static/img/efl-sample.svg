@@ -1,0 +1,22 @@
+<svg width="800" height="500" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="752" height="452" rx="18" fill="#F8F8F8" stroke="#1A1A1A" stroke-width="2"/>
+  <rect x="48" y="50" width="420" height="36" rx="6" fill="#1A1A1A"/>
+  <text x="64" y="74" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#FFFFFF">Electricity Facts Label (Sample)</text>
+
+  <rect x="48" y="110" width="704" height="70" rx="8" fill="#FFFFFF" stroke="#222222" stroke-width="1.5"/>
+  <text x="64" y="140" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#111111">Energy Charge</text>
+  <text x="64" y="162" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#111111">6.9¢ per kWh</text>
+  <rect x="40" y="102" width="720" height="86" rx="10" stroke="#FF8A00" stroke-width="4"/>
+
+  <rect x="48" y="200" width="704" height="70" rx="8" fill="#FFFFFF" stroke="#222222" stroke-width="1.5"/>
+  <text x="64" y="230" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#111111">Base Charge</text>
+  <text x="64" y="252" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#111111">$9.95 per billing cycle</text>
+  <rect x="40" y="192" width="720" height="86" rx="10" stroke="#1A7BFF" stroke-width="4"/>
+
+  <rect x="48" y="290" width="704" height="140" rx="8" fill="#FFFFFF" stroke="#222222" stroke-width="1.5"/>
+  <text x="64" y="320" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#111111">TDU Delivery Charges</text>
+  <text x="64" y="342" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#111111">4.9¢ per kWh + $4.23 base charge</text>
+  <text x="64" y="366" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#333333">(Rates set by your local transmission &amp; distribution utility)</text>
+  <rect x="40" y="282" width="720" height="156" rx="10" stroke="#00A86B" stroke-width="4"/>
+</svg>

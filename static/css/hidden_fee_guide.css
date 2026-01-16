@@ -1,0 +1,225 @@
+:root {
+  --decoder-text: #0f172a;
+  --decoder-green: #2ecc71;
+  --decoder-red: #ff4d4d;
+  --decoder-border: rgba(15, 23, 42, 0.12);
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: var(--decoder-text);
+}
+
+.decoder-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.decoder-header {
+  text-align: center;
+}
+
+.decoder-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.75rem;
+  color: var(--decoder-text);
+}
+
+.decoder-subheadline {
+  font-size: 1.1rem;
+  max-width: 780px;
+  margin: 0 auto;
+  color: rgba(15, 23, 42, 0.75);
+}
+
+.decoder-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+.decoder-hero-copy h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.efl-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--decoder-border);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+  padding: 1.75rem;
+  overflow: visible !important;
+}
+
+.efl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  margin-bottom: 1rem;
+}
+
+.efl-rate {
+  color: var(--decoder-green);
+}
+
+.efl-table {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.efl-row {
+  position: relative;
+  overflow: visible !important;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  background: rgba(15, 23, 42, 0.03);
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.efl-row::before {
+  content: none;
+}
+
+.efl-row:hover {
+  background: rgba(46, 204, 113, 0.12);
+  transform: translateY(-1px);
+  z-index: 1;
+}
+
+.efl-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(15, 23, 42, 0.5);
+  font-size: 0.85rem;
+}
+
+.efl-details {
+  display: none;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.efl-details.visible {
+  display: block;
+}
+.decoder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.flag-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flag-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  text-align: center;
+}
+
+.flag-header--red {
+  background: rgba(255, 77, 77, 0.15);
+  color: var(--decoder-red);
+}
+
+.flag-header--green {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--decoder-green);
+}
+
+.flag-card {
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 150px;
+}
+
+.flag-card--red {
+  background: rgba(255, 77, 77, 0.1);
+  border-color: rgba(255, 77, 77, 0.25);
+}
+
+.flag-card--green {
+  background: rgba(46, 204, 113, 0.12);
+  border-color: rgba(46, 204, 113, 0.25);
+}
+
+.flag-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+
+.decoder-checklist h2 {
+  margin-bottom: 1rem;
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.checklist-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--decoder-green);
+  position: relative;
+  display: inline-block;
+}
+
+.checklist-icon::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  border-right: 2px solid var(--decoder-green);
+  border-bottom: 2px solid var(--decoder-green);
+  transform: rotate(45deg);
+  top: 1px;
+  left: 6px;
+}
+
+@media (max-width: 720px) {
+  .decoder-header {
+    text-align: left;
+  }
+}

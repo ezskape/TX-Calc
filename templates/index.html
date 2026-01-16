@@ -6,6 +6,7 @@
     <title>WattWise | Never guess your electricity costs again</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   </head>
   <body>
     <main class="container">
@@ -23,7 +24,6 @@
       <input type="hidden" id="postal-code-param" aria-hidden="true" />
 
       {% if request.args.get("subscribed") == "1" %}
-      <div class="subscribe-success">Thanks! You’re on the list.</div>
       <script>
         setTimeout(function () {
           window.location.href = window.location.pathname;
@@ -110,6 +110,33 @@
             <div class="card-header">
               <p class="card-subtitle">Enter your plan’s base rate and monthly charges.</p>
             </div>
+            <div class="inline-helper-wrapper">
+              <button
+                type="button"
+                class="inline-helper-trigger"
+                data-inline-helper-trigger
+                aria-expanded="false"
+              >
+                💡 Not sure where to find these? View a sample bill
+              </button>
+              <div class="inline-helper" data-inline-helper aria-hidden="true">
+                <div class="inline-helper-body">
+                  <img
+                    src="{{ url_for('static', filename='img/efl-sample.svg') }}"
+                    alt="Sample Electricity Facts Label showing highlighted Energy Charge, Base Charge, and TDU fees."
+                    class="inline-helper-image"
+                  />
+                  <ul class="inline-helper-list">
+                    <li><strong>Energy Charge:</strong> Look for the "per kWh" rate (e.g., 6.9¢).</li>
+                    <li><strong>Base Charge:</strong> This is your monthly flat fee (e.g., $9.95).</li>
+                    <li><strong>TDU Charges:</strong> These are the delivery fees set by your local utility.</li>
+                  </ul>
+                  <button type="button" class="inline-helper-hide" data-inline-helper-hide>
+                    Hide Guide
+                  </button>
+                </div>
+              </div>
+            </div>
             <input
               type="hidden"
               id="fixed-delivery-rate"
@@ -177,7 +204,19 @@
                 <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
               </div>
               <div>
-                <h3>Approximate Bill Amount</h3>
+                <h3 class="result-label">
+                  Estimated Bill Amount
+                  <span
+                    class="result-tooltip"
+                    tabindex="0"
+                    aria-label="Tax transparency details"
+                  >
+                    i
+                    <span class="result-tooltip-text">
+                      Estimated bill excludes local municipal taxes and the 0.1667% PUC assessment.
+                    </span>
+                  </span>
+                </h3>
                 <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
               </div>
             </div>
@@ -189,6 +228,14 @@
                 that plan may not be a good deal.
               </p>
             </div>
+            <section class="result-guidance is-hidden">
+              <h3 class="result-guidance-title">How to use this number</h3>
+              <ul class="result-guidance-list">
+                <li>If your rate is above ~12¢ at average usage, most Texans can usually find cheaper options.</li>
+                <li>If your rate depends on credits or usage thresholds, be cautious — those often disappear.</li>
+                <li>Fixed, credit-free plans are usually safer for predictable bills.</li>
+              </ul>
+            </section>
           </section>
         </form>
         <div class="card email-card result-email-card is-hidden">
@@ -203,9 +250,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -248,6 +301,33 @@
           <section class="card">
             <div class="card-header">
               <p class="card-subtitle">Include bill credits or usage-based discounts in your plan.</p>
+            </div>
+            <div class="inline-helper-wrapper">
+              <button
+                type="button"
+                class="inline-helper-trigger"
+                data-inline-helper-trigger
+                aria-expanded="false"
+              >
+                💡 Not sure where to find these? View a sample bill
+              </button>
+              <div class="inline-helper" data-inline-helper aria-hidden="true">
+                <div class="inline-helper-body">
+                  <img
+                    src="{{ url_for('static', filename='img/efl-sample.svg') }}"
+                    alt="Sample Electricity Facts Label showing highlighted Energy Charge, Base Charge, and TDU fees."
+                    class="inline-helper-image"
+                  />
+                  <ul class="inline-helper-list">
+                    <li><strong>Energy Charge:</strong> Look for the "per kWh" rate (e.g., 6.9¢).</li>
+                    <li><strong>Base Charge:</strong> This is your monthly flat fee (e.g., $9.95).</li>
+                    <li><strong>TDU Charges:</strong> These are the delivery fees set by your local utility.</li>
+                  </ul>
+                  <button type="button" class="inline-helper-hide" data-inline-helper-hide>
+                    Hide Guide
+                  </button>
+                </div>
+              </div>
             </div>
             <input
               type="hidden"
@@ -343,7 +423,19 @@
                 <p class="result-value"><span class="result-true-rate">0.00</span> ¢/kWh</p>
               </div>
               <div>
-                <h3>Approximate Bill Amount</h3>
+                <h3 class="result-label">
+                  Estimated Bill Amount
+                  <span
+                    class="result-tooltip"
+                    tabindex="0"
+                    aria-label="Tax transparency details"
+                  >
+                    i
+                    <span class="result-tooltip-text">
+                      Estimated bill excludes local municipal taxes and the 0.1667% PUC assessment.
+                    </span>
+                  </span>
+                </h3>
                 <p class="result-value">$<span class="result-bill-amount">0.00</span></p>
               </div>
             </div>
@@ -355,6 +447,14 @@
                 that plan may not be a good deal.
               </p>
             </div>
+            <section class="result-guidance is-hidden">
+              <h3 class="result-guidance-title">How to use this number</h3>
+              <ul class="result-guidance-list">
+                <li>If your rate is above ~12¢ at average usage, most Texans can usually find cheaper options.</li>
+                <li>If your rate depends on credits or usage thresholds, be cautious — those often disappear.</li>
+                <li>Fixed, credit-free plans are usually safer for predictable bills.</li>
+              </ul>
+            </section>
           </section>
         </form>
         <div class="card email-card result-email-card is-hidden">
@@ -369,9 +469,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -407,6 +513,33 @@
         <section class="card">
           <div class="card-header">
             <p class="card-subtitle">Enter the hours that qualify for free or discounted electricity.</p>
+          </div>
+          <div class="inline-helper-wrapper">
+            <button
+              type="button"
+              class="inline-helper-trigger"
+              data-inline-helper-trigger
+              aria-expanded="false"
+            >
+              💡 Not sure where to find these? View a sample bill
+            </button>
+            <div class="inline-helper" data-inline-helper aria-hidden="true">
+              <div class="inline-helper-body">
+                <img
+                  src="{{ url_for('static', filename='img/efl-sample.svg') }}"
+                  alt="Sample Electricity Facts Label showing highlighted Energy Charge, Base Charge, and TDU fees."
+                  class="inline-helper-image"
+                />
+                <ul class="inline-helper-list">
+                  <li><strong>Energy Charge:</strong> Look for the "per kWh" rate (e.g., 6.9¢).</li>
+                  <li><strong>Base Charge:</strong> This is your monthly flat fee (e.g., $9.95).</li>
+                  <li><strong>TDU Charges:</strong> These are the delivery fees set by your local utility.</li>
+                </ul>
+                <button type="button" class="inline-helper-hide" data-inline-helper-hide>
+                  Hide Guide
+                </button>
+              </div>
+            </div>
           </div>
           <input type="hidden" id="touDeliveryRate" min="0" step="0.01" />
           <input type="hidden" id="touBaseDeliveryCharge" min="0" step="0.01" />
@@ -473,7 +606,19 @@
               <p class="result-value"><span id="touEffectiveRate">0.00</span> ¢/kWh</p>
             </div>
             <div>
-              <h3>Approximate Bill Amount</h3>
+              <h3 class="result-label">
+                Estimated Bill Amount
+                <span
+                  class="result-tooltip"
+                  tabindex="0"
+                  aria-label="Tax transparency details"
+                >
+                  i
+                  <span class="result-tooltip-text">
+                    Estimated bill excludes local municipal taxes and the 0.1667% PUC assessment.
+                  </span>
+                </span>
+              </h3>
               <p class="result-value">$<span id="touApproxBill">0.00</span></p>
             </div>
           </div>
@@ -485,6 +630,14 @@
               that plan may not be a good deal.
             </p>
           </div>
+          <section class="result-guidance is-hidden">
+            <h3 class="result-guidance-title">How to use this number</h3>
+            <ul class="result-guidance-list">
+              <li>If your rate is above ~12¢ at average usage, most Texans can usually find cheaper options.</li>
+              <li>If your rate depends on credits or usage thresholds, be cautious — those often disappear.</li>
+              <li>Fixed, credit-free plans are usually safer for predictable bills.</li>
+            </ul>
+          </section>
         </section>
         <div class="card email-card result-email-card is-hidden">
           <section class="result-email-optin">
@@ -498,9 +651,15 @@
               <li>Early access to our automatic bill analysis tool</li>
             </ul>
 
-            {% if request.args.get("subscribed") == "1" %}
-            <p class="result-email-success">Thanks! You’re on the list.</p>
-            {% endif %}
+            <p
+              class="result-email-success"
+              data-email-success
+              {% if request.args.get("subscribed") != "1" %}
+              hidden
+              {% endif %}
+            >
+              Thanks! You’re on the list.
+            </p>
 
             <form class="result-email-form" method="post" action="{{ url_for('subscribe') }}">
               <label for="result-email" class="sr-only">Email address</label>
@@ -535,6 +694,12 @@
 
     <footer class="page-footer">© 2025 WattWise</footer>
 
+    <script>
+      window.SUPABASE_CONFIG = {
+        url: {{ supabase_url | tojson }},
+        key: {{ supabase_key | tojson }},
+      };
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
   </body>
 </html>
