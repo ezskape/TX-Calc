@@ -49,6 +49,18 @@ A simple Flask application that helps customers understand their true electricit
 
 4. Open your browser to <http://127.0.0.1:5000> and begin calculating.
 
+## Local Development (Windows vs Render)
+
+Render runs on Linux, so the production start command uses Gunicorn: `gunicorn app:app`
+
+On Windows, running Gunicorn may fail with `ModuleNotFoundError: No module named 'fcntl'`
+
+For local development on Windows, run:
+
+```bash
+python app.py
+```
+
 ## Project structure
 
 ```
