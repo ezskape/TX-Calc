@@ -205,6 +205,9 @@ def calculate() -> Any:
     data = request.json or {}
     plan_type = data.get("plan_type", "fixed_rate")
 
+    if plan_type not in {"fixed_rate", "fixed_rate_credit"}:
+        return jsonify({"error": "Unsupported plan type"}), 400
+
     try:
         if plan_type == "fixed_rate_credit":
             plan_input = PlanInputWithCredit.from_json(data)
@@ -214,13 +217,6 @@ def calculate() -> Any:
             plan_input = PlanInput.from_json(data)
             true_rate_cents = round(plan_input.calculate_true_rate_cents(), 2)
             bill_amount = round(plan_input.calculate_bill_amount(), 2)
-        elif plan_type == "tiered_plan":
-            plan_input = TieredPlanInput.from_json(data)
-            calculation = calculateTieredPlan(plan_input)
-            true_rate_cents = round(calculation.effectiveRateCents, 2)
-            bill_amount = round(calculation.totalCost, 2)
-        else:
-            raise ValueError("Unsupported plan type")
     except ValueError as error:
         return jsonify({"error": str(error)}), 400
 
