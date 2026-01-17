@@ -14,6 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 
 resend.api_key = os.environ.get("RESEND_API_KEY", "")
+RESEND_FROM = os.environ.get("RESEND_FROM", "WattWise <guides@wattwisetx.com>")
 
 @dataclass
 class PlanInput:
@@ -110,13 +111,11 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
         app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
         return False
 
-    resend_from = os.environ.get("RESEND_FROM", "WattWise <onboarding@resend.dev>")
-
     guide_link = url_for("hidden_fee_guide", _external=True)
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
-        "from": resend_from,
+        "from": RESEND_FROM,
         "to": email,
         "subject": "Your Texas Electricity Hidden Fee Guide",
         "html": f"""
@@ -150,7 +149,7 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
 
 @app.route("/")
 def index() -> str:
-    return render_template("index.html", **supabase_context())
+    return render_template("landing.html")
 
 
 @app.route("/guide/texas-electricity-hidden-fees")
