@@ -162,6 +162,11 @@ def landing() -> str:
     return render_template("landing.html")
 
 
+@app.route("/privacy")
+def privacy() -> str:
+    return render_template("privacy.html")
+
+
 @app.route("/calculator")
 def calculator() -> str:
     return render_template("index.html", **supabase_context())
