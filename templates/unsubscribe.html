@@ -48,6 +48,13 @@
             <p class="mt-4">
               <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
             </p>
+          {% elif status == "error" %}
+            <p class="text-lg text-gray-700">
+              We ran into a problem updating your subscription. Please try the link again.
+            </p>
+            <p class="mt-4">
+              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            </p>
           {% else %}
             <p class="text-lg text-gray-700">Missing unsubscribe token.</p>
             <p class="mt-4">

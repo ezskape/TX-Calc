@@ -378,7 +378,9 @@ def unsubscribe() -> Any:
         return render_template("unsubscribe.html", status="invalid"), 404
 
     timestamp = datetime.now(timezone.utc).isoformat()
-    update_subscriber(subscriber["id"], {"unsubscribed_at": timestamp})
+    updated = update_subscriber(subscriber["id"], {"unsubscribed_at": timestamp})
+    if not updated:
+        return render_template("unsubscribe.html", status="error"), 500
 
     return render_template("unsubscribe.html", status="success")
 

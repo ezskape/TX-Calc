@@ -747,7 +747,7 @@ function setupLeadCapture() {
         submitButton.textContent = originalText;
         setLeadErrorMessage(
           errorMessage,
-          "We saved your email, but couldn’t send the guide right now. Please try again."
+          responseData.error || "We couldn’t sign you up right now. Please try again."
         );
         return;
       }
