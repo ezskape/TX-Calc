@@ -309,7 +309,6 @@ def subscribe() -> Any:
 
     print(f"New WattWise subscriber: {email}")
     subscriber = get_subscriber_by_email(email)
-    new_token = None
     already_subscribed = False
     unsubscribed = False
 
@@ -318,7 +317,12 @@ def subscribe() -> Any:
         unsubscribed = is_unsubscribed(subscriber)
         if not subscriber.get("unsubscribe_token"):
             new_token = secrets.token_urlsafe(32)
-            subscriber = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token}) or subscriber
+            updated = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token})
+            if not updated:
+                if wants_json:
+                    return jsonify({"error": "Unable to create an unsubscribe link right now."}), 500
+                return redirect(url_for("index"))
+            subscriber = updated
     else:
         new_token = secrets.token_urlsafe(32)
         subscriber = create_subscriber(email, zip_code or "", new_token)
@@ -329,7 +333,12 @@ def subscribe() -> Any:
                 unsubscribed = is_unsubscribed(subscriber)
         if subscriber and not subscriber.get("unsubscribe_token"):
             new_token = new_token or secrets.token_urlsafe(32)
-            subscriber = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token}) or subscriber
+            updated = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token})
+            if not updated:
+                if wants_json:
+                    return jsonify({"error": "Unable to create an unsubscribe link right now."}), 500
+                return redirect(url_for("index"))
+            subscriber = updated
 
     if not subscriber:
         if wants_json:
@@ -342,7 +351,7 @@ def subscribe() -> Any:
             return jsonify({"unsubscribed": True, "message": message}), 200
         return redirect(url_for("index"))
 
-    unsubscribe_token = subscriber.get("unsubscribe_token") or new_token
+    unsubscribe_token = subscriber.get("unsubscribe_token")
     if not unsubscribe_token:
         if wants_json:
             return jsonify({"error": "Unable to create an unsubscribe link right now."}), 500
