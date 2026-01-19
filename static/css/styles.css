@@ -747,6 +747,11 @@ h6,
   font-size: 0.95rem;
 }
 
+.footer-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
 @media (max-width: 640px) {
   .tab-bar {
     justify-content: center;

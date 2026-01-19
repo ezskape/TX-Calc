@@ -36,7 +36,6 @@ const energyRateInputIds = [
 ];
 
 const normalizationFlashDurationMs = 900;
-let supabaseClient = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   let tduController;
@@ -50,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEnergyRateNormalization();
   applyUrlParameters();
 
-  supabaseClient = initializeSupabaseClient();
   setupLeadCapture();
 
   const initialPanelId =
@@ -685,19 +683,6 @@ function applyUrlParameters() {
   }
 }
 
-function initializeSupabaseClient() {
-  if (typeof window === "undefined" || !window.supabase) {
-    return null;
-  }
-
-  const config = window.SUPABASE_CONFIG || {};
-  if (!config.url || !config.key) {
-    return null;
-  }
-
-  return window.supabase.createClient(config.url, config.key);
-}
-
 function setupLeadCapture() {
   const forms = document.querySelectorAll(".result-email-form");
   if (!forms.length) {
@@ -724,11 +709,6 @@ function setupLeadCapture() {
         return;
       }
 
-      if (!supabaseClient) {
-        setLeadErrorMessage(errorMessage, "Lead capture is unavailable right now. Please try again soon.");
-        return;
-      }
-
       const email = emailInput.value.trim();
       const zipCode = postalCodeField?.value.trim() || "";
 
@@ -736,22 +716,6 @@ function setupLeadCapture() {
       submitButton.disabled = true;
       submitButton.textContent = "Saving...";
       setLeadErrorMessage(errorMessage, "");
-
-      const { error } = await supabaseClient
-        .from("leads")
-        .insert([{ email, zip_code: zipCode || "" }]);
-
-      const isDuplicateError =
-        error?.code === "23505" ||
-        (typeof error?.message === "string" &&
-          error.message.toLowerCase().includes("duplicate"));
-
-      if (error && !isDuplicateError) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalText;
-        setLeadErrorMessage(errorMessage, "We couldn’t save your email. Please try again.");
-        return;
-      }
 
       submitButton.textContent = "Sending...";
 
@@ -767,12 +731,23 @@ function setupLeadCapture() {
         }),
       });
 
-      if (!emailResponse.ok) {
+      const responseData = await emailResponse.json().catch(() => ({}));
+
+      if (responseData.unsubscribed) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+        setLeadErrorMessage(errorMessage, responseData.message || "You're unsubscribed from WattWise emails.", {
+          variant: "info",
+        });
+        return;
+      }
+
+      if (!emailResponse.ok || !responseData.success) {
         submitButton.disabled = false;
         submitButton.textContent = originalText;
         setLeadErrorMessage(
           errorMessage,
-          "We saved your email, but couldn’t send the guide right now. Please try again."
+          responseData.error || "We couldn’t sign you up right now. Please try again."
         );
         return;
       }
@@ -785,7 +760,7 @@ function setupLeadCapture() {
         message.hidden = false;
       });
 
-      if (isDuplicateError) {
+      if (responseData.already_subscribed) {
         setLeadErrorMessage(
           errorMessage,
           "You're already on the list! We'll be in touch soon.",

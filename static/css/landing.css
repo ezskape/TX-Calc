@@ -318,6 +318,11 @@ a {
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
+.footer-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
 @media (min-width: 900px) {
   .hero {
     flex-direction: row;
