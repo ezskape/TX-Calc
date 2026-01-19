@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WattWise | Unsubscribe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: false,
+        },
+      };
+    </script>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+  </head>
+  <body>
+    <header class="nav-shell" aria-label="WattWise navigation">
+      <div class="nav-bar">
+        <a class="nav-brand" href="{{ url_for('landing') }}" aria-label="Go to WattWise home">
+          <img src="{{ url_for('static', filename='img/wattwise-icon.svg') }}" alt="WattWise icon" class="nav-icon" />
+          <div class="nav-copy">
+            <span class="nav-title">WattWise</span>
+            <span class="nav-subtitle">True-rate calculator</span>
+          </div>
+        </a>
+        <a id="sticky-nav-cta" class="nav-cta" href="{{ url_for('calculator') }}">⚡ Calculate Now</a>
+      </div>
+    </header>
+
+    <main class="landing-container">
+      <section class="section">
+        <div class="section-header">
+          <h1>Unsubscribe</h1>
+          <p class="section-subline">Manage your WattWise emails</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+          {% if status == "success" %}
+            <p class="text-lg text-gray-700">
+              You're unsubscribed. You won't receive emails from WattWise.
+            </p>
+            <p class="mt-4">
+              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            </p>
+          {% elif status == "invalid" %}
+            <p class="text-lg text-gray-700">Invalid or expired link.</p>
+            <p class="mt-4">
+              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            </p>
+          {% else %}
+            <p class="text-lg text-gray-700">Missing unsubscribe token.</p>
+            <p class="mt-4">
+              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            </p>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2025 WattWise</footer>
+  </body>
+</html>

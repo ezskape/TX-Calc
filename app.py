@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+import json
 import os
+import secrets
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from dotenv import load_dotenv
@@ -105,13 +111,121 @@ def supabase_context() -> Dict[str, str]:
         "supabase_key": os.environ.get("SUPABASE_KEY", ""),
     }
 
+def supabase_headers() -> Dict[str, str]:
+    key = os.environ.get("SUPABASE_KEY", "")
+    return {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
 
-def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
+
+def supabase_request(
+    method: str,
+    table: str,
+    params: Optional[Dict[str, str]] = None,
+    payload: Optional[Any] = None,
+    prefer_return: bool = False,
+) -> Optional[Any]:
+    supabase_url = os.environ.get("SUPABASE_URL", "")
+    supabase_key = os.environ.get("SUPABASE_KEY", "")
+    if not supabase_url or not supabase_key:
+        app.logger.error("Supabase configuration is missing.")
+        return None
+
+    query_string = f"?{urlencode(params)}" if params else ""
+    url = f"{supabase_url.rstrip('/')}/rest/v1/{table}{query_string}"
+    headers = supabase_headers()
+    headers["Prefer"] = "return=representation" if prefer_return else "return=minimal"
+
+    data = json.dumps(payload).encode("utf-8") if payload is not None else None
+    request_obj = Request(url, data=data, headers=headers, method=method)
+
+    try:
+        with urlopen(request_obj, timeout=10) as response:
+            body = response.read().decode("utf-8")
+            if not body:
+                return []
+            return json.loads(body)
+    except HTTPError as error:
+        error_body = error.read().decode("utf-8")
+        app.logger.error("Supabase request failed: %s", error_body)
+        return None
+    except URLError as error:
+        app.logger.error("Supabase request error: %s", error)
+        return None
+
+
+def get_subscriber_by_email(email: str) -> Optional[Dict[str, Any]]:
+    # Supabase "leads" table must include:
+    # - unsubscribe_token (text, unique)
+    # - unsubscribed_at (timestamp, nullable)
+    result = supabase_request(
+        "GET",
+        "leads",
+        params={
+            "select": "id,email,unsubscribe_token,unsubscribed_at",
+            "email": f"eq.{email}",
+        },
+        prefer_return=True,
+    )
+    if not result:
+        return None
+    return result[0]
+
+
+def get_subscriber_by_token(token: str) -> Optional[Dict[str, Any]]:
+    result = supabase_request(
+        "GET",
+        "leads",
+        params={
+            "select": "id,email,unsubscribe_token,unsubscribed_at",
+            "unsubscribe_token": f"eq.{token}",
+        },
+        prefer_return=True,
+    )
+    if not result:
+        return None
+    return result[0]
+
+
+def create_subscriber(email: str, zip_code: str, token: str) -> Optional[Dict[str, Any]]:
+    payload = {
+        "email": email,
+        "zip_code": zip_code,
+        "unsubscribe_token": token,
+    }
+    result = supabase_request("POST", "leads", payload=[payload], prefer_return=True)
+    if not result:
+        return None
+    return result[0]
+
+
+def update_subscriber(subscriber_id: Any, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    result = supabase_request(
+        "PATCH",
+        "leads",
+        params={"id": f"eq.{subscriber_id}"},
+        payload=updates,
+        prefer_return=True,
+    )
+    if not result:
+        return None
+    return result[0]
+
+
+def is_unsubscribed(subscriber: Dict[str, Any]) -> bool:
+    return bool(subscriber.get("unsubscribed_at"))
+
+
+def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[str] = None) -> bool:
     if not resend.api_key:
         app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
         return False
 
     guide_link = url_for("hidden_fee_guide", _external=True)
+    unsubscribe_url = url_for("unsubscribe", token=unsubscribe_token, _external=True)
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
@@ -134,8 +248,17 @@ def send_welcome_email(email: str, zip_code: Optional[str] = None) -> bool:
                 Cheers,<br />
                 The WattWise Team
               </p>
+              <p style='margin-top: 24px; font-size: 12px; color: #475569;'>
+                Unsubscribe: <a href='{unsubscribe_url}' style='color: #475569;'>{unsubscribe_url}</a>
+              </p>
             </div>
         """,
+        "text": (
+            "Welcome to WattWise!\n\n"
+            "Thanks for signing up to get the Texas Electricity Hidden Fee Guide.\n\n"
+            f"View the guide: {guide_link}\n\n"
+            f"Unsubscribe: {unsubscribe_url}\n"
+        ),
     }
 
     try:
@@ -185,8 +308,48 @@ def subscribe() -> Any:
         return redirect(url_for("index"))
 
     print(f"New WattWise subscriber: {email}")
+    subscriber = get_subscriber_by_email(email)
+    new_token = None
+    already_subscribed = False
+    unsubscribed = False
+
+    if subscriber:
+        already_subscribed = True
+        unsubscribed = is_unsubscribed(subscriber)
+        if not subscriber.get("unsubscribe_token"):
+            new_token = secrets.token_urlsafe(32)
+            subscriber = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token}) or subscriber
+    else:
+        new_token = secrets.token_urlsafe(32)
+        subscriber = create_subscriber(email, zip_code or "", new_token)
+        if not subscriber:
+            subscriber = get_subscriber_by_email(email)
+            if subscriber:
+                already_subscribed = True
+                unsubscribed = is_unsubscribed(subscriber)
+        if subscriber and not subscriber.get("unsubscribe_token"):
+            new_token = new_token or secrets.token_urlsafe(32)
+            subscriber = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token}) or subscriber
+
+    if not subscriber:
+        if wants_json:
+            return jsonify({"error": "Unable to save your email right now."}), 500
+        return redirect(url_for("index"))
+
+    if unsubscribed:
+        message = "You're currently unsubscribed. Reply to our last email to resubscribe."
+        if wants_json:
+            return jsonify({"unsubscribed": True, "message": message}), 200
+        return redirect(url_for("index"))
+
+    unsubscribe_token = subscriber.get("unsubscribe_token") or new_token
+    if not unsubscribe_token:
+        if wants_json:
+            return jsonify({"error": "Unable to create an unsubscribe link right now."}), 500
+        return redirect(url_for("index"))
+
     try:
-        email_sent = send_welcome_email(email, zip_code)
+        email_sent = send_welcome_email(email, unsubscribe_token, zip_code)
     except Exception:
         app.logger.error("Unable to send welcome email for %s", email, exc_info=True)
         email_sent = False
@@ -194,7 +357,7 @@ def subscribe() -> Any:
     if wants_json:
         if not email_sent:
             return jsonify({"error": "Unable to send email right now."}), 500
-        return jsonify({"success": True})
+        return jsonify({"success": True, "already_subscribed": already_subscribed})
 
     try:
         flash("Thanks! We’ll email you helpful updates soon.")
@@ -202,6 +365,22 @@ def subscribe() -> Any:
         pass
 
     return redirect(url_for("index", subscribed="1"))
+
+
+@app.route("/unsubscribe")
+def unsubscribe() -> Any:
+    token = request.args.get("token")
+    if not token:
+        return render_template("unsubscribe.html", status="missing"), 400
+
+    subscriber = get_subscriber_by_token(token)
+    if not subscriber:
+        return render_template("unsubscribe.html", status="invalid"), 404
+
+    timestamp = datetime.now(timezone.utc).isoformat()
+    update_subscriber(subscriber["id"], {"unsubscribed_at": timestamp})
+
+    return render_template("unsubscribe.html", status="success")
 
 
 @app.route("/api/calculate", methods=["POST"])
