@@ -111,8 +111,16 @@ def supabase_context() -> Dict[str, str]:
         "supabase_key": os.environ.get("SUPABASE_KEY", ""),
     }
 
-def supabase_headers() -> Dict[str, str]:
-    key = os.environ.get("SUPABASE_KEY", "")
+def supabase_key_for_request(method: str) -> str:
+    service_key = os.environ.get("SUPABASE_SERVICE_KEY", "")
+    if method.upper() in {"POST", "PATCH", "PUT", "DELETE"} and service_key:
+        # Set SUPABASE_SERVICE_KEY in Render for server-side writes that hit RLS.
+        return service_key
+    return os.environ.get("SUPABASE_KEY", "")
+
+
+def supabase_headers(method: str) -> Dict[str, str]:
+    key = supabase_key_for_request(method)
     return {
         "apikey": key,
         "Authorization": f"Bearer {key}",
@@ -129,14 +137,14 @@ def supabase_request(
     prefer_return: bool = False,
 ) -> Optional[Any]:
     supabase_url = os.environ.get("SUPABASE_URL", "")
-    supabase_key = os.environ.get("SUPABASE_KEY", "")
+    supabase_key = supabase_key_for_request(method)
     if not supabase_url or not supabase_key:
         app.logger.error("Supabase configuration is missing.")
         return None
 
     query_string = f"?{urlencode(params)}" if params else ""
     url = f"{supabase_url.rstrip('/')}/rest/v1/{table}{query_string}"
-    headers = supabase_headers()
+    headers = supabase_headers(method)
     headers["Prefer"] = "return=representation" if prefer_return else "return=minimal"
 
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
@@ -150,6 +158,16 @@ def supabase_request(
             return json.loads(body)
     except HTTPError as error:
         error_body = error.read().decode("utf-8")
+        if "42501" in error_body or "row-level security" in error_body.lower():
+            method_upper = method.upper()
+            action = "INSERT" if method_upper == "POST" else "UPDATE"
+            if method_upper == "DELETE":
+                action = "DELETE"
+            app.logger.error(
+                "Supabase RLS blocked %s. Configure SUPABASE_SERVICE_KEY or add an %s policy.",
+                action,
+                action,
+            )
         app.logger.error("Supabase request failed: %s", error_body)
         return None
     except URLError as error:
