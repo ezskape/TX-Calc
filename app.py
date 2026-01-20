@@ -113,8 +113,8 @@ def supabase_context() -> Dict[str, str]:
 
 def supabase_key_for_request(method: str) -> str:
     service_key = os.environ.get("SUPABASE_SERVICE_KEY", "")
-    if method.upper() in {"POST", "PATCH", "PUT", "DELETE"} and service_key:
-        # Set SUPABASE_SERVICE_KEY in Render for server-side writes that hit RLS.
+    if service_key:
+        # Set SUPABASE_SERVICE_KEY in Render for server-side calls that hit RLS.
         return service_key
     return os.environ.get("SUPABASE_KEY", "")
 
@@ -267,7 +267,7 @@ def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[st
                 The WattWise Team
               </p>
               <p style='margin-top: 24px; font-size: 12px; color: #475569;'>
-                Unsubscribe: <a href='{unsubscribe_url}' style='color: #475569;'>{unsubscribe_url}</a>
+                <a href='{unsubscribe_url}' style='color: #475569;'>Unsubscribe</a>
               </p>
             </div>
         """,
@@ -334,7 +334,7 @@ def subscribe() -> Any:
         already_subscribed = True
         unsubscribed = is_unsubscribed(subscriber)
         if not subscriber.get("unsubscribe_token"):
-            new_token = secrets.token_urlsafe(32)
+            new_token = secrets.token_urlsafe(24)
             updated = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token})
             if not updated:
                 if wants_json:
@@ -342,7 +342,7 @@ def subscribe() -> Any:
                 return redirect(url_for("index"))
             subscriber = updated
     else:
-        new_token = secrets.token_urlsafe(32)
+        new_token = secrets.token_urlsafe(24)
         subscriber = create_subscriber(email, zip_code or "", new_token)
         if not subscriber:
             subscriber = get_subscriber_by_email(email)
@@ -350,7 +350,7 @@ def subscribe() -> Any:
                 already_subscribed = True
                 unsubscribed = is_unsubscribed(subscriber)
         if subscriber and not subscriber.get("unsubscribe_token"):
-            new_token = new_token or secrets.token_urlsafe(32)
+            new_token = secrets.token_urlsafe(24)
             updated = update_subscriber(subscriber["id"], {"unsubscribe_token": new_token})
             if not updated:
                 if wants_json:
@@ -396,12 +396,13 @@ def subscribe() -> Any:
 
 @app.route("/unsubscribe")
 def unsubscribe() -> Any:
-    token = request.args.get("token")
+    token = request.args.get("token") or request.args.get("t")
     if not token:
-        return render_template("unsubscribe.html", status="missing"), 400
+        return render_template("unsubscribe.html", status="invalid"), 400
 
     subscriber = get_subscriber_by_token(token)
     if not subscriber:
+        app.logger.info("Unsubscribe token not found: %s", token[:6])
         return render_template("unsubscribe.html", status="invalid"), 404
 
     timestamp = datetime.now(timezone.utc).isoformat()
@@ -409,6 +410,7 @@ def unsubscribe() -> Any:
     if not updated:
         return render_template("unsubscribe.html", status="error"), 500
 
+    app.logger.info("Unsubscribe succeeded for %s", subscriber.get("email"))
     return render_template("unsubscribe.html", status="success")
 
 
