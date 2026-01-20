@@ -61,6 +61,12 @@ For local development on Windows, run:
 python app.py
 ```
 
+## Environment variables
+
+Set the following environment variables in Render (or your hosting provider):
+
+- `BASE_URL`: The public site URL used to build absolute links in emails (for example, `https://www.wattwisetx.com`).
+
 ## Project structure
 
 ```

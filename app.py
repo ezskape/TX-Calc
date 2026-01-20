@@ -10,7 +10,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, has_request_context
 from dotenv import load_dotenv
 
 import resend
@@ -237,13 +237,30 @@ def is_unsubscribed(subscriber: Dict[str, Any]) -> bool:
     return bool(subscriber.get("unsubscribed_at"))
 
 
+def get_base_url() -> str:
+    base_url = os.environ.get("BASE_URL") or os.environ.get("APP_BASE_URL", "")
+    if base_url:
+        return base_url.rstrip("/")
+    if has_request_context():
+        return request.host_url.rstrip("/")
+    return ""
+
+
+def build_absolute_url(endpoint: str, **values: Any) -> str:
+    base_url = get_base_url()
+    path = url_for(endpoint, _external=False, **values)
+    if base_url:
+        return f"{base_url}{path}"
+    return url_for(endpoint, _external=True, **values)
+
+
 def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[str] = None) -> bool:
     if not resend.api_key:
         app.logger.warning("RESEND_API_KEY is not set; skipping welcome email send.")
         return False
 
-    guide_link = url_for("hidden_fee_guide", _external=True)
-    unsubscribe_url = url_for("unsubscribe", token=unsubscribe_token, _external=True)
+    guide_link = build_absolute_url("hidden_fee_guide")
+    unsubscribe_url = build_absolute_url("unsubscribe", token=unsubscribe_token)
     zip_line = f"<p><strong>Your zip code:</strong> {zip_code}</p>" if zip_code else ""
 
     email_payload = {
@@ -267,7 +284,7 @@ def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[st
                 The WattWise Team
               </p>
               <p style='margin-top: 24px; font-size: 12px; color: #475569;'>
-                Unsubscribe: <a href='{unsubscribe_url}' style='color: #475569;'>{unsubscribe_url}</a>
+                <a href='{unsubscribe_url}' style='color: #475569;'>Unsubscribe</a>
               </p>
             </div>
         """,
