@@ -267,7 +267,7 @@ def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[st
                 The WattWise Team
               </p>
               <p style='margin-top: 24px; font-size: 12px; color: #475569;'>
-                Unsubscribe: <a href='{unsubscribe_url}' style='color: #475569;'>{unsubscribe_url}</a>
+                <a href='{unsubscribe_url}' style='color: #475569;'>Unsubscribe</a>
               </p>
             </div>
         """,
