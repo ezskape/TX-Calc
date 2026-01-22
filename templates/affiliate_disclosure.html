@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WattWise | Unsubscribe</title>
+    <title>WattWise | Affiliate Disclosure</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -32,35 +32,24 @@
     <main class="landing-container">
       <section class="section">
         <div class="section-header">
-          <h1>Unsubscribe</h1>
-          <p class="section-subline">Manage your WattWise emails</p>
+          <h1>Affiliate Disclosure</h1>
+          <p class="section-subline">Transparency about how WattWise is funded.</p>
         </div>
         <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
-          {% if status == "success" %}
-            <p class="text-lg text-gray-700">
-              You are unsubscribed. You won't receive emails from WattWise.
+          <div class="space-y-6 text-[0.98rem] text-gray-700">
+            <p>
+              WattWise may include affiliate links to electricity plan partners. If you choose a plan using one of
+              these links, we may earn a commission at no extra cost to you.
             </p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            <p>
+              Affiliate relationships do not influence our calculator results. Your true-rate calculations are based
+              solely on the plan inputs you provide.
             </p>
-          {% elif status == "invalid" %}
-            <p class="text-lg text-gray-700">Invalid or expired link.</p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
+            <p>
+              For more information about how we handle data, please review our
+              <a class="footer-link" href="{{ url_for('privacy') }}">Privacy Policy</a>.
             </p>
-          {% elif status == "error" %}
-            <p class="text-lg text-gray-700">
-              We ran into a problem updating your subscription. Please try the link again.
-            </p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% else %}
-            <p class="text-lg text-gray-700">Missing unsubscribe token.</p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% endif %}
+          </div>
         </div>
       </section>
     </main>
