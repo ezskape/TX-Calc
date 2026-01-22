@@ -308,6 +308,11 @@ def privacy() -> str:
     return render_template("privacy.html")
 
 
+@app.route("/affiliate-disclosure")
+def affiliate_disclosure() -> str:
+    return render_template("affiliate_disclosure.html")
+
+
 @app.route("/calculator")
 def calculator() -> str:
     return render_template("index.html", **supabase_context())
