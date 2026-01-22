@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse, urlunparse, parse_qsl
 from urllib.request import Request, urlopen
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
@@ -175,6 +175,23 @@ def supabase_request(
         return None
 
 
+def append_subid_to_url(destination_url: str, click_id: str) -> str:
+    parsed = urlparse(destination_url)
+    query_params = dict(parse_qsl(parsed.query))
+    query_params["subid"] = click_id
+    updated_query = urlencode(query_params)
+    return urlunparse(
+        (
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            updated_query,
+            parsed.fragment,
+        )
+    )
+
+
 def get_subscriber_by_email(email: str) -> Optional[Dict[str, Any]]:
     # Supabase "leads" table must include:
     # - unsubscribe_token (text, unique)
@@ -306,6 +323,67 @@ def landing() -> str:
 @app.route("/privacy")
 def privacy() -> str:
     return render_template("privacy.html")
+
+
+@app.route("/affiliate-disclosure")
+def affiliate_disclosure() -> str:
+    return render_template("affiliate_disclosure.html")
+
+
+@app.route("/compare")
+def compare() -> str:
+    return render_template("compare.html")
+
+
+@app.route("/go/compare")
+def go_compare() -> Any:
+    partner = request.args.get("partner")
+    if partner not in {"choosetexaspower", "gatby"}:
+        return redirect(url_for("compare"))
+
+    click_id = secrets.token_urlsafe(12)
+    partner_env_map = {
+        "choosetexaspower": "CHOOSETEXASPOWER_AFFILIATE_URL",
+        "gatby": "GATBY_AFFILIATE_URL",
+    }
+    destination_base = os.environ.get(partner_env_map[partner], "").strip()
+    if not destination_base:
+        return redirect(url_for("compare"))
+
+    destination_url = append_subid_to_url(destination_base, click_id)
+    zip_code = request.args.get("zip")
+    tab = request.args.get("tab")
+    kwh_raw = request.args.get("kwh")
+    try:
+        kwh = int(kwh_raw) if kwh_raw else None
+    except ValueError:
+        kwh = None
+
+    # Requires Supabase table "outbound_clicks" with:
+    # id uuid primary key default gen_random_uuid()
+    # created_at timestamptz default now()
+    # partner text
+    # click_id text
+    # zip_code text null
+    # tab text null
+    # kwh int null
+    # destination_url text
+    supabase_request(
+        "POST",
+        "outbound_clicks",
+        payload=[
+            {
+                "partner": partner,
+                "click_id": click_id,
+                "zip_code": zip_code,
+                "tab": tab,
+                "kwh": kwh,
+                "destination_url": destination_url,
+            }
+        ],
+    )
+
+    return redirect(destination_url)
 
 
 @app.route("/calculator")

@@ -84,6 +84,7 @@ class PlanCalculator {
     this.resultInsight = panel.querySelector(".result-insight");
     this.resultGuidance = panel.querySelector(".result-guidance");
     this.resultEmailOptin = panel.querySelector(".result-email-card");
+    this.resultNextStep = panel.querySelector(".result-next-step-card");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
     this.errorMessage = panel.querySelector(".error-message");
@@ -142,6 +143,7 @@ class PlanCalculator {
     this.resultInsight?.classList.remove("is-hidden");
     this.resultGuidance?.classList.remove("is-hidden");
     this.resultEmailOptin?.classList.remove("is-hidden");
+    this.resultNextStep?.classList.remove("is-hidden");
     this.resultsPlaceholder.classList.add("is-hidden");
   }
 
@@ -151,6 +153,7 @@ class PlanCalculator {
     this.resultInsight?.classList.add("is-hidden");
     this.resultGuidance?.classList.add("is-hidden");
     this.resultEmailOptin?.classList.add("is-hidden");
+    this.resultNextStep?.classList.add("is-hidden");
     this.resultsPlaceholder.classList.remove("is-hidden");
   }
 
@@ -384,6 +387,7 @@ function setupTouCalculator() {
   const resultInsight = panel.querySelector(".result-insight");
   const resultGuidance = panel.querySelector(".result-guidance");
   const resultEmailOptin = panel.querySelector(".result-email-card");
+  const resultNextStep = panel.querySelector(".result-next-step-card");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
 
@@ -403,6 +407,7 @@ function setupTouCalculator() {
     resultInsight?.classList.add("is-hidden");
     resultGuidance?.classList.add("is-hidden");
     resultEmailOptin?.classList.add("is-hidden");
+    resultNextStep?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
 
@@ -412,6 +417,7 @@ function setupTouCalculator() {
     resultInsight?.classList.remove("is-hidden");
     resultGuidance?.classList.remove("is-hidden");
     resultEmailOptin?.classList.remove("is-hidden");
+    resultNextStep?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
 

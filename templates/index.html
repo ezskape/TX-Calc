@@ -22,6 +22,8 @@
         </a>
       </header>
       <input type="hidden" id="postal-code-param" aria-hidden="true" />
+      {% set zip_code = request.args.get("zip") or request.args.get("pc") %}
+      {% set kwh_param = request.args.get("kwh") %}
 
       {% if request.args.get("subscribed") == "1" %}
       <script>
@@ -280,6 +282,21 @@
             </p>
           </section>
         </div>
+        {% set compare_params = "partner=choosetexaspower&tab=fixed_rate" %}
+        {% if zip_code %}
+          {% set compare_params = compare_params ~ "&zip=" ~ zip_code %}
+        {% endif %}
+        {% if kwh_param %}
+          {% set compare_params = compare_params ~ "&kwh=" ~ kwh_param %}
+        {% endif %}
+        <section class="card result-next-step-card is-hidden">
+          <h3>Next step</h3>
+          <p>See plans available for your ZIP.</p>
+          <a class="calculate-button" href="{{ url_for('go_compare') }}?{{ compare_params }}">Compare plans</a>
+          <p class="result-email-disclaimer">
+            We may earn a commission if you enroll through links on this site.
+          </p>
+        </section>
         <p class="result-note result-disclaimer is-hidden">
           True rate per kWh is calculated using information entered, approximate bill amount is calculated as price per kwh * kwh usage.
         </p>
@@ -499,6 +516,21 @@
             </p>
           </section>
         </div>
+        {% set compare_params = "partner=choosetexaspower&tab=fixed_rate_credit" %}
+        {% if zip_code %}
+          {% set compare_params = compare_params ~ "&zip=" ~ zip_code %}
+        {% endif %}
+        {% if kwh_param %}
+          {% set compare_params = compare_params ~ "&kwh=" ~ kwh_param %}
+        {% endif %}
+        <section class="card result-next-step-card is-hidden">
+          <h3>Next step</h3>
+          <p>See plans available for your ZIP.</p>
+          <a class="calculate-button" href="{{ url_for('go_compare') }}?{{ compare_params }}">Compare plans</a>
+          <p class="result-email-disclaimer">
+            We may earn a commission if you enroll through links on this site.
+          </p>
+        </section>
         <p class="result-note result-disclaimer is-hidden">
           True rate per kWh subtracts the usage credit from the total charge when your usage meets the entered kWh threshold.
         </p>
@@ -681,6 +713,21 @@
             </p>
           </section>
         </div>
+        {% set compare_params = "partner=choosetexaspower&tab=tou" %}
+        {% if zip_code %}
+          {% set compare_params = compare_params ~ "&zip=" ~ zip_code %}
+        {% endif %}
+        {% if kwh_param %}
+          {% set compare_params = compare_params ~ "&kwh=" ~ kwh_param %}
+        {% endif %}
+        <section class="card result-next-step-card is-hidden">
+          <h3>Next step</h3>
+          <p>See plans available for your ZIP.</p>
+          <a class="calculate-button" href="{{ url_for('go_compare') }}?{{ compare_params }}">Compare plans</a>
+          <p class="result-email-disclaimer">
+            We may earn a commission if you enroll through links on this site.
+          </p>
+        </section>
         <p class="result-note result-disclaimer is-hidden">
           TDU delivery charges do NOT apply during the free usage period.
         </p>
@@ -693,7 +740,8 @@
     </main>
 
     <footer class="page-footer">
-      © 2025 WattWise · <a class="footer-link" href="{{ url_for('privacy') }}">Privacy Policy</a>
+      © 2026 WattWise · <a class="footer-link" href="{{ url_for('privacy') }}">Privacy Policy</a> ·
+      <a class="footer-link" href="{{ url_for('affiliate_disclosure') }}">Affiliate Disclosure</a>
     </footer>
 
     <script>

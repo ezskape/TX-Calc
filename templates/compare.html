@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WattWise | Unsubscribe</title>
+    <title>WattWise | Compare plans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -32,35 +32,28 @@
     <main class="landing-container">
       <section class="section">
         <div class="section-header">
-          <h1>Unsubscribe</h1>
-          <p class="section-subline">Manage your WattWise emails</p>
+          <h1>Compare plans</h1>
+          <p class="section-subline">
+            Plan links are being finalized. Meanwhile, browse official listings.
+          </p>
         </div>
         <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
-          {% if status == "success" %}
-            <p class="text-lg text-gray-700">
-              You are unsubscribed. You won't receive emails from WattWise.
-            </p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% elif status == "invalid" %}
-            <p class="text-lg text-gray-700">Invalid or expired link.</p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% elif status == "error" %}
-            <p class="text-lg text-gray-700">
-              We ran into a problem updating your subscription. Please try the link again.
-            </p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% else %}
-            <p class="text-lg text-gray-700">Missing unsubscribe token.</p>
-            <p class="mt-4">
-              <a class="nav-cta" href="{{ url_for('landing') }}">Back to home</a>
-            </p>
-          {% endif %}
+          <p class="text-base text-gray-700">
+            We’ll publish partner comparisons soon. For now, use the official marketplace to review available plans.
+          </p>
+          <div class="mt-6">
+            <a
+              class="nav-cta"
+              href="https://www.powertochoose.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Browse official listings
+            </a>
+          </div>
+          <p class="mt-4 text-sm text-gray-500">
+            We may earn a commission if you enroll through links on this site.
+          </p>
         </div>
       </section>
     </main>
