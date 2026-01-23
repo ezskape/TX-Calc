@@ -14,6 +14,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, f
 from dotenv import load_dotenv
 
 import resend
+import threading
 
 load_dotenv()
 
@@ -316,6 +317,39 @@ def affiliate_disclosure() -> str:
 @app.route("/calculator")
 def calculator() -> str:
     return render_template("index.html", **supabase_context())
+
+
+@app.route("/go/compare")
+def compare_redirect() -> Any:
+    payload: Dict[str, Any] = {
+        "event": "compare_click",
+        "source": request.args.get("source") or "calculator",
+    }
+    for key in ("zip_code", "tdu", "plan_type", "pc"):
+        value = request.args.get(key)
+        if value:
+            payload[key] = value
+
+    user_agent = request.headers.get("User-Agent")
+    if user_agent:
+        payload["user_agent"] = user_agent
+
+    referrer = request.referrer
+    if referrer:
+        payload["referrer"] = referrer
+
+    if not os.environ.get("SUPABASE_SERVICE_KEY"):
+        app.logger.warning("SUPABASE_SERVICE_KEY is not set; compare clicks may fail due to RLS.")
+
+    def log_compare_click() -> None:
+        try:
+            supabase_request("POST", "clicks", payload=[payload])
+        except Exception as error:  # noqa: BLE001
+            app.logger.error("Failed to log compare click: %s", error)
+
+    threading.Thread(target=log_compare_click, daemon=True).start()
+
+    return redirect("https://www.powertochoose.org/en-us", code=302)
 
 
 @app.route("/subscribe", methods=["POST"])
