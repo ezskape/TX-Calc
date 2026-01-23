@@ -573,6 +573,37 @@ h6,
   margin-bottom: 4px;
 }
 
+.result-compare-card {
+  background: linear-gradient(180deg, rgba(15, 118, 110, 0.08), #ffffff);
+  border: 1px solid rgba(15, 118, 110, 0.18);
+}
+
+.result-compare-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.result-compare-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ww-gray-900);
+}
+
+.result-compare-intro {
+  margin: 0;
+  color: var(--ww-gray-600);
+}
+
+.compare-plans-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
 .result-email-optin {
   padding: 0;
   display: flex;
