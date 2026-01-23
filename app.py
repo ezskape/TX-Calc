@@ -318,6 +318,36 @@ def calculator() -> str:
     return render_template("index.html", **supabase_context())
 
 
+@app.route("/go/compare")
+def compare_redirect() -> Any:
+    payload: Dict[str, Any] = {
+        "event": "compare_click",
+        "source": request.args.get("source") or "calculator",
+    }
+    for key in ("zip_code", "tdu", "plan_type", "pc"):
+        value = request.args.get(key)
+        if value:
+            payload[key] = value
+
+    user_agent = request.headers.get("User-Agent")
+    if user_agent:
+        payload["user_agent"] = user_agent
+
+    referrer = request.referrer
+    if referrer:
+        payload["referrer"] = referrer
+
+    if not os.environ.get("SUPABASE_SERVICE_KEY"):
+        app.logger.warning("SUPABASE_SERVICE_KEY is not set; compare clicks may fail due to RLS.")
+
+    try:
+        supabase_request("POST", "clicks", payload=[payload])
+    except Exception as error:  # noqa: BLE001
+        app.logger.error("Failed to log compare click: %s", error)
+
+    return redirect("https://www.powertochoose.org/en-us", code=302)
+
+
 @app.route("/subscribe", methods=["POST"])
 def subscribe() -> Any:
     app.logger.info("HIT /subscribe")

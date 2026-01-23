@@ -84,6 +84,8 @@ class PlanCalculator {
     this.resultInsight = panel.querySelector(".result-insight");
     this.resultGuidance = panel.querySelector(".result-guidance");
     this.resultEmailOptin = panel.querySelector(".result-email-card");
+    this.resultCompareCard = panel.querySelector(".result-compare-card");
+    this.resultCompareLink = panel.querySelector(".compare-plans-button");
     this.resultsPlaceholder = panel.querySelector(".results-placeholder");
     this.errorSection = panel.querySelector(".error-card");
     this.errorMessage = panel.querySelector(".error-message");
@@ -141,6 +143,10 @@ class PlanCalculator {
     this.resultNote.classList.remove("is-hidden");
     this.resultInsight?.classList.remove("is-hidden");
     this.resultGuidance?.classList.remove("is-hidden");
+    if (this.resultCompareLink) {
+      this.resultCompareLink.href = buildCompareUrl(this.planType);
+    }
+    this.resultCompareCard?.classList.remove("is-hidden");
     this.resultEmailOptin?.classList.remove("is-hidden");
     this.resultsPlaceholder.classList.add("is-hidden");
   }
@@ -150,6 +156,7 @@ class PlanCalculator {
     this.resultNote.classList.add("is-hidden");
     this.resultInsight?.classList.add("is-hidden");
     this.resultGuidance?.classList.add("is-hidden");
+    this.resultCompareCard?.classList.add("is-hidden");
     this.resultEmailOptin?.classList.add("is-hidden");
     this.resultsPlaceholder.classList.remove("is-hidden");
   }
@@ -186,6 +193,30 @@ class PlanCalculator {
     this.hideResults();
     this.clearError();
   }
+}
+
+function buildCompareUrl(planType) {
+  const params = new URLSearchParams();
+  const postalCodeField = document.getElementById("postal-code-param");
+  const zipCode = postalCodeField?.value.trim() || "";
+  const tduSelect = document.getElementById("tduSelect");
+  const tdu = tduSelect?.value || "";
+
+  if (zipCode) {
+    params.set("zip_code", zipCode);
+    params.set("pc", zipCode);
+  }
+
+  if (tdu) {
+    params.set("tdu", tdu);
+  }
+
+  if (planType) {
+    params.set("plan_type", planType);
+  }
+
+  const query = params.toString();
+  return `/go/compare${query ? `?${query}` : ""}`;
 }
 
 function setupTduSelector() {
@@ -383,6 +414,8 @@ function setupTouCalculator() {
   const resultNote = panel.querySelector(".result-note");
   const resultInsight = panel.querySelector(".result-insight");
   const resultGuidance = panel.querySelector(".result-guidance");
+  const resultCompareCard = panel.querySelector(".result-compare-card");
+  const resultCompareLink = panel.querySelector(".compare-plans-button");
   const resultEmailOptin = panel.querySelector(".result-email-card");
   const errorSection = panel.querySelector(".error-card");
   const errorMessage = panel.querySelector(".error-message");
@@ -402,6 +435,7 @@ function setupTouCalculator() {
     resultNote?.classList.add("is-hidden");
     resultInsight?.classList.add("is-hidden");
     resultGuidance?.classList.add("is-hidden");
+    resultCompareCard?.classList.add("is-hidden");
     resultEmailOptin?.classList.add("is-hidden");
     placeholder.classList.remove("is-hidden");
   };
@@ -411,6 +445,10 @@ function setupTouCalculator() {
     resultNote?.classList.remove("is-hidden");
     resultInsight?.classList.remove("is-hidden");
     resultGuidance?.classList.remove("is-hidden");
+    if (resultCompareLink) {
+      resultCompareLink.href = buildCompareUrl("tou");
+    }
+    resultCompareCard?.classList.remove("is-hidden");
     resultEmailOptin?.classList.remove("is-hidden");
     placeholder.classList.add("is-hidden");
   };
