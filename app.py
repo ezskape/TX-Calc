@@ -14,6 +14,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, f
 from dotenv import load_dotenv
 
 import resend
+import threading
 
 load_dotenv()
 
@@ -340,10 +341,13 @@ def compare_redirect() -> Any:
     if not os.environ.get("SUPABASE_SERVICE_KEY"):
         app.logger.warning("SUPABASE_SERVICE_KEY is not set; compare clicks may fail due to RLS.")
 
-    try:
-        supabase_request("POST", "clicks", payload=[payload])
-    except Exception as error:  # noqa: BLE001
-        app.logger.error("Failed to log compare click: %s", error)
+    def log_compare_click() -> None:
+        try:
+            supabase_request("POST", "clicks", payload=[payload])
+        except Exception as error:  # noqa: BLE001
+            app.logger.error("Failed to log compare click: %s", error)
+
+    threading.Thread(target=log_compare_click, daemon=True).start()
 
     return redirect("https://www.powertochoose.org/en-us", code=302)
 
