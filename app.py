@@ -262,7 +262,7 @@ def send_welcome_email(email: str, unsubscribe_token: str, zip_code: Optional[st
                   View the Hidden Fee Guide
                 </a>
               </p>
-              <p>If you have any questions, just hit reply — we're here to help you avoid surprise charges.</p>
+              <p>If you have any questions, email us at info@wattwisetx.com — we're here to help you avoid surprise charges.</p>
               <p style='margin-top: 24px;'>
                 Cheers,<br />
                 The WattWise Team
