@@ -311,6 +311,71 @@ a {
   margin: 0 0 1rem;
 }
 
+.faq-section {
+  padding-top: 1rem;
+}
+
+.faq-card {
+  background: #ffffff;
+  border: 1px solid var(--ww-gray-200);
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 10px 26px rgba(0, 25, 68, 0.06);
+}
+
+.faq-list {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--ww-gray-200);
+  padding-bottom: 1.1rem;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ww-gray-900);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.faq-question::after {
+  content: '+';
+  font-size: 1.25rem;
+  color: var(--ww-primary-600);
+  transition: transform 0.2s ease;
+}
+
+.faq-question[aria-expanded='true']::after {
+  content: '–';
+}
+
+.faq-answer {
+  margin-top: 0.6rem;
+}
+
+.faq-answer p {
+  margin: 0;
+}
+
 .footer {
   text-align: center;
   padding: 1.5rem 1rem 2.25rem;
