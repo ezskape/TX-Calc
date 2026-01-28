@@ -18,6 +18,54 @@
     </script>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/wattwise-icon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why is my real rate higher than the advertised rate?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Many Texas plans advertise an energy charge but don’t highlight delivery (TDU) fees, fixed monthly charges, and bill credits that depend on usage. WattWise combines these to show your true effective ¢/kWh."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does WattWise sell electricity plans?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. WattWise is a calculator and education tool. After you calculate your rate, you can choose to compare plans on third-party sites."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is WattWise free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes — the calculator and guide are free."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this work for all Texas ZIP codes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "WattWise is designed for deregulated Texas electricity areas. Some ZIP codes may be in regulated territories where plan shopping works differently."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate is the estimate?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your true ¢/kWh depends on the plan details you enter and how your usage lines up with credits or thresholds. WattWise provides a strong estimate based on your inputs so you can compare plans more accurately."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <header class="nav-shell" aria-label="WattWise navigation">
@@ -125,6 +173,67 @@
         <div class="cta-card">
           <h2 id="cta-title">Ready to see your true electricity rate?</h2>
           <a class="primary-cta" href="{{ url_for('calculator') }}">Start Calculator</a>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="faq-title">
+        <div class="section-header">
+          <h2 id="faq-title">Electricity Rate Questions Texans Ask</h2>
+        </div>
+        <div class="faq-card">
+          <div class="faq-list" role="list">
+            <article class="faq-item" role="listitem">
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-1">
+                Why is my real rate higher than the advertised rate?
+              </button>
+              <div id="faq-answer-1" class="faq-answer" hidden>
+                <p>
+                  Many Texas plans advertise an energy charge but don’t highlight delivery (TDU) fees, fixed monthly charges,
+                  and bill credits that depend on usage. WattWise combines these to show your true effective ¢/kWh.
+                </p>
+              </div>
+            </article>
+            <article class="faq-item" role="listitem">
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-2">
+                Does WattWise sell electricity plans?
+              </button>
+              <div id="faq-answer-2" class="faq-answer" hidden>
+                <p>
+                  No. WattWise is a calculator and education tool. After you calculate your rate, you can choose to compare plans on third-party sites.
+                </p>
+              </div>
+            </article>
+            <article class="faq-item" role="listitem">
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-3">
+                Is WattWise free to use?
+              </button>
+              <div id="faq-answer-3" class="faq-answer" hidden>
+                <p>Yes — the calculator and guide are free.</p>
+              </div>
+            </article>
+            <article class="faq-item" role="listitem">
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-4">
+                Does this work for all Texas ZIP codes?
+              </button>
+              <div id="faq-answer-4" class="faq-answer" hidden>
+                <p>
+                  WattWise is designed for deregulated Texas electricity areas. Some ZIP codes may be in regulated territories
+                  where plan shopping works differently.
+                </p>
+              </div>
+            </article>
+            <article class="faq-item" role="listitem">
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-5">
+                How accurate is the estimate?
+              </button>
+              <div id="faq-answer-5" class="faq-answer" hidden>
+                <p>
+                  Your true ¢/kWh depends on the plan details you enter and how your usage lines up with credits or thresholds.
+                  WattWise provides a strong estimate based on your inputs so you can compare plans more accurately.
+                </p>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
     </main>

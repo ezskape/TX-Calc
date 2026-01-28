@@ -226,4 +226,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchParams = new URLSearchParams({ pc: zip, tdu });
     window.location.href = `/calculator?${searchParams.toString()}`;
   });
+
+  const faqButtons = document.querySelectorAll(".faq-question");
+  if (faqButtons.length > 0) {
+    const closeAllFaqs = () => {
+      faqButtons.forEach((button) => {
+        button.setAttribute("aria-expanded", "false");
+        const answerId = button.getAttribute("aria-controls");
+        const answer = answerId ? document.getElementById(answerId) : null;
+        if (answer) {
+          answer.hidden = true;
+        }
+      });
+    };
+
+    faqButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        closeAllFaqs();
+
+        if (!isExpanded) {
+          button.setAttribute("aria-expanded", "true");
+          const answerId = button.getAttribute("aria-controls");
+          const answer = answerId ? document.getElementById(answerId) : null;
+          if (answer) {
+            answer.hidden = false;
+          }
+        }
+      });
+    });
+  }
 });
